@@ -1,0 +1,115 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+const Test = () => {
+  const [questions, setQuestions] = useState([""]);
+  const [dataRadio, setDataRadio] = useState([""]);
+  const [id, setId] = useState("");
+  const [answer, setAnswer] = useState("");
+  const token = localStorage.getItem("token");
+  
+  const idQuestion = Object.values(id);
+  const answerQuestion = Object.values(answer);
+  const handleChange = (e) => {
+    setId({ ...id, [e.target.id]: e.target.id });
+    setAnswer({ ...answer, [e.target.name]: e.target.value });
+  };
+
+//   console.log(answerQuestion); 
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_URL}holland/questions`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        setQuestions(res.data.data);
+      });
+  }, []);
+
+  const handleSubmit = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_URL}holland/save_answer`,
+        { data: dataRadio },
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
+      .then((res) => {
+        alert("success");
+      })
+      .catch((err) => {
+        alert("failed");
+      });
+  };
+
+  return (
+    <div className="container p-4 mt-3">
+      <p className="fs-1 text-center">Holland Test</p>
+      <p className="text-secondary">
+        Bacalah setiap pertanyaan di bawah ini. Jika Anda setuju dengan
+        pernyataan tersebut, silahkan beri tanda silang "x" di kolom yang
+        tersedia. Tidak ada jawaban yang benar atau salah.
+      </p>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Pernyataan</th>
+            <th scope="col">Ya</th>
+            <th scope="col">Tidak</th>
+          </tr>
+        </thead>
+        {questions.map((item) => (
+          <tbody
+            onChange={handleChange}
+            //   onClick={(e) => {
+            //     setDataRadio([...dataRadio].map(object => {
+            //       if(object.username === item.username) {
+            //         return {
+            //           ...object,
+            //           id_question: e.target.id,
+            //           answer: e.target.value
+            //         }
+            //       }
+            //       else return object;
+            //     }))
+            //   }}
+          >
+            <tr>
+              <th scope="row">{item.id}</th>
+              <th scope="row">{item.question}</th>
+              <td className="text-center">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  id={item.id}
+                  name={"question_" + item.id}
+                  value="1"
+                />
+              </td>
+              <td className="text-center">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  id={item.id}
+                  name={"question_" + item.id}
+                  value="0"
+                />
+              </td>
+            </tr>
+          </tbody>
+        ))}
+      </table>
+      <button
+        className="btn btn-success w-25 float-end mb-3"
+        onClick={handleSubmit}
+      >
+        Submit
+      </button>
+    </div>
+  );
+};
+
+export default Test;
