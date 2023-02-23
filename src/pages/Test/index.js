@@ -1,21 +1,36 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const Test = () => {
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([""]);
-  const [dataRadio, setDataRadio] = useState([""]);
   const [id, setId] = useState("");
   const [answer, setAnswer] = useState("");
+  const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
-  
-  const idQuestion = Object.values(id);
-  const answerQuestion = Object.values(answer);
+
   const handleChange = (e) => {
     setId({ ...id, [e.target.id]: e.target.id });
     setAnswer({ ...answer, [e.target.name]: e.target.value });
   };
 
-//   console.log(answerQuestion); 
+  const idQuestion = Object.values(id);
+  const answerQuestion = Object.values(answer);
+
+  const arrayId = idQuestion.map((item) => {
+    return { id_question: item };
+  });
+  const arrayQuestion = answerQuestion.map((item) => {
+    return { answer: item };
+  });
+
+  var newArray = arrayId.map((obj, index) => ({
+    ...obj,
+    ...arrayQuestion[index],
+  }));
+  console.log(newArray.length);
 
   useEffect(() => {
     axios
@@ -28,20 +43,24 @@ const Test = () => {
   }, []);
 
   const handleSubmit = () => {
-    axios
-      .post(
-        `${process.env.REACT_APP_URL}holland/save_answer`,
-        { data: dataRadio },
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
-      .then((res) => {
-        alert("success");
-      })
-      .catch((err) => {
-        alert("failed");
-      });
+    if (newArray.length === 108) {
+      axios
+        .post(
+          `${process.env.REACT_APP_URL}holland/save_answer`,
+          { data: newArray },
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        )
+        .then((res) => {
+          navigate("/thankyou");
+        })
+        .catch((err) => {
+          alert("failed");
+        });
+    } else {
+      setShow(true);
+    }
   };
 
   return (
@@ -62,21 +81,7 @@ const Test = () => {
           </tr>
         </thead>
         {questions.map((item) => (
-          <tbody
-            onChange={handleChange}
-            //   onClick={(e) => {
-            //     setDataRadio([...dataRadio].map(object => {
-            //       if(object.username === item.username) {
-            //         return {
-            //           ...object,
-            //           id_question: e.target.id,
-            //           answer: e.target.value
-            //         }
-            //       }
-            //       else return object;
-            //     }))
-            //   }}
-          >
+          <tbody onChange={handleChange}>
             <tr>
               <th scope="row">{item.id}</th>
               <th scope="row">{item.question}</th>
@@ -87,6 +92,7 @@ const Test = () => {
                   id={item.id}
                   name={"question_" + item.id}
                   value="1"
+                  required
                 />
               </td>
               <td className="text-center">
@@ -96,6 +102,7 @@ const Test = () => {
                   id={item.id}
                   name={"question_" + item.id}
                   value="0"
+                  required
                 />
               </td>
             </tr>
@@ -108,6 +115,16 @@ const Test = () => {
       >
         Submit
       </button>
+
+      {/* modal */}
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Failed</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <>Please input all form!</>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

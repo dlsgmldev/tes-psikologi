@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [status, setStatus] = useState("");
   const token = localStorage.getItem("token");
   const [form, setForm] = useState({
     username: "",
@@ -20,7 +19,7 @@ const Login = () => {
 
   const handleSubmit = () => {
     axios
-      .post(`${process.env.REACT_APP_URL}cultureapp/auth/login`, form, {
+      .post(`${process.env.REACT_APP_URL}holland/login`, form, {
         headers: {
           Authorization:
             "Basic " +
@@ -32,24 +31,23 @@ const Login = () => {
       .then((res) => {
         localStorage.setItem("token", res.data.user.token.access_token);
         localStorage.setItem("auth", 1);
-        status === "0"
-          ? navigate("/opening")
-          : status === "1"
-          ? navigate("/test")
-          : navigate("/thankyou");
+        axios
+          .get(`${process.env.REACT_APP_URL}holland/get_status`, {
+            headers: { Authorization: "Bearer " + res.data.user.token.access_token },
+          })
+          .then((res) => {
+            console.log(res);
+            res.data?.status === "0"
+              ? navigate("/opening")
+              : res.data?.status === "1"
+              ? navigate("/test")
+              : navigate("/thankyou");
+          });
       })
-      .catch((err) => {});
-  };
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_URL}holland/get_status`, {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        setStatus(res.data.status);
+      .catch((err) => {
+        alert("failed");
       });
-  }, []);
+  };
 
   return (
     <div className="container d-flex p-4 w-100 mt-5">

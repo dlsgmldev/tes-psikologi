@@ -2,7 +2,7 @@ import React from 'react'
 
 const Thankyou = () => {
   return (
-    <div>Thankyou</div>
+    <div className='fs-1 p-5 mt-5 text-center fw-bold'>Thankyou for participating</div>
   )
 }
 

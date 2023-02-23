@@ -1,11 +1,46 @@
+body {
+  background-color: #fafcff;
+  overflow-x: hidden;
+}
+
 input:focus {
-    box-shadow: none!important;
-    border: 1px solid #ced4da!important;
+  box-shadow: none !important;
+  border: 1px solid #ced4da !important;
 }
 
 .img-login {
-    width: 400px;
-    margin-left: 100px;
-    margin-right: 50px;
-    margin-top: 15px;
+  width: 400px;
+  margin-left: 100px;
+  margin-right: 50px;
+  margin-top: 15px;
+}
+
+.wrapper {
+  height: 100vh;
+}
+
+.h-100 {
+  height: 100vh !important;
+}
+
+.ps-0 {
+  padding-left: 0 !important;
+}
+
+.bg-blue {
+  background-color: cornflowerblue !important;
+}
+
+.border-left-primary {
+  border-left: 0.25rem solid #4e73df !important;
+  border-top: #fafcff!important;
+  border-right: #fafcff!important;
+  border-bottom: #fafcff!important;
+}
+
+.text-xs {
+  font-size: 0.7rem;
+}
+.text-blue {
+  color: cornflowerblue !important;
 }

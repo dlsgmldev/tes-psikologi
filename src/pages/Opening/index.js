@@ -23,16 +23,6 @@ const Opening = () => {
       });
   };
 
-  //   useEffect(() => {
-  //     axios
-  //       .get(`${process.env.REACT_APP_URL}holland/get_status`, {
-  //         headers: { Authorization: "Bearer " + token },
-  //       })
-  //       .then((res) => {
-  //         console.log(res.data.status);
-  //       });
-  //   }, []);
-
   return (
     <div className="container p-4 text-center mt-5">
       <p className="fs-1">Holland Test Online</p>
