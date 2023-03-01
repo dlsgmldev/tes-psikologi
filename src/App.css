@@ -32,15 +32,95 @@ input:focus {
 }
 
 .border-left-primary {
-  border-left: 0.25rem solid #4e73df !important;
-  border-top: #fafcff!important;
-  border-right: #fafcff!important;
-  border-bottom: #fafcff!important;
+  border-left: 0.25rem solid cornflowerblue !important;
+  border-top: #fafcff !important;
+  border-right: #fafcff !important;
+  border-bottom: #fafcff !important;
+}
+
+.border-left-success {
+  border-left: 0.25rem solid #28a745 !important;
+  border-top: #fafcff !important;
+  border-right: #fafcff !important;
+  border-bottom: #fafcff !important;
+}
+
+.border-left-warning {
+  border-left: 0.25rem solid #ffc107 !important;
+  border-top: #fafcff !important;
+  border-right: #fafcff !important;
+  border-bottom: #fafcff !important;
+}
+
+.border-left-info {
+  border-left: 0.25rem solid #17a2b8 !important;
+  border-top: #fafcff !important;
+  border-right: #fafcff !important;
+  border-bottom: #fafcff !important;
+}
+
+.border-left-danger {
+  border-left: 0.25rem solid #dc3545 !important;
+  border-top: #fafcff !important;
+  border-right: #fafcff !important;
+  border-bottom: #fafcff !important;
 }
 
 .text-xs {
   font-size: 0.7rem;
 }
+
+.text-sidebar {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
 .text-blue {
   color: cornflowerblue !important;
+}
+
+.text-gray-300 {
+  color: #dddfeb !important;
+}
+
+.fa-2x {
+  font-size: 2em;
+}
+
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.pie-chart {
+  width: 10vh;
+  height: 10vh;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.w-70 {
+  width: 70% !important;
+}
+
+.bg-pink {
+  background-color: rgb(245, 199, 199) !important;
+}
+
+.bg-yellow {
+  background-color: rgb(255, 226, 174) !important;
+}
+
+.dropdown-toggle::after {
+  border: none !important;
+}
+
+.dropdown-toggle:focus {
+  border: none !important;
 }

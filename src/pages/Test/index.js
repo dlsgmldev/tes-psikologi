@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 
 const Test = () => {
@@ -30,7 +30,6 @@ const Test = () => {
     ...obj,
     ...arrayQuestion[index],
   }));
-  console.log(newArray.length);
 
   useEffect(() => {
     axios
@@ -40,7 +39,7 @@ const Test = () => {
       .then((res) => {
         setQuestions(res.data.data);
       });
-  }, []);
+  }, [token]);
 
   const handleSubmit = () => {
     if (newArray.length === 108) {
@@ -66,12 +65,12 @@ const Test = () => {
   return (
     <div className="container p-4 mt-3">
       <p className="fs-1 text-center">Holland Test</p>
-      <p className="text-secondary">
+      <p className="">
         Bacalah setiap pertanyaan di bawah ini. Jika Anda setuju dengan
         pernyataan tersebut, silahkan beri tanda silang "x" di kolom yang
         tersedia. Tidak ada jawaban yang benar atau salah.
       </p>
-      <table class="table table-bordered">
+      <table className="table table-bordered">
         <thead>
           <tr>
             <th scope="col">No.</th>
@@ -83,8 +82,12 @@ const Test = () => {
         {questions.map((item) => (
           <tbody onChange={handleChange}>
             <tr>
-              <th scope="row">{item.id}</th>
-              <th scope="row">{item.question}</th>
+              <th scope="row" className="fw-normal">
+                {item.id}
+              </th>
+              <th scope="row" className="fw-normal">
+                {item.question}
+              </th>
               <td className="text-center">
                 <input
                   className="form-check-input"

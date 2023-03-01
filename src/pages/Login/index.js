@@ -1,10 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -30,18 +29,22 @@ const Login = () => {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.user.token.access_token);
-        localStorage.setItem("auth", 1);
+        localStorage.setItem("role", res.data.user.role);
+        localStorage.setItem("name", res.data.user.fullname);
         axios
           .get(`${process.env.REACT_APP_URL}holland/get_status`, {
-            headers: { Authorization: "Bearer " + res.data.user.token.access_token },
+            headers: {
+              Authorization: "Bearer " + res.data.user.token.access_token,
+            },
           })
           .then((res) => {
-            console.log(res);
             res.data?.status === "0"
               ? navigate("/opening")
               : res.data?.status === "1"
               ? navigate("/test")
-              : navigate("/thankyou");
+              : res.data?.status === "2"
+              ? navigate("/thankyou")
+              : navigate("/");
           });
       })
       .catch((err) => {
@@ -50,7 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container d-flex p-4 w-100 mt-5">
+    <div className="container d-flex p-4 w-100 mt-3">
       <div className="w-100">
         <p className="fs-1">Login</p>
         <p className="text-secondary">

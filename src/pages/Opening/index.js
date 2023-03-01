@@ -24,15 +24,20 @@ const Opening = () => {
   };
 
   return (
-    <div className="container p-4 text-center mt-5">
-      <p className="fs-1">Holland Test Online</p>
-      <p className="">
-        Selamat datang di Holland Test Online. Anda akan mengerjakan beberapa
-        soal dengan estimasi 20 menit
-      </p>
-      <button className="btn btn-success p-2 w-25 mt-3" onClick={handleSubmit}>
-        Start
-      </button>
+    <div className="container p-4 mt-5 d-flex justify-content-center">
+      <div className="card p-5 shadow-lg border-0 text-center">
+        <p className="fs-1">Holland Test Online</p>
+        <p className="">
+          Selamat datang di Holland Test Online. Anda akan mengerjakan beberapa
+          soal dengan estimasi 20 menit
+        </p>
+        <button
+          className="btn btn-success p-2 w-100 mt-3"
+          onClick={handleSubmit}
+        >
+          Start
+        </button>
+      </div>
     </div>
   );
 };
