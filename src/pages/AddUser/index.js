@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddUser = () => {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const AddUser = () => {
     divisi: "",
     nip: "",
   });
+  const { id } = useParams();
 
   const handleChange = (e) => {
     setForm({
@@ -26,17 +27,21 @@ const AddUser = () => {
 
   const handleSubmit = () => {
     axios
-      .post(`${process.env.REACT_APP_URL}holland/usermanagement/add`, form, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .post(
+        `${process.env.REACT_APP_URL}holland/usermanagement/add`,
+        { ...form, id_company: id, role: 2 },
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then((res) => {
-        navigate("/user-management");
+        navigate(`/user-management/${id}`);
       })
       .catch((err) => {});
   };
 
   return (
-    <div className="card border py-2 mx-3 shadow my-4">
+    <div className="card border-0 py-2 mx-3 shadow-lg my-4">
       <div className="card-body">
         <p className="text-blue fw-bold fs-4">Add User</p>
         <div className="row">
@@ -88,7 +93,7 @@ const AddUser = () => {
             <div className="my-3">
               <label>Telp:</label>
               <input
-                type="text"
+                type="number"
                 name="telp"
                 placeholder="telp"
                 className="w-100 mt-1 rounded-3 p-2 border form-control"
@@ -134,7 +139,7 @@ const AddUser = () => {
             <div className="my-3">
               <label>NIP:</label>
               <input
-                type="text"
+                type="number"
                 name="nip"
                 placeholder="nip"
                 className="w-100 mt-1 rounded-3 p-2 border form-control"

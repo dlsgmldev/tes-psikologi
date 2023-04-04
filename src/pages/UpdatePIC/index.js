@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const UpdateUser = () => {
+const UpdatePIC = () => {
   const navigate = useNavigate();
   const [dataUser, setDataUser] = useState("");
   const token = localStorage.getItem("token");
@@ -52,7 +52,7 @@ const UpdateUser = () => {
           divisi: form.divisi ? form.divisi : dataUser.divisi,
           nip: form.nip ? form.nip : dataUser.nip,
           id_company: id2,
-          role: 2,
+          role: 3,
         },
         {
           headers: { Authorization: "Bearer " + token },
@@ -67,7 +67,7 @@ const UpdateUser = () => {
   return (
     <div className="card border-0 py-2 mx-3 shadow-lg my-4">
       <div className="card-body">
-        <p className="text-blue fw-bold fs-4">Update User</p>
+        <p className="text-blue fw-bold fs-4">Update PIC</p>
         <div className="row">
           <div className="col-6">
             <div className="mb-3">
@@ -184,4 +184,4 @@ const UpdateUser = () => {
   );
 };
 
-export default UpdateUser;
+export default UpdatePIC;

@@ -58,7 +58,14 @@ const Test = () => {
           alert("failed");
         });
     } else {
-      setShow(true);
+      const numbers = newArray.map((item) => parseInt(item.id_question));
+      const missingItems = (arr, n) => {
+        let missingItems = [];
+        for (let i = 1; i <= n; i++) if (!arr.includes(i)) missingItems.push(i);
+        return missingItems;
+      };
+      const missingNumbers = missingItems(numbers, 108)
+      window.location.href = `/test#${Math.min(...missingNumbers)}`;
     }
   };
 
@@ -73,16 +80,22 @@ const Test = () => {
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th scope="col">No.</th>
+            <th className="text-center" scope="col">
+              No.
+            </th>
             <th scope="col">Pernyataan</th>
-            <th scope="col">Ya</th>
-            <th scope="col">Tidak</th>
+            <th className="text-center" scope="col">
+              Ya
+            </th>
+            <th className="text-center" scope="col">
+              Tidak
+            </th>
           </tr>
         </thead>
         {questions.map((item) => (
           <tbody onChange={handleChange}>
             <tr>
-              <th scope="row" className="fw-normal">
+              <th scope="row" className="fw-normal text-center">
                 {item.id}
               </th>
               <th scope="row" className="fw-normal">
@@ -114,6 +127,7 @@ const Test = () => {
       </table>
       <button
         className="btn btn-success w-25 float-end mb-3"
+        type="submit"
         onClick={handleSubmit}
       >
         Submit

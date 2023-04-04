@@ -5,6 +5,8 @@ import { Pie } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import { PaginationControl } from "react-bootstrap-pagination-control";
 import Report from "../../components/Report";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -19,9 +21,14 @@ const Dashboard = () => {
   const [selesai, setSelesai] = useState([""]);
   const [dalamProses, setDalamProses] = useState([""]);
   const [belumMulai, setBelumMulai] = useState([""]);
+  const [companyList, setCompanyList] = useState([""]);
+  const [selectedCompany, setSelectedCompany] = useState([""]);
   const [type, setType] = useState("");
   const [report, setReport] = useState("");
+  const [search, setSearch] = useState("");
+  const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
+  const idCompany = localStorage.getItem("id_company");
 
   const dataType =
     type === "selesai"
@@ -32,15 +39,20 @@ const Dashboard = () => {
       ? dalamProses
       : responden;
 
-  const getData = (pageSize, pageIndex, searchIndex) => {
+  const handleChange = (selectedOption) => {
+    const value = selectedOption.map((item) => item.value);
+    setSelectedCompany(value.toString());
+  };
+
+  const getData = (pageSize, pageIndex, searchIndex, filterIndex) => {
     axios
       .get(
         `${process.env.REACT_APP_URL}holland/data_total_responden/${
-          pageSize ?? 10
-        }/${pageIndex ?? 1}`,
+          idCompany === "null" ? 0 : idCompany
+        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex },
+          params: { search: searchIndex, filter_company: filterIndex },
         }
       )
       .then((res) => {
@@ -50,11 +62,11 @@ const Dashboard = () => {
     axios
       .get(
         `${process.env.REACT_APP_URL}holland/data_total_selesai/${
-          pageSize ?? 10
-        }/${pageIndex ?? 1}`,
+          idCompany === "null" ? 0 : idCompany
+        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex },
+          params: { search: searchIndex, filter_company: filterIndex },
         }
       )
       .then((res) => {
@@ -64,11 +76,11 @@ const Dashboard = () => {
     axios
       .get(
         `${process.env.REACT_APP_URL}holland/data_total_dalam_proses/${
-          pageSize ?? 10
-        }/${pageIndex ?? 1}`,
+          idCompany === "null" ? 0 : idCompany
+        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex },
+          params: { search: searchIndex, filter_company: filterIndex },
         }
       )
       .then((res) => {
@@ -78,11 +90,11 @@ const Dashboard = () => {
     axios
       .get(
         `${process.env.REACT_APP_URL}holland/data_total_belum_mulai/${
-          pageSize ?? 10
-        }/${pageIndex ?? 1}`,
+          idCompany === "null" ? 0 : idCompany
+        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex },
+          params: { search: searchIndex, filter_company: filterIndex },
         }
       )
       .then((res) => {
@@ -91,19 +103,51 @@ const Dashboard = () => {
       });
   };
 
+  const getCompany = (pageSize, pageIndex, searchIndex) => {
+    axios
+      .get(
+        `${process.env.REACT_APP_URL}holland/company/list/${pageSize ?? 5}/${
+          pageIndex ?? 1
+        }`,
+        {
+          headers: { Authorization: "Bearer " + token },
+          params: { search: searchIndex },
+        }
+      )
+      .then((res) => {
+        console.log(res.data.data);
+        const company = res.data.data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+        setCompanyList(company);
+      });
+  };
+
   useEffect(() => {
+    getCompany();
     getData();
     axios
-      .get(`${process.env.REACT_APP_URL}holland/box_info`, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .get(
+        `${process.env.REACT_APP_URL}holland/box_info/${
+          idCompany === "null" ? 0 : idCompany
+        }`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then((res) => {
         setInfo(res.data);
       });
     axios
-      .get(`${process.env.REACT_APP_URL}holland/pie_chart`, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .get(
+        `${process.env.REACT_APP_URL}holland/pie_chart/${
+          idCompany === "null" ? 0 : idCompany
+        }`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then((res) => {
         setPieChart(res.data);
       });
@@ -253,12 +297,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="card border py-2 mx-3 shadow p-2">
+      <div className="card border-0 py-2 mx-3 shadow-lg p-2">
         <div className="card-body d-flex justify-content-center">
           <Pie data={dataPie} className="w-25 h-25" />
         </div>
       </div>
-      <div className="card border py-2 mx-3 shadow my-5">
+      <div className="card border-0 py-2 mx-3 shadow-lg my-5">
         <div className="card-body">
           <p className="text-blue fw-bold">
             Data{" "}
@@ -270,17 +314,28 @@ const Dashboard = () => {
               ? "Dalam Proses"
               : "Responden"}
           </p>
-          <div className="input-group w-70">
-            <span className="input-group-text">
-              <i class="fas fa-search text-secondary"></i>
-            </span>
-            <input
-              className="form-control"
-              placeholder="Search"
-              onChange={(e) => getData(10, 1, e.target.value)}
-            />
+          <div className="d-flex justify-content-between">
+            <div className="input-group w-70">
+              <span className="input-group-text">
+                <i class="fas fa-search text-secondary"></i>
+              </span>
+              <input
+                className="form-control"
+                placeholder="Search"
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  getData(10, 1, e.target.value, selectedCompany);
+                }}
+              />
+            </div>
+            <button
+              className="btn bg-blue text-white p-1 w-10"
+              onClick={() => setShow(true)}
+            >
+              Filter
+            </button>
           </div>
-          <table class="table table-bordered mt-2">
+          <table class="table table-bordered mt-2 rounded rounded-3 overflow-hidden">
             <thead>
               <tr className="bg-blue text-white">
                 <th scope="col">Unit</th>
@@ -289,6 +344,7 @@ const Dashboard = () => {
                 <th scope="col">Fullname</th>
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
+                <th scope="col">Company</th>
                 <th scope="col">Aksi</th>
               </tr>
             </thead>
@@ -307,6 +363,7 @@ const Dashboard = () => {
                       ? "Belum mulai"
                       : "Dalam proses"}
                   </th>
+                  <th className="fw-normal">{item.name_company}</th>
                   <th className="fw-bold text-center">
                     {item.status === "2" ? (
                       <i
@@ -341,6 +398,38 @@ const Dashboard = () => {
         </div>
       </div>
       {report ? <Report id={report} /> : ""}
+
+      {/* for modal */}
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Body>
+          <p className="fs-4 fw-bold">Filter by company</p>
+          <Select
+            isMulti
+            name="company"
+            options={companyList}
+            className="basic-multi-select mb-3"
+            classNamePrefix="select"
+            onChange={handleChange}
+          />
+          <div className="d-flex justify-content-center">
+            <div
+              className="btn bg-blue mx-2 text-white px-4"
+              onClick={() => {
+                getData(10, 1, search, selectedCompany);
+                setShow(false);
+              }}
+            >
+              OK
+            </div>
+            <div
+              className="btn bg-blue mx-2 text-white px-4"
+              onClick={() => setShow(false)}
+            >
+              Cancel
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

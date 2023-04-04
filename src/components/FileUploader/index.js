@@ -21,7 +21,7 @@ const FileUploader = ({ handleFile }) => {
         style={{ display: "none" }}
       />
       <div className="btn bg-blue text-white" onClick={handleClick}>
-        <i class="fas fa-upload me-2"></i>Upload excel
+        <i class="fas fa-upload me-2" style={{ fontSize: 13 }}></i>Upload excel
       </div>
     </div>
   );

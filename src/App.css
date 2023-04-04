@@ -5,7 +5,7 @@ body {
 
 input:focus {
   box-shadow: none !important;
-  border: 1px solid #ced4da !important;
+  border-bottom: 1px solid #ced4da !important;
 }
 
 .img-login {
@@ -103,6 +103,10 @@ input:focus {
 
 .w-15 {
   width: 15% !important;
+}
+
+.w-10 {
+  width: 10% !important;
 }
 
 .w-70 {

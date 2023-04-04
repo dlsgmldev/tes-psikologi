@@ -5,6 +5,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 const LayoutAdmin = ({ children }) => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
+  const role = localStorage.getItem("role");
+  const idCompany = localStorage.getItem("id_company");
 
   return (
     <div className="wrapper">
@@ -17,13 +19,33 @@ const LayoutAdmin = ({ children }) => {
             <p className="ms-2 text-sidebar">Dashboard</p>
           </div>
           <hr className="mx-2 mt-0" />
-          <div
-            className="ms-3 d-flex pointer"
-            onClick={() => navigate("/user-management")}
-          >
-            <i class="fas fa-user-alt fa-fw mt-2"></i>
-            <p className="ms-2 text-sidebar">User Management</p>
-          </div>
+          {role === "1" ? (
+            <div
+              className="ms-3 d-flex pointer"
+              onClick={() => navigate("/client-management")}
+            >
+              <i class="fas fa-user-alt fa-fw mt-2"></i>
+              <p className="ms-2 text-sidebar">Company Management</p>
+            </div>
+          ) : (
+            <>
+              <div
+                className="ms-3 d-flex pointer"
+                onClick={() => navigate(`/user-management/${idCompany}`)}
+              >
+                <i class="fas fa-user-alt fa-fw mt-2"></i>
+                <p className="ms-2 text-sidebar">User Management</p>
+              </div>
+              <hr className="mx-2 mt-0" />
+              <div
+                className="ms-3 d-flex pointer"
+                onClick={() => navigate(`/settings/${idCompany}`)}
+              >
+                <i class="fas fa-cog mt-2"></i>
+                <p className="ms-2 text-sidebar">Settings</p>
+              </div>
+            </>
+          )}
           <hr className="mx-2 mt-0" />
         </div>
         <div className="col ps-0">
