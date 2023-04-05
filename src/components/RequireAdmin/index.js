@@ -4,8 +4,8 @@ import { Navigate } from "react-router-dom";
 const RequireAdmin = ({ children }) => {
   const role = localStorage.getItem("role");
 
-  if (role !== "1") {
-    return <Navigate to="/login" replace />;
+  if (role === "2") {
+    return <Navigate to="/test" replace />;
   }
 
   return children;

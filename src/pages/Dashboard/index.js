@@ -23,12 +23,14 @@ const Dashboard = () => {
   const [belumMulai, setBelumMulai] = useState([""]);
   const [companyList, setCompanyList] = useState([""]);
   const [selectedCompany, setSelectedCompany] = useState([""]);
+  const [selectedOption, setSelectedOption] = useState([""]);
   const [type, setType] = useState("");
   const [report, setReport] = useState("");
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
   const idCompany = localStorage.getItem("id_company");
+  const role = localStorage.getItem("role");
 
   const dataType =
     type === "selesai"
@@ -42,6 +44,7 @@ const Dashboard = () => {
   const handleChange = (selectedOption) => {
     const value = selectedOption.map((item) => item.value);
     setSelectedCompany(value.toString());
+    setSelectedOption(selectedOption);
   };
 
   const getData = (pageSize, pageIndex, searchIndex, filterIndex) => {
@@ -115,7 +118,6 @@ const Dashboard = () => {
         }
       )
       .then((res) => {
-        console.log(res.data.data);
         const company = res.data.data.map((item) => ({
           value: item.id,
           label: item.name,
@@ -123,6 +125,16 @@ const Dashboard = () => {
         setCompanyList(company);
       });
   };
+
+  const getDataReport = (id) => [
+    axios
+      .get(`${process.env.REACT_APP_URL}holland/summary/${id}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        setReport(res.data);
+      }),
+  ];
 
   useEffect(() => {
     getCompany();
@@ -316,9 +328,6 @@ const Dashboard = () => {
           </p>
           <div className="d-flex justify-content-between">
             <div className="input-group w-70">
-              <span className="input-group-text">
-                <i class="fas fa-search text-secondary"></i>
-              </span>
               <input
                 className="form-control"
                 placeholder="Search"
@@ -327,13 +336,20 @@ const Dashboard = () => {
                   getData(10, 1, e.target.value, selectedCompany);
                 }}
               />
+              <span className="input-group-text">
+                <i class="fas fa-search text-secondary"></i>
+              </span>
             </div>
-            <button
-              className="btn bg-blue text-white p-1 w-10"
-              onClick={() => setShow(true)}
-            >
-              Filter
-            </button>
+            {role === "1" ? (
+              <button
+                className="btn bg-blue text-white p-1 w-10"
+                onClick={() => setShow(true)}
+              >
+                Filter
+              </button>
+            ) : (
+              ""
+            )}
           </div>
           <table class="table table-bordered mt-2 rounded rounded-3 overflow-hidden">
             <thead>
@@ -368,7 +384,9 @@ const Dashboard = () => {
                     {item.status === "2" ? (
                       <i
                         class="fas fa-arrow-right bg-warning text-white rounded-circle p-1 pointer"
-                        onClick={() => setReport(item.id)}
+                        onClick={() => {
+                          getDataReport(item.id);
+                        }}
                       ></i>
                     ) : (
                       "-"
@@ -397,13 +415,14 @@ const Dashboard = () => {
           />
         </div>
       </div>
-      {report ? <Report id={report} /> : ""}
+      {report ? <Report data={report} /> : ""}
 
       {/* for modal */}
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Body>
           <p className="fs-4 fw-bold">Filter by company</p>
           <Select
+            defaultValue={selectedOption}
             isMulti
             name="company"
             options={companyList}

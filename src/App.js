@@ -19,6 +19,7 @@ import UpdateClient from "./pages/UpdateClient";
 import Settings from "./pages/Settings";
 import AddPIC from "./pages/AddPIC";
 import UpdatePIC from "./pages/UpdatePIC";
+import RequireAuth from "./components/RequireAuth";
 
 const App = () => (
   <BrowserRouter>
@@ -26,9 +27,11 @@ const App = () => (
       <Route path="/login" element={<Login />} />
       <Route
         element={
-          // <RequireAdmin>
-          <LayoutAdmin />
-          // </RequireAdmin>
+          <RequireAuth>
+            <RequireAdmin>
+              <LayoutAdmin />
+            </RequireAdmin>
+          </RequireAuth>
         }
       >
         <Route path="/" element={<Dashboard />} />
@@ -44,9 +47,11 @@ const App = () => (
       </Route>
       <Route
         element={
-          // <RequireUser>
-          <LayoutUser />
-          // </RequireUser>
+          <RequireAuth>
+            <RequireUser>
+              <LayoutUser />
+            </RequireUser>
+          </RequireAuth>
         }
       >
         <Route path="/opening" element={<Opening />} />

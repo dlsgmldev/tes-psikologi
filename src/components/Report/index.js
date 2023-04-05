@@ -1,27 +1,13 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Radar } from "react-chartjs-2";
 
-const Report = ({ id }) => {
-  const [report, setReport] = useState();
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_URL}holland/summary/${id}`, {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        setReport(res.data);
-      });
-  }, []);
-
+const data = ({ data }) => {
   const dataRadar = {
-    labels: report?.radar_data?.label,
+    labels: data?.radar_data?.label,
     datasets: [
       {
         label: "My First Dataset",
-        data: report?.radar_data?.data,
+        data: data?.radar_data?.data,
         fill: true,
         borderColor: "#ffc107",
       },
@@ -56,11 +42,11 @@ const Report = ({ id }) => {
       <div className="card border rounded shadow">
         <div className="bg-warning rounded">
           <p className="text-center text-uppercase fw-bold mt-2">
-            Report Holland test (RIASEC)
+            data Holland test (RIASEC)
           </p>
         </div>
         <div className="p-2 px-3">
-          <p className="fw-bold">Name: {report?.fullname}</p>
+          <p className="fw-bold">Name: {data?.fullname}</p>
           <p className="fw-bold">Skor Jawaban:</p>
           <div className="d-flex justify-content-center">
             <table class="table table-bordered w-75 text-center">
@@ -76,12 +62,12 @@ const Report = ({ id }) => {
               </thead>
               <tbody>
                 <tr>
-                  <th>{report?.skorjawaban.R}</th>
-                  <th>{report?.skorjawaban.I}</th>
-                  <th>{report?.skorjawaban.A}</th>
-                  <th>{report?.skorjawaban.S}</th>
-                  <th>{report?.skorjawaban.E}</th>
-                  <th>{report?.skorjawaban.C}</th>
+                  <th>{data?.skorjawaban.R}</th>
+                  <th>{data?.skorjawaban.I}</th>
+                  <th>{data?.skorjawaban.A}</th>
+                  <th>{data?.skorjawaban.S}</th>
+                  <th>{data?.skorjawaban.E}</th>
+                  <th>{data?.skorjawaban.C}</th>
                 </tr>
               </tbody>
             </table>
@@ -96,7 +82,7 @@ const Report = ({ id }) => {
               <thead>
                 <tr>
                   <th colspan="2" className="text-center bg-warning">
-                    {report?.firstkey}
+                    {data?.firstkey}
                     <br />
                     Artistic
                   </th>
@@ -105,25 +91,23 @@ const Report = ({ id }) => {
               <tbody>
                 <tr className="text-center">
                   <th scope="row" className="bg-pink">
-                    {report?.secondkey}
+                    {data?.secondkey}
                   </th>
                   <th scope="row" className="bg-yellow">
-                    {report?.thirdkey}
+                    {data?.thirdkey}
                   </th>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="text-center">Konsistensi:</p>
-          <p className="text-center fst-italic">
-            {report?.tingkat_konsistensi}
-          </p>
+          <p className="text-center fst-italic">{data?.tingkat_konsistensi}</p>
           <div className="card mx-3 p-3 bg-light border-0">
-            <p>{report?.deskripsi}</p>
+            <p>{data?.deskripsi}</p>
           </div>
           <p className="fw-bold mt-3">Profesi Terkait:</p>
           <div className="card mx-3 p-1 bg-light border-0">
-            <p className="text-center">{report?.pekerjaan}</p>
+            <p className="text-center">{data?.pekerjaan}</p>
           </div>
         </div>
       </div>
@@ -131,4 +115,4 @@ const Report = ({ id }) => {
   );
 };
 
-export default Report;
+export default data;

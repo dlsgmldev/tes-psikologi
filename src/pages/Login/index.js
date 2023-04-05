@@ -34,6 +34,7 @@ const Login = () => {
         localStorage.setItem("role", res.data.user.role);
         localStorage.setItem("name", res.data.user.fullname);
         localStorage.setItem("id_company", res.data.user.id_company);
+        localStorage.setItem("auth", 1);
         axios
           .get(`${process.env.REACT_APP_URL}holland/get_status`, {
             headers: {
@@ -56,14 +57,14 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div className="card my-5 mx-5 shadow-lg p-4 border-0">
-        <img src={logo} width={150} />
+    <div className="container-login d-flex justify-content-center">
+      <div className="card-login shadow-lg p-4 border-0">
         <div className="row no-gutter">
           <div className="col-md-6">
             <div className="container">
               <div class="col-lg-10 col-xl-7 mx-auto">
-                <p className="fs-1 mt-4 fw-bold">Login</p>
+                <img className="mt-4" src={logo} width={120} />
+                <p className="fs-1 mt-2 fw-bold">Login</p>
                 <p className="">
                   Welcome back! You need to login to participate in this survey.
                 </p>
@@ -101,7 +102,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

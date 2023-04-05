@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 const RequireUser = ({ children }) => {
   const role = localStorage.getItem("role");
 
-  if (role !== 2) {
+  if (role !== "2") {
     return <Navigate to="/" replace />;
   }
 

@@ -41,6 +41,14 @@ const Test = () => {
       });
   }, [token]);
 
+  const numbers = newArray.map((item) => parseInt(item.id_question));
+  const missingItems = (arr, n) => {
+    let missingItems = [];
+    for (let i = 1; i <= n; i++) if (!arr.includes(i)) missingItems.push(i);
+    return missingItems;
+  };
+  const missingNumbers = missingItems(numbers, 108);
+
   const handleSubmit = () => {
     if (newArray.length === 108) {
       axios
@@ -58,15 +66,21 @@ const Test = () => {
           alert("failed");
         });
     } else {
-      const numbers = newArray.map((item) => parseInt(item.id_question));
-      const missingItems = (arr, n) => {
-        let missingItems = [];
-        for (let i = 1; i <= n; i++) if (!arr.includes(i)) missingItems.push(i);
-        return missingItems;
-      };
-      const missingNumbers = missingItems(numbers, 108)
+      setShow(true);
       window.location.href = `/test#${Math.min(...missingNumbers)}`;
     }
+  };
+
+  const handleClose = () => {
+    missingNumbers.map((item) => {
+      document.getElementById("box_" + item).style.backgroundColor = "rgb(246, 47, 47)";
+      document.getElementById("box2_" + item).style.backgroundColor = "rgb(246, 47, 47)";
+    });
+    numbers.map((item) => {
+      document.getElementById("box_" + item).style.backgroundColor = "white";
+      document.getElementById("box2_" + item).style.backgroundColor = "white";
+    });
+    setShow(false);
   };
 
   return (
@@ -101,7 +115,7 @@ const Test = () => {
               <th scope="row" className="fw-normal">
                 {item.question}
               </th>
-              <td className="text-center">
+              <td className="text-center" id={"box_" + item.id}>
                 <input
                   className="form-check-input"
                   type="radio"
@@ -111,7 +125,7 @@ const Test = () => {
                   required
                 />
               </td>
-              <td className="text-center">
+              <td className="text-center" id={"box2_" + item.id}>
                 <input
                   className="form-check-input"
                   type="radio"
@@ -135,11 +149,15 @@ const Test = () => {
 
       {/* modal */}
       <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Failed</Modal.Title>
-        </Modal.Header>
         <Modal.Body>
-          <>Please input all form!</>
+          <button
+            type="button"
+            className="btn-close float-end"
+            aria-label="Close"
+            onClick={handleClose}
+          ></button>
+          <p className="h4 fw-bold text-center text-danger mt-2">Failed!</p>
+          <p className="text-center">Please fill in the required fields.</p>
         </Modal.Body>
       </Modal>
     </div>

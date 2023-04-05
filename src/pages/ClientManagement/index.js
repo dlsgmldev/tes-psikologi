@@ -13,7 +13,6 @@ const ClientManagement = () => {
   const [current, setCurrent] = useState(1);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
-  const [fileExcel, setFileExcel] = useState("");
   const token = localStorage.getItem("token");
 
   const getData = (pageSize, pageIndex, searchIndex) => {
@@ -57,40 +56,20 @@ const ClientManagement = () => {
       });
   };
 
-  const handleUploadExcel = (file) => {
-    const PPData = new FormData();
-    PPData.append("excelFile", file);
-    axios
-      .post(
-        `${process.env.REACT_APP_URL}holland/usermanagement/upload_file_excel`,
-        PPData,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
-      .then((res) => {
-        window.location.reload(false);
-        alert("success");
-      })
-      .catch((err) => {
-        alert("failed");
-      });
-  };
-
   return (
     <div className="card border-0 py-2 mx-3 shadow-lg my-4">
       <div className="card-body">
         <p className="text-blue fw-bold fs-4">Company Management</p>
         <div className="d-flex justify-content-between">
           <div className="input-group w-70">
-            <span className="input-group-text">
-              <i class="fas fa-search text-secondary"></i>
-            </span>
             <input
               className="form-control"
               placeholder="Search"
               onChange={(e) => getData(10, 1, e.target.value)}
             />
+            <span className="input-group-text">
+              <i class="fas fa-search text-secondary"></i>
+            </span>
           </div>
           <div className="d-flex">
             <div
@@ -100,7 +79,6 @@ const ClientManagement = () => {
               <i class="fas fa-plus me-2" style={{ fontSize: 14 }}></i>
               Add Company
             </div>
-            <FileUploader handleFile={handleUploadExcel} />
           </div>
         </div>
         <table class="table table-bordered mt-3 rounded rounded-3 overflow-hidden">

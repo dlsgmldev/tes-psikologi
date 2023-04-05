@@ -125,6 +125,13 @@ input:focus {
   border: none !important;
 }
 
-.dropdown-toggle:focus {
-  border: none !important;
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+  border-color: white !important;
+}
+
+.card-login {
+  border: 5px solid;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 }

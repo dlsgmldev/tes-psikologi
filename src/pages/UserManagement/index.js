@@ -110,14 +110,14 @@ const UserManagement = () => {
             <p className="text-blue fw-bold fs-4">PIC Management</p>
             <div className="d-flex justify-content-between">
               <div className="input-group w-70">
-                <span className="input-group-text">
-                  <i class="fas fa-search text-secondary"></i>
-                </span>
                 <input
                   className="form-control"
                   placeholder="Search"
                   onChange={(e) => getData(10, 1, e.target.value)}
                 />
+                <span className="input-group-text">
+                  <i class="fas fa-search text-secondary"></i>
+                </span>
               </div>
               <div className="d-flex">
                 <div
@@ -213,14 +213,14 @@ const UserManagement = () => {
           <p className="text-blue fw-bold fs-4">User Management</p>
           <div className="d-flex justify-content-between">
             <div className="input-group w-70">
-              <span className="input-group-text">
-                <i class="fas fa-search text-secondary"></i>
-              </span>
               <input
                 className="form-control"
                 placeholder="Search"
                 onChange={(e) => getData(10, 1, e.target.value)}
               />
+              <span className="input-group-text">
+                <i class="fas fa-search text-secondary"></i>
+              </span>
             </div>
             <div className="d-flex">
               <div
@@ -230,7 +230,11 @@ const UserManagement = () => {
                 <i class="fas fa-plus me-2"></i>
                 Add User
               </div>
-              <FileUploader handleFile={handleUploadExcel} />
+              {role === "1" ? (
+                <FileUploader handleFile={handleUploadExcel} />
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <table class="table table-bordered mt-3 rounded rounded-3 overflow-hidden">
