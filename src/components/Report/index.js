@@ -84,7 +84,7 @@ const data = ({ data }) => {
                   <th colspan="2" className="text-center bg-warning">
                     {data?.firstkey}
                     <br />
-                    Artistic
+                    {data?.firstkeystring}
                   </th>
                 </tr>
               </thead>

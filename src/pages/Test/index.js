@@ -73,8 +73,10 @@ const Test = () => {
 
   const handleClose = () => {
     missingNumbers.map((item) => {
-      document.getElementById("box_" + item).style.backgroundColor = "rgb(246, 47, 47)";
-      document.getElementById("box2_" + item).style.backgroundColor = "rgb(246, 47, 47)";
+      document.getElementById("box_" + item).style.backgroundColor =
+        "rgb(246, 47, 47)";
+      document.getElementById("box2_" + item).style.backgroundColor =
+        "rgb(246, 47, 47)";
     });
     numbers.map((item) => {
       document.getElementById("box_" + item).style.backgroundColor = "white";
@@ -91,7 +93,7 @@ const Test = () => {
         pernyataan tersebut, silahkan beri tanda silang "x" di kolom yang
         tersedia. Tidak ada jawaban yang benar atau salah.
       </p>
-      <table className="table table-bordered">
+      <table className="table table-striped table-bordered table-light">
         <thead>
           <tr>
             <th className="text-center" scope="col">
@@ -106,8 +108,8 @@ const Test = () => {
             </th>
           </tr>
         </thead>
-        {questions.map((item) => (
-          <tbody onChange={handleChange}>
+        <tbody onChange={handleChange}>
+          {questions.map((item) => (
             <tr>
               <th scope="row" className="fw-normal text-center">
                 {item.id}
@@ -136,8 +138,8 @@ const Test = () => {
                 />
               </td>
             </tr>
-          </tbody>
-        ))}
+          ))}
+        </tbody>
       </table>
       <button
         className="btn btn-success w-25 float-end mb-3"
