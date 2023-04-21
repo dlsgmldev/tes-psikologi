@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Radar } from "react-chartjs-2";
+import ReactToPrint from "react-to-print";
 
-const data = ({ data }) => {
+const Report = ({ data }) => {
+  const componentRef = useRef();
+
   const dataRadar = {
     labels: data?.radar_data?.label,
     datasets: [
@@ -39,7 +42,11 @@ const data = ({ data }) => {
 
   return (
     <div className="p-3">
-      <div className="card border rounded shadow">
+      <ReactToPrint
+        trigger={() => <button className="btn btn-success mb-2">Export PDF</button>}
+        content={() => componentRef.current}
+      />
+      <div className="card border rounded shadow capture" ref={componentRef}>
         <div className="bg-warning rounded">
           <p className="text-center text-uppercase fw-bold mt-2">
             data Holland test (RIASEC)
@@ -115,4 +122,4 @@ const data = ({ data }) => {
   );
 };
 
-export default data;
+export default Report;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import img from "../../assets/Holland_hexagon_with_text_0.png";
+import img from "../../assets/Cover Login-05.jpg";
 import logo from "../../assets/Logo Assesment Center-06.png";
 
 const Login = () => {
@@ -34,6 +34,8 @@ const Login = () => {
         localStorage.setItem("role", res.data.user.role);
         localStorage.setItem("name", res.data.user.fullname);
         localStorage.setItem("id_company", res.data.user.id_company);
+        localStorage.setItem("name_company", res.data.user.company_name);
+        localStorage.setItem("logo_company", res.data.user.logo_company);
         localStorage.setItem("auth", 1);
         axios
           .get(`${process.env.REACT_APP_URL}holland/get_status`, {
@@ -57,51 +59,49 @@ const Login = () => {
   };
 
   return (
-    <div className="container-login d-flex justify-content-center">
-      <div className="card-login shadow-lg p-4 border-0">
-        <div className="row no-gutter">
-          <div className="col-md-6">
-            <div className="container">
-              <div class="col-lg-10 col-xl-7 mx-auto">
-                <img className="mt-4" src={logo} width={120} />
-                <p className="fs-1 mt-2 fw-bold">Login</p>
-                <p className="">
-                  Welcome back! You need to login to participate in this survey.
-                </p>
-                <div class="form-group w-100">
-                  {/* <label>Username:</label> */}
-                  <input
-                    type="text"
-                    name="username"
-                    className="form-control mt-1 border-bottom border-0"
-                    placeholder="username"
-                    onChange={handleChange}
-                  />
-                </div>
-                <div class="form-group w-100 mt-2">
-                  {/* <label>Password:</label> */}
-                  <input
-                    type="password"
-                    name="password"
-                    className="form-control mt-1 border-bottom border-0"
-                    placeholder="password"
-                    onChange={handleChange}
-                  />
-                </div>
-                <button
-                  className="btn btn-success p-2 w-100 my-3"
-                  onClick={handleSubmit}
-                >
-                  Login
-                </button>
+    <div className="container-login">
+        <div className="row container-login g-0">
+          <div className="col card border-0">
+            <div className="col-lg-10 my-auto mx-auto">
+              <img className="d-flex mx-auto" src={logo} width={250} />
+              <p className="text-center fs-3 fw-bold mt-1">Holland Test</p>
+              <div class="form-group w-100 mt-4">
+                {/* <label>Username:</label> */}
+                <input
+                  type="text"
+                  name="username"
+                  className="form-control mt-1 border-bottom border-0"
+                  placeholder="username"
+                  onChange={handleChange}
+                />
               </div>
+              <div class="form-group w-100 mt-2">
+                {/* <label>Password:</label> */}
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control mt-1 border-bottom border-0"
+                  placeholder="password"
+                  onChange={handleChange}
+                />
+              </div>
+              <button
+                className="btn btn-success p-2 w-100 mt-3"
+                onClick={handleSubmit}
+              >
+                Login
+              </button>
+              <p className="text-center mt-3">
+                Copyright © Digital Learning Solutions 2023. All rights
+                reserved. v 1.0..0
+              </p>
             </div>
           </div>
-          <div className="col-md-6 d-none d-md-flex">
-            <img alt="" src={img} className="img-login" />
+
+          <div className="col d-none d-md-flex">
+            <img alt="" src={img} className="w-100" />
           </div>
         </div>
-      </div>
     </div>
   );
 };

@@ -6,12 +6,19 @@ import logo from "../../assets/Logo Assesment Center-06.png";
 const LayoutUser = ({ children }) => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
+  const logoCompany = localStorage.getItem("logo_company");
 
   return (
     <div>
-      <div className="header d-flex justify-content-between p-3 border shadow rounded-3">
+      <div className="header d-flex p-3 border shadow rounded-3">
         <img alt="" src={logo} width={150}></img>
-        <div className="d-flex justify-content-end mt-2">
+        <img
+          className="d-flex my-auto"
+          src={logoCompany}
+          width="auto"
+          height={40}
+        ></img>
+        <div className="d-flex justify-content-end mt-2 ms-auto">
           <Dropdown>
             <Dropdown.Toggle className="d-flex" variant="none">
               <i class="far fa-user-circle fs-4"></i>

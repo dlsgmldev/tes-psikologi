@@ -11,25 +11,38 @@ const Test = () => {
   const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
 
+  const newArray = [];
+
   const handleChange = (e) => {
-    setId({ ...id, [e.target.id]: e.target.id });
-    setAnswer({ ...answer, [e.target.name]: e.target.value });
+    const index = newArray.findIndex((p) => p.id_question === e.target.id);
+    if (index > -1) {
+      newArray[index] = { id_question: e.target.id, answer: e.target.value };
+    } else {
+      newArray.push({ id_question: e.target.id, answer: e.target.value });
+    }
   };
 
-  const idQuestion = Object.values(id);
-  const answerQuestion = Object.values(answer);
+  const handleClick = (e) => {
+    const tag = e.currentTarget.dataset.tag;
+    document.querySelector(`input[id='${tag}'][value='1']`).checked = true;
+    const index = newArray.findIndex((p) => p.id_question === tag);
+    if (index > -1) {
+      newArray[index] = { id_question: tag, answer: "1" };
+    } else {
+      newArray.push({ id_question: tag, answer: "1" });
+    }
+  };
 
-  const arrayId = idQuestion.map((item) => {
-    return { id_question: item };
-  });
-  const arrayQuestion = answerQuestion.map((item) => {
-    return { answer: item };
-  });
-
-  var newArray = arrayId.map((obj, index) => ({
-    ...obj,
-    ...arrayQuestion[index],
-  }));
+  const handleClick2 = (e) => {
+    const tag = e.currentTarget.dataset.tag;
+    document.querySelector(`input[id='${tag}'][value='0']`).checked = true;
+    const index = newArray.findIndex((p) => p.id_question === tag);
+    if (index > -1) {
+      newArray[index] = { id_question: tag, answer: "0" };
+    } else {
+      newArray.push({ id_question: tag, answer: "0" });
+    }
+  };
 
   useEffect(() => {
     axios
@@ -50,25 +63,26 @@ const Test = () => {
   const missingNumbers = missingItems(numbers, 108);
 
   const handleSubmit = () => {
-    if (newArray.length === 108) {
-      axios
-        .post(
-          `${process.env.REACT_APP_URL}holland/save_answer`,
-          { data: newArray },
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        )
-        .then((res) => {
-          navigate("/thankyou");
-        })
-        .catch((err) => {
-          alert("failed");
-        });
-    } else {
-      setShow(true);
-      window.location.href = `/test#${Math.min(...missingNumbers)}`;
-    }
+    console.log(newArray);
+    // if (newArray.length === 108) {
+    //   axios
+    //     .post(
+    //       `${process.env.REACT_APP_URL}holland/save_answer`,
+    //       { data: newArray },
+    //       {
+    //         headers: { Authorization: "Bearer " + token },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       navigate("/thankyou");
+    //     })
+    //     .catch((err) => {
+    //       alert("failed");
+    //     });
+    // } else {
+    //   setShow(true);
+    //   window.location.href = `/test#${Math.min(...missingNumbers)}`;
+    // }
   };
 
   const handleClose = () => {
@@ -87,7 +101,7 @@ const Test = () => {
 
   return (
     <div className="container p-4 mt-3">
-      <p className="fs-1 text-center">Holland Test</p>
+      <p className="fs-3 fw-bold text-center">Holland Test</p>
       <p className="">
         Bacalah setiap pertanyaan di bawah ini. Jika Anda setuju dengan
         pernyataan tersebut, silahkan beri tanda silang "x" di kolom yang
@@ -117,7 +131,12 @@ const Test = () => {
               <th scope="row" className="fw-normal">
                 {item.question}
               </th>
-              <td className="text-center" id={"box_" + item.id}>
+              <td
+                data-tag={item.id}
+                className="text-center"
+                id={"box_" + item.id}
+                onClick={handleClick}
+              >
                 <input
                   className="form-check-input"
                   type="radio"
@@ -127,7 +146,12 @@ const Test = () => {
                   required
                 />
               </td>
-              <td className="text-center" id={"box2_" + item.id}>
+              <td
+                data-tag={item.id}
+                className="text-center"
+                id={"box2_" + item.id}
+                onClick={handleClick2}
+              >
                 <input
                   className="form-check-input"
                   type="radio"

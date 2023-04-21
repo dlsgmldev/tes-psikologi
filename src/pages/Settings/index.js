@@ -53,7 +53,7 @@ const Settings = () => {
               name="opening"
               placeholder="opening"
               className="w-100 mt-1 rounded-3 p-2 border form-control"
-              defaultValue={dataSettings.opening}
+              defaultValue={dataSettings?.opening}
               onChange={handleChange}
             />
           </div>
@@ -64,7 +64,7 @@ const Settings = () => {
               name="closing"
               placeholder="ending"
               className="w-100 mt-1 rounded-3 p-2 border form-control"
-              defaultValue={dataSettings.closing}
+              defaultValue={dataSettings?.closing}
               onChange={handleChange}
             />
           </div>
