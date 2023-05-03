@@ -6,43 +6,9 @@ import { useNavigate } from "react-router-dom";
 const Test = () => {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([""]);
-  const [id, setId] = useState("");
-  const [answer, setAnswer] = useState("");
   const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
-
-  const newArray = [];
-
-  const handleChange = (e) => {
-    const index = newArray.findIndex((p) => p.id_question === e.target.id);
-    if (index > -1) {
-      newArray[index] = { id_question: e.target.id, answer: e.target.value };
-    } else {
-      newArray.push({ id_question: e.target.id, answer: e.target.value });
-    }
-  };
-
-  const handleClick = (e) => {
-    const tag = e.currentTarget.dataset.tag;
-    document.querySelector(`input[id='${tag}'][value='1']`).checked = true;
-    const index = newArray.findIndex((p) => p.id_question === tag);
-    if (index > -1) {
-      newArray[index] = { id_question: tag, answer: "1" };
-    } else {
-      newArray.push({ id_question: tag, answer: "1" });
-    }
-  };
-
-  const handleClick2 = (e) => {
-    const tag = e.currentTarget.dataset.tag;
-    document.querySelector(`input[id='${tag}'][value='0']`).checked = true;
-    const index = newArray.findIndex((p) => p.id_question === tag);
-    if (index > -1) {
-      newArray[index] = { id_question: tag, answer: "0" };
-    } else {
-      newArray.push({ id_question: tag, answer: "0" });
-    }
-  };
+  const answerArray = JSON.parse(localStorage.getItem("new_array"));
 
   useEffect(() => {
     axios
@@ -54,36 +20,72 @@ const Test = () => {
       });
   }, [token]);
 
-  const numbers = newArray.map((item) => parseInt(item.id_question));
+  const newArray = [];
+
+  const handleChange = (e) => {
+    const index = newArray.findIndex((p) => p.id_question === e.target.id);
+    if (index > -1) {
+      newArray[index] = { id_question: e.target.id, answer: e.target.value };
+    } else {
+      newArray.push({ id_question: e.target.id, answer: e.target.value });
+    }
+    localStorage.setItem("new_array", JSON.stringify(newArray));
+  };
+
+  const handleClick = (e) => {
+    const tag = e.currentTarget.dataset.tag;
+    document.querySelector(`input[id='${tag}'][value='1']`).checked = true;
+    const index = newArray.findIndex((p) => p.id_question === tag);
+    if (index > -1) {
+      newArray[index] = { id_question: tag, answer: "1" };
+    } else {
+      newArray.push({ id_question: tag, answer: "1" });
+    }
+    localStorage.setItem("new_array", JSON.stringify(newArray));
+  };
+
+  const handleClick2 = (e) => {
+    const tag = e.currentTarget.dataset.tag;
+    document.querySelector(`input[id='${tag}'][value='0']`).checked = true;
+    const index = newArray.findIndex((p) => p.id_question === tag);
+    if (index > -1) {
+      newArray[index] = { id_question: tag, answer: "0" };
+    } else {
+      newArray.push({ id_question: tag, answer: "0" });
+    }
+    localStorage.setItem("new_array", JSON.stringify(newArray));
+  };
+
+  const handleSubmit = () => {
+    console.log(answerArray);
+    if (answerArray.length === 108) {
+      axios
+        .post(
+          `${process.env.REACT_APP_URL}holland/save_answer`,
+          { data: answerArray },
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        )
+        .then((res) => {
+          navigate("/thankyou");
+        })
+        .catch((err) => {
+          alert("failed");
+        });
+    } else {
+      setShow(true);
+      window.location.href = `/test#${Math.min(...missingNumbers)}`;
+    }
+  };
+
+  const numbers = answerArray?.map((item) => parseInt(item.id_question));
   const missingItems = (arr, n) => {
     let missingItems = [];
-    for (let i = 1; i <= n; i++) if (!arr.includes(i)) missingItems.push(i);
+    for (let i = 1; i <= n; i++) if (!arr?.includes(i)) missingItems.push(i);
     return missingItems;
   };
   const missingNumbers = missingItems(numbers, 108);
-
-  const handleSubmit = () => {
-    console.log(newArray);
-    // if (newArray.length === 108) {
-    //   axios
-    //     .post(
-    //       `${process.env.REACT_APP_URL}holland/save_answer`,
-    //       { data: newArray },
-    //       {
-    //         headers: { Authorization: "Bearer " + token },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       navigate("/thankyou");
-    //     })
-    //     .catch((err) => {
-    //       alert("failed");
-    //     });
-    // } else {
-    //   setShow(true);
-    //   window.location.href = `/test#${Math.min(...missingNumbers)}`;
-    // }
-  };
 
   const handleClose = () => {
     missingNumbers.map((item) => {
