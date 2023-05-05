@@ -18,6 +18,7 @@ const Test = () => {
       .then((res) => {
         setQuestions(res.data.data);
       });
+    localStorage.setItem("new_array", JSON.stringify([]));
   }, [token]);
 
   const newArray = [];
@@ -29,7 +30,6 @@ const Test = () => {
     } else {
       newArray.push({ id_question: e.target.id, answer: e.target.value });
     }
-    localStorage.setItem("new_array", JSON.stringify(newArray));
   };
 
   const handleClick = (e) => {
@@ -41,7 +41,6 @@ const Test = () => {
     } else {
       newArray.push({ id_question: tag, answer: "1" });
     }
-    localStorage.setItem("new_array", JSON.stringify(newArray));
   };
 
   const handleClick2 = (e) => {
@@ -53,11 +52,25 @@ const Test = () => {
     } else {
       newArray.push({ id_question: tag, answer: "0" });
     }
-    localStorage.setItem("new_array", JSON.stringify(newArray));
+  };
+
+  const setArray = () => {
+    // gabungin answerArray(jawaban lama) sama newArray(jawaban baru)
+    const dataArray = newArray.concat(answerArray);
+    const filteredArray = dataArray.filter(
+      (obj, index) =>
+        dataArray.findIndex((item) => item.id_question === obj.id_question) === index
+    );
+    if (answerArray !== null) {
+      localStorage.setItem("new_array", JSON.stringify(filteredArray));
+    } else {
+      localStorage.setItem("new_array", JSON.stringify(newArray));
+    }
   };
 
   const handleSubmit = () => {
-    console.log(answerArray);
+    setArray();
+    const answerArray = JSON.parse(localStorage.getItem("new_array"));
     if (answerArray.length === 108) {
       axios
         .post(
@@ -69,6 +82,7 @@ const Test = () => {
         )
         .then((res) => {
           navigate("/thankyou");
+          localStorage.removeItem("new_array");
         })
         .catch((err) => {
           alert("failed");
@@ -95,8 +109,17 @@ const Test = () => {
         "rgb(246, 47, 47)";
     });
     numbers.map((item) => {
-      document.getElementById("box_" + item).style.backgroundColor = "white";
-      document.getElementById("box2_" + item).style.backgroundColor = "white";
+      if (item % 2 === 0) {
+        document.getElementById("box_" + item).style.backgroundColor =
+          "var(--bs-table-bg)";
+        document.getElementById("box2_" + item).style.backgroundColor =
+          "var(--bs-table-bg)";
+      } else {
+        document.getElementById("box_" + item).style.backgroundColor =
+          "var(--bs-table-striped-bg)";
+        document.getElementById("box2_" + item).style.backgroundColor =
+          "var(--bs-table-striped-bg)";
+      }
     });
     setShow(false);
   };
