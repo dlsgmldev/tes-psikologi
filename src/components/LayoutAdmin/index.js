@@ -16,8 +16,8 @@ const LayoutAdmin = ({ children }) => {
       <div className="row h-100">
         <div className="col-2 w-20 bg-blue text-white p-3">
           <p className="fs-4 text-center fw-bold">Holland Test</p>
-        {/* <img className="d-flex mx-auto" src={logo} width={150} /> */}
-          <hr className="mx-2 mb-2 mt-4"/>
+          {/* <img className="d-flex mx-auto" src={logo} width={150} /> */}
+          <hr className="mx-2 mb-2 mt-4" />
           <div className="ms-3 d-flex pointer" onClick={() => navigate("/")}>
             <i class="fas fa-info-circle fa-fw mt-2"></i>
             <p className="ms-2 text-sidebar">Dashboard</p>
@@ -55,7 +55,7 @@ const LayoutAdmin = ({ children }) => {
         <div className="col ps-0">
           <div className="shadow-sm p-3">
             <div className="d-flex justify-content-between">
-              <img className="" src={logoCompany} width="auto" height={35}/>
+              <img className="" src={logoCompany} width="auto" height={35} />
               {/* <p className="fs-4">{companyName}</p> */}
               <Dropdown>
                 <Dropdown.Toggle className="d-flex" variant="none">
@@ -79,8 +79,8 @@ const LayoutAdmin = ({ children }) => {
           {children} <Outlet />
           <div className="footer mt-2">
             <p className="text-center">
-              Copyright © Digital Learning Solutions 2023. All rights reserved.
-              v 1.0..0
+              Copyright © Assessment Center Solutions 2023. All rights reserved.
+              v 1.0.0
             </p>
           </div>
         </div>

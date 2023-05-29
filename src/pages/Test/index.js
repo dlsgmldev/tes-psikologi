@@ -207,8 +207,8 @@ const Test = () => {
             aria-label="Close"
             onClick={handleClose}
           ></button>
-          <p className="h4 fw-bold text-center text-danger mt-2">Failed!</p>
-          <p className="text-center">Please fill in the required fields.</p>
+          <p className="h4 fw-bold text-center text-danger mt-2">Gagal!</p>
+          <p className="text-center">Harap isi yang kosong.</p>
         </Modal.Body>
       </Modal>
     </div>

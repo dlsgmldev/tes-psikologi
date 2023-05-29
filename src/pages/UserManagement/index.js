@@ -133,7 +133,7 @@ const UserManagement = () => {
               <thead>
                 <tr className="bg-blue text-white">
                   <th className="fw-normal">No.</th>
-                  <th className="fw-normal">Fullname</th>
+                  <th className="fw-normal">Name</th>
                   <th className="fw-normal">Username</th>
                   <th className="fw-normal">Email</th>
                   <th className="fw-normal">Telp</th>
@@ -241,7 +241,7 @@ const UserManagement = () => {
             <thead>
               <tr className="bg-blue text-white">
                 <th className="fw-normal">No.</th>
-                <th className="fw-normal">Fullname</th>
+                <th className="fw-normal">Name</th>
                 <th className="fw-normal">Username</th>
                 <th className="fw-normal">Email</th>
                 <th className="fw-normal">Telp</th>

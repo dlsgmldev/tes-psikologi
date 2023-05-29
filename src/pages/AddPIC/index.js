@@ -81,11 +81,11 @@ const AddPIC = () => {
               />
             </div>
             <div className="my-3">
-              <label>Fullname:</label>
+              <label>Name:</label>
               <input
                 type="text"
                 name="fullname"
-                placeholder="fullname"
+                placeholder="name"
                 className="w-100 mt-1 rounded-3 p-2 border form-control"
                 value={form.fullname}
                 onChange={handleChange}

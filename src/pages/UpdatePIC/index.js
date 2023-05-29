@@ -104,11 +104,11 @@ const UpdatePIC = () => {
               />
             </div>
             <div className="my-3">
-              <label>Fullname:</label>
+              <label>Name:</label>
               <input
                 type="text"
                 name="fullname"
-                placeholder="fullname"
+                placeholder="name"
                 className="w-100 mt-1 rounded-3 p-2 border form-control"
                 defaultValue={dataUser.fullname}
                 onChange={handleChange}
