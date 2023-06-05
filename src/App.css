@@ -114,6 +114,10 @@ input:focus {
   background-color: rgb(255, 226, 174) !important;
 }
 
+.bg-grey {
+  background-color: #C0C0C0;
+}
+
 .dropdown-toggle::after {
   border: none !important;
 }

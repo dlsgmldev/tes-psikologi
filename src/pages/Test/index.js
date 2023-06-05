@@ -59,7 +59,8 @@ const Test = () => {
     const dataArray = newArray.concat(answerArray);
     const filteredArray = dataArray.filter(
       (obj, index) =>
-        dataArray.findIndex((item) => item.id_question === obj.id_question) === index
+        dataArray.findIndex((item) => item.id_question === obj.id_question) ===
+        index
     );
     if (answerArray !== null) {
       localStorage.setItem("new_array", JSON.stringify(filteredArray));
@@ -68,9 +69,26 @@ const Test = () => {
     }
   };
 
+  const numbers = answerArray?.map((item) => parseInt(item.id_question));
+  const missingItems = (arr, n) => {
+    let missingItems = [];
+    for (let i = 1; i <= n; i++) if (!arr?.includes(i)) missingItems.push(i);
+    return missingItems;
+  };
+  const missingNumbers = missingItems(numbers, 108);
+
   const handleSubmit = () => {
     setArray();
+
     const answerArray = JSON.parse(localStorage.getItem("new_array"));
+    const numbers = answerArray?.map((item) => parseInt(item.id_question));
+    const missingItems = (arr, n) => {
+      let missingItems = [];
+      for (let i = 1; i <= n; i++) if (!arr?.includes(i)) missingItems.push(i);
+      return missingItems;
+    };
+    const missingNumbers = missingItems(numbers, 108);
+
     if (answerArray.length === 108) {
       axios
         .post(
@@ -92,14 +110,6 @@ const Test = () => {
       window.location.href = `/test#${Math.min(...missingNumbers)}`;
     }
   };
-
-  const numbers = answerArray?.map((item) => parseInt(item.id_question));
-  const missingItems = (arr, n) => {
-    let missingItems = [];
-    for (let i = 1; i <= n; i++) if (!arr?.includes(i)) missingItems.push(i);
-    return missingItems;
-  };
-  const missingNumbers = missingItems(numbers, 108);
 
   const handleClose = () => {
     missingNumbers.map((item) => {
@@ -127,27 +137,25 @@ const Test = () => {
   return (
     <div className="container p-4 mt-3">
       <p className="fs-3 fw-bold text-center">Holland Test</p>
-      <p className="">
+      <p>
         Bacalah setiap pertanyaan di bawah ini. Jika Anda setuju dengan
-        pernyataan tersebut, silahkan beri tanda silang "x" di kolom yang
-        tersedia. Tidak ada jawaban yang benar atau salah.
+        pernyataan tersebut, silahkan isi di kolom yang tersedia. Tidak ada
+        jawaban yang benar atau salah.
       </p>
-      <table className="table table-striped table-bordered table-light">
+      <table className="table table-striped table-bordered">
         <thead>
-          <tr>
-            <th className="text-center" scope="col">
-              No.
-            </th>
+          <tr className="text-center bg-grey">
+            <th scope="col">No.</th>
             <th scope="col">Pernyataan</th>
-            <th className="text-center" scope="col">
+            <th scope="col" width="8%">
               Ya
             </th>
-            <th className="text-center" scope="col">
+            <th scope="col" width="8%">
               Tidak
             </th>
           </tr>
         </thead>
-        <tbody onChange={handleChange}>
+        <tbody onChange={handleChange} className="table-light">
           {questions.map((item) => (
             <tr>
               <th scope="row" className="fw-normal text-center">
@@ -199,7 +207,7 @@ const Test = () => {
       </button>
 
       {/* modal */}
-      <Modal show={show} onHide={() => setShow(false)}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Body>
           <button
             type="button"
