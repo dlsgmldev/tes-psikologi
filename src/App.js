@@ -3,23 +3,26 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Opening from "./pages/Opening";
-import Test from "./pages/Test";
-import Thankyou from "./pages/Thankyou";
 import Dashboard from "./pages/Dashboard";
 import UserManagement from "./pages/UserManagement";
 import LayoutUser from "./components/LayoutUser";
 import LayoutAdmin from "./components/LayoutAdmin";
 import RequireAdmin from "./components/RequireAdmin";
 import RequireUser from "./components/RequireUser";
-import AddUser from "./pages/AddUser";
-import UpdateUser from "./pages/UpdateUser";
+import AddUser from "./pages/AddUser/add";
+import UpdateUser from "./pages/AddUser/update";
 import ClientManagement from "./pages/ClientManagement";
-import AddClient from "./pages/AddClient";
-import UpdateClient from "./pages/UpdateClient";
+import AddClient from "./pages/AddClient/add";
+import UpdateClient from "./pages/AddClient/update";
 import Settings from "./pages/Settings";
-import AddPIC from "./pages/AddPIC";
-import UpdatePIC from "./pages/UpdatePIC";
+import AddPIC from "./pages/AddPIC/add";
+import UpdatePIC from "./pages/AddPIC/update";
 import RequireAuth from "./components/RequireAuth";
+import TestHolland from "./pages/Test/testHolland";
+import Home from "./pages/Home";
+import TestPDR from "./pages/Test/testPDR";
+import TestPauli from "./pages/Test/testPauli";
+import Closing from "./pages/Closing";
 
 const App = () => (
   <BrowserRouter>
@@ -54,9 +57,12 @@ const App = () => (
           </RequireAuth>
         }
       >
-        <Route path="/opening" element={<Opening />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/thankyou" element={<Thankyou />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/opening/:id" element={<Opening />} />
+        <Route path="/holland-test/:id" element={<TestHolland />} />
+        <Route path="/pdr-test/:id" element={<TestPDR />} />
+        <Route path="/pauli-test/:id" element={<TestPauli />} />
+        <Route path="/closing/:id" element={<Closing />} />
       </Route>
     </Routes>
   </BrowserRouter>

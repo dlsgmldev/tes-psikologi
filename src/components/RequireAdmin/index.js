@@ -5,7 +5,7 @@ const RequireAdmin = ({ children }) => {
   const role = localStorage.getItem("role");
 
   if (role === "2") {
-    return <Navigate to="/test" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return children;

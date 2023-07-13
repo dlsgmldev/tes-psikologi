@@ -18,7 +18,7 @@ const ClientManagement = () => {
   const getData = (pageSize, pageIndex, searchIndex) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/company/list/${pageSize ?? 10}/${
+        `${process.env.REACT_APP_URL}ac/company/list/${pageSize ?? 10}/${
           pageIndex ?? 1
         }`,
         {
@@ -40,7 +40,7 @@ const ClientManagement = () => {
   const handleDelete = () => {
     axios
       .post(
-        `${process.env.REACT_APP_URL}holland/company/delete/${id}`,
+        `${process.env.REACT_APP_URL}ac/company/delete/${id}`,
         { id_value: id },
         {
           headers: {

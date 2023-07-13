@@ -24,7 +24,7 @@ const UserManagement = () => {
   const getData = (pageSize, pageIndex, searchIndex) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/usermanagement/list/${id}/${
+        `${process.env.REACT_APP_URL}ac/usermanagement/list/${id}/${
           pageSize ?? 10
         }/${pageIndex ?? 1}`,
         {
@@ -42,7 +42,7 @@ const UserManagement = () => {
   const getDataPIC = (pageSize, pageIndex, searchIndex) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/usermanagement/list_pic/${id}/${
+        `${process.env.REACT_APP_URL}ac/usermanagement/list_pic/${id}/${
           pageSize ?? 10
         }/${pageIndex ?? 1}`,
         {
@@ -65,7 +65,7 @@ const UserManagement = () => {
   const handleDelete = () => {
     axios
       .post(
-        `${process.env.REACT_APP_URL}holland/usermanagement/delete/${idUser}`,
+        `${process.env.REACT_APP_URL}ac/usermanagement/delete/${idUser}`,
         { id_value: idUser },
         {
           headers: {
@@ -87,7 +87,7 @@ const UserManagement = () => {
     PPData.append("id_company", id);
     axios
       .post(
-        `${process.env.REACT_APP_URL}holland/usermanagement/upload_file_excel`,
+        `${process.env.REACT_APP_URL}ac/usermanagement/upload_file_excel`,
         PPData,
         {
           headers: { Authorization: "Bearer " + token },

@@ -4,9 +4,9 @@ import "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import { PaginationControl } from "react-bootstrap-pagination-control";
-import Report from "../../components/Report";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
+import ReportHolland from "../../components/Report/reportHolland";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -46,11 +46,12 @@ const Dashboard = () => {
     setSelectedCompany(value.toString());
     setSelectedOption(selectedOption);
   };
+  console.log(selectedOption);
 
   const getData = (pageSize, pageIndex, searchIndex, filterIndex) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/data_total_responden/${
+        `${process.env.REACT_APP_URL}ac/data_total_responden/${
           idCompany === "null" ? 0 : idCompany
         }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
@@ -64,7 +65,7 @@ const Dashboard = () => {
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/data_total_selesai/${
+        `${process.env.REACT_APP_URL}ac/data_total_selesai/${
           idCompany === "null" ? 0 : idCompany
         }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
@@ -78,7 +79,7 @@ const Dashboard = () => {
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/data_total_dalam_proses/${
+        `${process.env.REACT_APP_URL}ac/data_total_dalam_proses/${
           idCompany === "null" ? 0 : idCompany
         }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
@@ -92,7 +93,7 @@ const Dashboard = () => {
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/data_total_belum_mulai/${
+        `${process.env.REACT_APP_URL}ac/data_total_belum_mulai/${
           idCompany === "null" ? 0 : idCompany
         }/${pageSize ?? 10}/${pageIndex ?? 1}`,
         {
@@ -109,7 +110,7 @@ const Dashboard = () => {
   const getCompany = (pageSize, pageIndex, searchIndex) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/company/list/${pageSize ?? 5}/${
+        `${process.env.REACT_APP_URL}ac/company/list/${pageSize ?? 5}/${
           pageIndex ?? 1
         }`,
         {
@@ -128,7 +129,7 @@ const Dashboard = () => {
 
   const getDataReport = (id) => [
     axios
-      .get(`${process.env.REACT_APP_URL}holland/summary/${id}`, {
+      .get(`${process.env.REACT_APP_URL}ac/holland_summary/${id}`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -141,7 +142,7 @@ const Dashboard = () => {
     getData();
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/box_info/${
+        `${process.env.REACT_APP_URL}ac/box_info/${
           idCompany === "null" ? 0 : idCompany
         }`,
         {
@@ -153,7 +154,7 @@ const Dashboard = () => {
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}holland/pie_chart/${
+        `${process.env.REACT_APP_URL}ac/pie_chart/${
           idCompany === "null" ? 0 : idCompany
         }`,
         {
@@ -359,6 +360,7 @@ const Dashboard = () => {
                 <th scope="col">Nip</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
+                <th scope="col">Test</th>
                 <th scope="col">Status</th>
                 <th scope="col">Company</th>
                 <th scope="col">Aksi</th>
@@ -372,6 +374,7 @@ const Dashboard = () => {
                   <th className="fw-normal">{item.nip}</th>
                   <th className="fw-normal">{item.fullname}</th>
                   <th className="fw-normal">{item.email}</th>
+                  <th className="fw-normal">{item.name_test}</th>
                   <th className="fw-normal">
                     {item.status === "2"
                       ? "Selesai"
@@ -415,7 +418,7 @@ const Dashboard = () => {
           />
         </div>
       </div>
-      {report ? <Report data={report} /> : ""}
+      {report ? <ReportHolland data={report} /> : ""}
 
       {/* for modal */}
       <Modal show={show} onHide={() => setShow(false)}>

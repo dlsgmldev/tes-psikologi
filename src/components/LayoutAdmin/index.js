@@ -14,8 +14,8 @@ const LayoutAdmin = ({ children }) => {
   return (
     <div className="wrapper">
       <div className="row h-100">
-        <div className="col-2 w-20 bg-blue text-white p-3">
-          <p className="fs-4 text-center fw-bold">Holland Test</p>
+        <div className="card border-0 border-radius-0 col-2 w-20 text-white" style={{backgroundColor:"#6C9BCF"}}>
+          <p className="fs-4 text-center fw-bold mt-3">Holland Test</p>
           {/* <img className="d-flex mx-auto" src={logo} width={150} /> */}
           <hr className="mx-2 mb-2 mt-4" />
           <div className="ms-3 d-flex pointer" onClick={() => navigate("/")}>
@@ -51,6 +51,11 @@ const LayoutAdmin = ({ children }) => {
             </>
           )}
           <hr className="mx-2 mt-0" />
+        <span
+          className="mt-auto text-xs text-center"
+        >
+          v 1.0.0
+        </span>
         </div>
         <div className="col ps-0">
           <div className="shadow-sm p-3">
@@ -80,7 +85,6 @@ const LayoutAdmin = ({ children }) => {
           <div className="footer mt-2">
             <p className="text-center">
               Copyright © Assessment Center Solutions 2023. All rights reserved.
-              v 1.0.0
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import img from "../../assets/Cover Login-05.jpg";
+import img from "../../assets/Asset 29.png";
 import logo from "../../assets/Logo Assesment Center-06.png";
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
 
   const handleSubmit = () => {
     axios
-      .post(`${process.env.REACT_APP_URL}holland/login`, form, {
+      .post(`${process.env.REACT_APP_URL}ac/login`, form, {
         headers: {
           Authorization:
             "Basic " +
@@ -38,25 +38,25 @@ const Login = () => {
         localStorage.setItem("logo_company", res.data.user.logo_company);
         localStorage.setItem("auth", 1);
         axios
-          .get(`${process.env.REACT_APP_URL}holland/get_status`, {
+          .get(`${process.env.REACT_APP_URL}ac/get_test`, {
             headers: {
               Authorization: "Bearer " + res.data.user.token.access_token,
             },
           })
           .then((res) => {
-            res.data?.status === "0"
-              ? navigate("/opening")
-              : res.data?.status === "1"
-              ? navigate("/test")
-              : res.data?.status === "2"
-              ? navigate("/thankyou")
-              : navigate("/");
+            navigate("/home")
           });
       })
       .catch((err) => {
         alert("failed");
       });
   };
+
+  const handleKeypress = e => {
+  if (e.keyCode === 13) {
+    handleSubmit();
+  }
+};
 
   return (
     <section className="vh-100">
@@ -65,30 +65,31 @@ const Login = () => {
           <div className="col card border-0">
             <div className="col-lg-10 my-auto mx-auto">
               <img className="d-flex mx-auto" src={logo} width={250} />
-              <p className="text-center fs-3 fw-bold mt-1">Holland Test</p>
+              <p className="text-center fs-3 fw-bold mt-1">Assessment Test</p>
               <div class="form-group w-100 mt-4">
-                {/* <label>Username:</label> */}
                 <input
                   type="text"
                   name="username"
                   className="form-control mt-1 border-bottom border-0"
                   placeholder="username"
+                  onKeyUp={handleKeypress}
                   onChange={handleChange}
                 />
               </div>
               <div class="form-group w-100 mt-2">
-                {/* <label>Password:</label> */}
                 <input
                   type="password"
                   name="password"
                   className="form-control mt-1 border-bottom border-0"
                   placeholder="password"
+                  onKeyUp={handleKeypress}
                   onChange={handleChange}
                 />
               </div>
               <button
                 className="btn btn-success p-2 w-100 mt-3"
                 onClick={handleSubmit}
+                type="submit"
               >
                 Login
               </button>
