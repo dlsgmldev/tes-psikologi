@@ -42,7 +42,7 @@ const ReportHolland = ({ data }) => {
       doc.save("report-holland.pdf");
     });
     document.getElementById("pdfHidden").style.display = "none";
-    // document.getElementById("pdfHidden2").style.display = "none";
+    document.getElementById("pdfHidden2").style.display = "none";
   };
 
   const dataRadar = {
@@ -119,7 +119,7 @@ const ReportHolland = ({ data }) => {
             </div>
           </Row>
         </div>
-        <div id="pdfHidden2" className="a4">
+        <div id="pdfHidden2" style={{ display: "none" }} className="a4">
           <Row>
             <div className="col-1">
               <img src={bgLeft} height="100%" width="130%" />
@@ -347,12 +347,6 @@ const ReportHolland = ({ data }) => {
                   <p className="text-center mb-0">{data?.thirdkey.value}</p>
                 </div>
               </div>
-              {/* <p className="text-center mt-2">
-                Konsistensi:{" "}
-                <span className="fst-italic fw-bold">
-                  {data?.tingkat_konsistensi}
-                </span>
-              </p> */}
             </Col>
             <Col className="ps-0">
               <div className="card p-3 bg-light border-0">
