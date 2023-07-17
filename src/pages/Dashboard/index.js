@@ -403,7 +403,7 @@ const Dashboard = () => {
                   <th className="fw-bold text-center">
                     {item.status === "2" ? (
                       <i
-                        class="fas fa-arrow-right bg-warning text-white rounded-circle p-1 pointer"
+                        class="fas fa-arrow-right bg-secondary text-white rounded-circle p-1 pointer"
                         onClick={() => {
                           getDataReport(item.id);
                         }}
