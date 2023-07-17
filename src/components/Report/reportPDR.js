@@ -58,7 +58,7 @@ const ReportPDR = ({ data }) => {
 
   return (
     <div className="p-3">
-      <button className="btn btn-success mb-2" onClick={generatePDF}>
+      <button className="btn bg-blue mb-2 text-white" onClick={generatePDF}>
         Export PDF
       </button>
       <div
@@ -66,8 +66,8 @@ const ReportPDR = ({ data }) => {
         className="card border rounded shadow capture"
         ref={componentRef}
       >
-        <div className="bg-warning rounded">
-          <p className="text-center text-uppercase fw-bold mt-2">
+        <div className="rounded" style={{backgroundColor:"#0E2954"}}>
+          <p className="text-center text-uppercase fw-bold mt-2 text-white">
             data people digital readiness (pdr)
           </p>
         </div>

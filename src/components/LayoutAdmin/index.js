@@ -13,19 +13,19 @@ const LayoutAdmin = ({ children }) => {
 
   return (
     <div className="wrapper">
-      <div className="row h-100">
-        <div className="card border-0 border-radius-0 col-2 w-20 text-white" style={{backgroundColor:"#6C9BCF"}}>
-          <p className="fs-4 text-center fw-bold mt-3">Holland Test</p>
-          {/* <img className="d-flex mx-auto" src={logo} width={150} /> */}
-          <hr className="mx-2 mb-2 mt-4" />
-          <div className="ms-3 d-flex pointer" onClick={() => navigate("/")}>
+      <div className="row h-100 ms-0">
+        <div
+          className="card border-0 border-radius-0 col-2 text-white"
+          style={{ backgroundColor: "#6C9BCF", width:"18%" }}
+        >
+          <p className="fs-3 fw-bold mt-4 pb-2 border-bottom border-3 border-light">Assessment Test</p>
+          <div className="ms-2 d-flex pointer mt-3" onClick={() => navigate("/")}>
             <i class="fas fa-info-circle fa-fw mt-2"></i>
             <p className="ms-2 text-sidebar">Dashboard</p>
           </div>
-          <hr className="mx-2 mt-0" />
           {role === "1" ? (
             <div
-              className="ms-3 d-flex pointer"
+              className="ms-2 d-flex pointer"
               onClick={() => navigate("/client-management")}
             >
               <i class="fas fa-user-alt fa-fw mt-2"></i>
@@ -40,7 +40,6 @@ const LayoutAdmin = ({ children }) => {
                 <i class="fas fa-user-alt fa-fw mt-2"></i>
                 <p className="ms-2 text-sidebar">User Management</p>
               </div>
-              <hr className="mx-2 mt-0" />
               <div
                 className="ms-3 d-flex pointer"
                 onClick={() => navigate(`/settings/${idCompany}`)}
@@ -50,18 +49,12 @@ const LayoutAdmin = ({ children }) => {
               </div>
             </>
           )}
-          <hr className="mx-2 mt-0" />
-        <span
-          className="mt-auto text-xs text-center"
-        >
-          v 1.0.0
-        </span>
+          <span className="mt-auto text-xs text-center">v 1.0.0</span>
         </div>
         <div className="col ps-0">
           <div className="shadow-sm p-3">
             <div className="d-flex justify-content-between">
               <img className="" src={logoCompany} width="auto" height={35} />
-              {/* <p className="fs-4">{companyName}</p> */}
               <Dropdown>
                 <Dropdown.Toggle className="d-flex" variant="none">
                   <i class="far fa-user-circle fs-4"></i>

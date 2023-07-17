@@ -75,13 +75,6 @@ const ReportHolland = ({ data }) => {
     },
   };
 
-  // const name = data.pekerjaan.map((item) => {
-  //   if (item.image === null) {
-  //     return item.name;
-  //   }
-  // });
-  // const names = name.filter((item) => item !== undefined).join(" | ");
-
   return (
     <div className="p-3">
       <button

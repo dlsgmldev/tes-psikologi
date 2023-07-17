@@ -7,6 +7,7 @@ import { PaginationControl } from "react-bootstrap-pagination-control";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 import ReportHolland from "../../components/Report/reportHolland";
+import ReportPDR from "../../components/Report/reportPDR";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const [dalamProses, setDalamProses] = useState([""]);
   const [belumMulai, setBelumMulai] = useState([""]);
   const [companyList, setCompanyList] = useState([""]);
+  const [testList, setTestList] = useState([""]);
   const [selectedCompany, setSelectedCompany] = useState([""]);
   const [selectedOption, setSelectedOption] = useState([""]);
   const [type, setType] = useState("");
@@ -46,7 +48,6 @@ const Dashboard = () => {
     setSelectedCompany(value.toString());
     setSelectedOption(selectedOption);
   };
-  console.log(selectedOption);
 
   const getData = (pageSize, pageIndex, searchIndex, filterIndex) => {
     axios
@@ -127,6 +128,20 @@ const Dashboard = () => {
       });
   };
 
+  const getTest = () => {
+    axios
+      .get(`${process.env.REACT_APP_URL}ac/get_test_option`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        const option = res.data.data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+        setTestList(option);
+      });
+  };
+
   const getDataReport = (id) => [
     axios
       .get(`${process.env.REACT_APP_URL}ac/holland_summary/${id}`, {
@@ -139,6 +154,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getCompany();
+    getTest();
     getData();
     axios
       .get(
@@ -189,6 +205,7 @@ const Dashboard = () => {
       },
     ],
   };
+  console.log(dataType);
 
   return (
     <>
@@ -418,7 +435,7 @@ const Dashboard = () => {
           />
         </div>
       </div>
-      {report ? <ReportHolland data={report} /> : ""}
+      {report ? <ReportPDR data={report} /> : ""}
 
       {/* for modal */}
       <Modal show={show} onHide={() => setShow(false)}>
@@ -432,6 +449,16 @@ const Dashboard = () => {
             className="basic-multi-select mb-3"
             classNamePrefix="select"
             onChange={handleChange}
+          />
+          <p className="fs-4 fw-bold">Filter by Test</p>
+          <Select
+            // defaultValue={selectedOption}
+            isMulti
+            name="company"
+            options={testList}
+            className="basic-multi-select mb-3"
+            classNamePrefix="select"
+            // onChange={handleChange}
           />
           <div className="d-flex justify-content-center">
             <div

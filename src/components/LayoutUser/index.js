@@ -10,15 +10,15 @@ const LayoutUser = ({ children }) => {
 
   return (
     <div>
-      <div className="header d-flex p-3 border shadow rounded-3">
-        <img alt="" src={logo} width="auto" height={60}></img>
-        <p className="mx-3 fw-bold my-auto">X</p>
+      <div className="header d-flex p-2 px-3 border shadow rounded-3">
+        <img className="my-auto p-1" alt="" src={logo} width="auto" height={55}></img>
+        <div className="mx-3 fw-bold vr"></div>
         <img
-          className="my-auto"
+          className="my-auto p-1"
           alt=""
           src={logoCompany}
           width="auto"
-          height={38}
+          height={33}
         ></img>
         <div className="d-flex justify-content-end mt-2 ms-auto">
           <Dropdown>

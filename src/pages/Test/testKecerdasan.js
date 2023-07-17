@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const TestPDR = () => {
+const TestKecerdasan = () => {
   const navigate = useNavigate();
   const lastMC = localStorage.getItem("last_mc");
   const token = localStorage.getItem("token");
@@ -64,7 +64,7 @@ const TestPDR = () => {
 
   return (
     <>
-      <p className="fs-2 fw-bold text-center mt-4">People Digital Readiness</p>
+      <p className="fs-2 fw-bold text-center mt-4">Tes Kecerdasan</p>
       <div className="card shadow-lg border-0 mx-5 p-1">
         <div className="quiz-container">
           <div>
@@ -112,4 +112,4 @@ const TestPDR = () => {
   );
 };
 
-export default TestPDR;
+export default TestKecerdasan;

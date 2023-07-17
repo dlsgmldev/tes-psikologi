@@ -23,6 +23,7 @@ import Home from "./pages/Home";
 import TestPDR from "./pages/Test/testPDR";
 import TestPauli from "./pages/Test/testPauli";
 import Closing from "./pages/Closing";
+import TestKecerdasan from "./pages/Test/testKecerdasan";
 
 const App = () => (
   <BrowserRouter>
@@ -62,6 +63,7 @@ const App = () => (
         <Route path="/holland-test/:id" element={<TestHolland />} />
         <Route path="/pdr-test/:id" element={<TestPDR />} />
         <Route path="/pauli-test/:id" element={<TestPauli />} />
+        <Route path="/kecerdasan-test/:id" element={<TestKecerdasan />} />
         <Route path="/closing/:id" element={<Closing />} />
       </Route>
     </Routes>

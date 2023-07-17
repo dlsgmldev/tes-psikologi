@@ -87,7 +87,7 @@ const Login = () => {
                 />
               </div>
               <button
-                className="btn btn-success p-2 w-100 mt-3"
+                className="btn bg-blue p-2 w-100 mt-3 text-white"
                 onClick={handleSubmit}
                 type="submit"
               >

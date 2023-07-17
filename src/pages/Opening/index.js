@@ -11,9 +11,12 @@ const Opening = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_URL}ac/company/get_opening_test/${idCompany}/${id}`, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .get(
+        `${process.env.REACT_APP_URL}ac/company/get_opening_test/${idCompany}/${id}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then((res) => {
         setDataOpening(res.data.data.opening);
       });
@@ -38,11 +41,11 @@ const Opening = () => {
 
   return (
     <div className="container p-4 mt-5 d-flex justify-content-center">
-      <div className="card p-5 shadow-lg border-0 text-center">
-        <p className="fs-1">Holland Test Online</p>
+      <div className="card p-5 shadow-lg border-0 text-center w-100">
+        <p className="fs-1 fw-bold">Holland Test Online</p>
         <p className="">{dataOpening}</p>
         <button
-          className="btn btn-success p-2 w-100 mt-3"
+          className="btn btn-success p-2 mt-3 w-50 mx-auto"
           onClick={handleSubmit}
         >
           Start

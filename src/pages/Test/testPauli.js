@@ -64,6 +64,7 @@ const TestPauli = () => {
 
   return (
     <div className="p-5">
+      <p className="fs-2 fw-bold text-center mt-4">Tes Pauli</p>
       <Card className="border w-20 p-1 text-center mx-auto mb-3 bg-warning">
         <span className="fw-bold text-white fs-5">
           {`${Math.floor(time / 3600)}`.padStart(2, 0)}:

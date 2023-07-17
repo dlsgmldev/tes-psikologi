@@ -139,11 +139,11 @@ const TestHolland = () => {
   };
 
   return (
-    <div className="container p-4 mt-3">
-      <p className="fs-3 fw-bold text-center">Holland Test</p>
+    <div className="container p-4 mt-2">
+      <p className="fs-2 fw-bold text-center">Holland Test</p>
       <div
-        className="card border-0 p-3 shadow-lg mb-3"
-        style={{ backgroundColor: "#E8E8E8" }}
+        className="card border p-3 shadow border-bottom mb-3"
+        style={{ backgroundColor: "#DDE6ED" }}
       >
         <span className="text-center fw-bold">
           Bacalah setiap pertanyaan di bawah ini. Jika Anda setuju dengan
@@ -152,65 +152,70 @@ const TestHolland = () => {
           Tidak ada jawaban yang benar atau salah.
         </span>
       </div>
-      <table className="table table-striped table-bordered">
-        <thead>
-          <tr className="text-center text-white" style={{backgroundColor:"#AAAAAA"}}>
-            <th className="p-3">No.</th>
-            <th className="p-3">Pernyataan</th>
-            <th className="p-3" width="8%">
-              Ya
-            </th>
-            <th className="p-3" width="8%">
-              Tidak
-            </th>
-          </tr>
-        </thead>
-        <tbody onChange={handleChange} className="table-light">
-          {questions.map((item) => (
-            <tr>
-              <th scope="row" className="fw-normal text-center p-3">
-                {item.id}
+      <div className="table-responsive card shadow-lg border-0">
+        <table className="table table-striped mb-0">
+          <thead>
+            <tr
+              className="text-center text-white"
+              style={{ backgroundColor: "#9CB4CC" }}
+            >
+              <th className="p-3">No.</th>
+              <th className="p-3">Pernyataan</th>
+              <th className="p-3" width="8%">
+                Ya
               </th>
-              <th scope="row" className="fw-normal p-3">
-                {item.question}
+              <th className="p-3" width="8%">
+                Tidak
               </th>
-              <td
-                data-tag={item.id}
-                className="text-center p-3"
-                // style={{backgroundColor:"#99DBF5"}}
-                id={"box_" + item.id}
-                onClick={handleClick}
-              >
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  id={item.id}
-                  name={"question_" + item.id}
-                  value="1"
-                  required
-                />
-              </td>
-              <td
-                data-tag={item.id}
-                className="text-center p-3"
-                id={"box2_" + item.id}
-                onClick={handleClick2}
-              >
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  id={item.id}
-                  name={"question_" + item.id}
-                  value="0"
-                  required
-                />
-              </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody onChange={handleChange} className="table-light">
+            {questions.map((item) => (
+              <tr>
+                <th scope="row" className="fw-normal text-center p-3">
+                  {item.id}
+                </th>
+                <th scope="row" className="fw-normal p-3">
+                  {item.question}
+                </th>
+                <td
+                  data-tag={item.id}
+                  className="text-center p-3 border-start border-end"
+                  // style={{backgroundColor:"#E8E8E8"}}
+                  id={"box_" + item.id}
+                  onClick={handleClick}
+                >
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id={item.id}
+                    name={"question_" + item.id}
+                    value="1"
+                    required
+                  />
+                </td>
+                <td
+                  data-tag={item.id}
+                  className="text-center p-3 border-start"
+                  id={"box2_" + item.id}
+                  onClick={handleClick2}
+                >
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id={item.id}
+                    name={"question_" + item.id}
+                    value="0"
+                    required
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <button
-        className="btn btn-success w-25 float-end mb-3"
+        className="btn bg-blue w-25 float-end my-3 text-white"
         type="submit"
         onClick={handleSubmit}
       >
