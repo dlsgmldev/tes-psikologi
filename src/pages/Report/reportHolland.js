@@ -1,6 +1,6 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Radar } from "react-chartjs-2";
 import line from "../../assets/Asset 25.png";
@@ -15,9 +15,24 @@ import s from "../../assets/Asset 65.png";
 import e from "../../assets/Asset 64.png";
 import c from "../../assets/Asset 63.png";
 import img from "../../assets/Asset 61.png";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const ReportHolland = ({ data }) => {
+const ReportHolland = () => {
+  const [dataReport, setDataReport] = useState("");
+  const token = localStorage.getItem("token");
   const componentRef = useRef();
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_URL}ac/admin/holland_summary/${id}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        setDataReport(res.data);
+      });
+  }, []);
 
   const generatePDF = () => {
     document.getElementById("pdfHidden").style.display = "block";
@@ -46,10 +61,10 @@ const ReportHolland = ({ data }) => {
   };
 
   const dataRadar = {
-    labels: data?.radar_data?.label,
+    labels: dataReport.radar_data?.label,
     datasets: [
       {
-        data: data?.radar_data?.data,
+        data: dataReport?.radar_data?.data,
         fill: true,
         borderColor: "#ffc107",
       },
@@ -100,12 +115,14 @@ const ReportHolland = ({ data }) => {
                 Test Report
               </p>
               <img src={lineTitle} height="auto" width="70%" />
-              <p className="fw-bold mt-3 fs-4">{data?.fullname}</p>
-              <p className="fw-bold mb-0 fs-4">Email: {data?.email}</p>
+              <p className="fw-bold mt-3 fs-4">{dataReport?.fullname}</p>
+              <p className="fw-bold mb-0 fs-4">Email: {dataReport?.email}</p>
               <p className="fw-bold mb-0 fs-4">
-                Perusahaan: {data?.name_company}
+                Perusahaan: {dataReport?.name_company}
               </p>
-              <p className="fw-bold mb-0 fs-4">Jabatan: {data?.jabatan}</p>
+              <p className="fw-bold mb-0 fs-4">
+                Jabatan: {dataReport?.jabatan}
+              </p>
             </div>
             <div className="col-4">
               <img src={bgRight} height="auto" width="100%" />
@@ -243,7 +260,7 @@ const ReportHolland = ({ data }) => {
             </div>
           </Row>
         </div>
-        <div className="rounded" style={{ backgroundColor: "darkblue" }}>
+        <div className="rounded" style={{ backgroundColor: "#0E2954" }}>
           <p className="text-center text-uppercase fw-bold mt-2 text-white mb-2">
             data Holland test (RIASEC)
           </p>
@@ -293,12 +310,12 @@ const ReportHolland = ({ data }) => {
                   </li>
                 </ul>
                 <ul className="fw-bold lh-xl no-bullets">
-                  <li>: {data?.skorjawaban.R}</li>
-                  <li>: {data?.skorjawaban.I}</li>
-                  <li>: {data?.skorjawaban.A}</li>
-                  <li>: {data?.skorjawaban.S}</li>
-                  <li>: {data?.skorjawaban.E}</li>
-                  <li>: {data?.skorjawaban.C}</li>
+                  <li>: {dataReport?.skorjawaban?.R}</li>
+                  <li>: {dataReport?.skorjawaban?.I}</li>
+                  <li>: {dataReport?.skorjawaban?.A}</li>
+                  <li>: {dataReport?.skorjawaban?.S}</li>
+                  <li>: {dataReport?.skorjawaban?.E}</li>
+                  <li>: {dataReport?.skorjawaban?.C}</li>
                 </ul>
               </div>
             </Col>
@@ -317,33 +334,39 @@ const ReportHolland = ({ data }) => {
                     className="fw-bold p-3 rounded-circle text-white text-center fs-4"
                     style={{ backgroundColor: "#0700C4" }}
                   >
-                    {data?.firstkey.label}
+                    {dataReport?.firstkey?.label}
                   </div>
-                  <p className="text-center mb-0">{data?.firstkey.value}</p>
+                  <p className="text-center mb-0">
+                    {dataReport?.firstkey?.value}
+                  </p>
                 </div>
                 <div className="round-div">
                   <div
                     className="fw-bold p-3 rounded-circle h-auto text-white text-center fs-4"
                     style={{ backgroundColor: "#0052FF" }}
                   >
-                    {data?.secondkey.label}
+                    {dataReport?.secondkey?.label}
                   </div>
-                  <p className="text-center mb-0">{data?.secondkey.value}</p>
+                  <p className="text-center mb-0">
+                    {dataReport?.secondkey?.value}
+                  </p>
                 </div>
                 <div className="round-div">
                   <div
                     className="fw-bold p-3 rounded-circle h-auto text-white text-center fs-4"
                     style={{ backgroundColor: "#00CCFF" }}
                   >
-                    {data?.thirdkey.label}
+                    {dataReport?.thirdkey?.label}
                   </div>
-                  <p className="text-center mb-0">{data?.thirdkey.value}</p>
+                  <p className="text-center mb-0">
+                    {dataReport?.thirdkey?.value}
+                  </p>
                 </div>
               </div>
             </Col>
             <Col className="ps-0">
               <div className="card p-3 bg-light border-0">
-                <span>{data?.deskripsi}</span>
+                <span>{dataReport?.deskripsi}</span>
               </div>
             </Col>
           </Row>
@@ -352,7 +375,7 @@ const ReportHolland = ({ data }) => {
             Bidang Kerja sesuai dengan Profil Anda:
           </p>
           <Row className="row-cols-6 d-flex justify-content-center gap-2 mb-3">
-            {data.pekerjaan?.map((item) => {
+            {dataReport?.pekerjaan?.map((item) => {
               if (item.image !== null) {
                 return (
                   <Col className="card text-center p-4 border shadow">

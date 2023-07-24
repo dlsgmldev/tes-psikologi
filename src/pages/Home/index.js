@@ -7,6 +7,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [dataTest, setDataTest] = useState([]);
   const token = localStorage.getItem("token");
+  const arrayTest = JSON.parse(localStorage.getItem("new_array"));
 
   useEffect(() => {
     axios
@@ -20,14 +21,16 @@ const Home = () => {
 
   const handleTest = (id) => {
     const data = dataTest.find((item) => item.id === id);
-    navigate(`/${data.slug}/${id}`)
-    // data.status === "0"
-    //   ? navigate(`/opening/${id}`)
-    //   : data.status === "1"
-    //   ? navigate(`/${data.slug}`)
-    //   : data.status === "2"
-    //   ? navigate(`/closing/${id}`)
-    //   : navigate(`/home`);
+    data.status === 0
+      ? navigate(`/opening/${id}`)
+      : data.status === 1
+      ? navigate(`/${data.slug}/${id}`)
+      : data.status === 2
+      ? navigate(`/closing/${id}`)
+      : navigate(`/home`);
+    if (arrayTest.length === 0) {
+      localStorage.setItem("new_array", JSON.stringify([]));
+    }
   };
 
   return (
@@ -36,7 +39,8 @@ const Home = () => {
         <Col className="card border-0 shadow-lg p-3 text-center">
           <p>{item.name}</p>
           <button
-            className="btn btn-warning text-white fw-bold mt-auto"
+            className="btn bg-blue text-white fw-bold mt-auto"
+            disabled={item.status === 2}
             onClick={() => handleTest(item.id)}
           >
             Ikuti Tes

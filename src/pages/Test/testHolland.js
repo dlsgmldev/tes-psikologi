@@ -7,13 +7,14 @@ const TestHolland = () => {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([""]);
   const [show, setShow] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const token = localStorage.getItem("token");
   const answerArray = JSON.parse(localStorage.getItem("new_array"));
   const { id } = useParams();
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_URL}ac/questions/1/200/1`, {
+      .get(`${process.env.REACT_APP_URL}ac/questions/${id}/200/1`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -77,7 +78,6 @@ const TestHolland = () => {
     return missingItems;
   };
   const missingNumbers = missingItems(numbers, 108);
-  console.log(answerArray);
 
   const handleSubmit = () => {
     setArray();
@@ -92,27 +92,31 @@ const TestHolland = () => {
     const missingNumbers = missingItems(numbers, 108);
 
     if (answerArray.length === 108) {
-      axios
-        .post(
-          `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
-          { data: answerArray },
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        )
-        .then((res) => {
-          navigate(`/closing/${id}`);
-          localStorage.removeItem("new_array");
-        })
-        .catch((err) => {
-          alert("failed");
-        });
+      setShowConfirmation(true);
     } else {
       setShow(true);
       window.location.href = `/holland-test/${id}#${Math.min(
         ...missingNumbers
       )}`;
     }
+  };
+
+  const handleOk = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
+        { data: answerArray },
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
+      .then((res) => {
+        navigate(`/closing/${id}`);
+        localStorage.removeItem("new_array");
+      })
+      .catch((err) => {
+        alert("failed");
+      });
   };
 
   const handleClose = () => {
@@ -233,6 +237,27 @@ const TestHolland = () => {
           ></button>
           <p className="h4 fw-bold text-center text-danger mt-2">Gagal!</p>
           <p className="text-center">Harap isi yang kosong.</p>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showConfirmation} onHide={() => setShowConfirmation(false)}>
+        <Modal.Body>
+          <p className="fs-4 fw-bold">Confirmation</p>
+          <p>Are you sure you want submit?</p>
+          <div className="d-flex justify-content-center">
+            <div
+              className="btn bg-blue mx-2 text-white px-4"
+              onClick={handleOk}
+            >
+              OK
+            </div>
+            <div
+              className="btn bg-blue mx-2 text-white px-4"
+              onClick={() => setShowConfirmation(false)}
+            >
+              Cancel
+            </div>
+          </div>
         </Modal.Body>
       </Modal>
     </div>

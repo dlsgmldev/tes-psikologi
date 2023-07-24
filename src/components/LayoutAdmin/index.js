@@ -1,51 +1,53 @@
 import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Outlet, useNavigate } from "react-router-dom";
-import logo from "../../assets/Logo Assesment Center-06.png";
 
 const LayoutAdmin = ({ children }) => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const role = localStorage.getItem("role");
   const idCompany = localStorage.getItem("id_company");
-  const companyName = localStorage.getItem("name_company");
-  const logoCompany = localStorage.getItem("logo_company");
 
   return (
     <div className="wrapper">
       <div className="row h-100 ms-0">
         <div
           className="card border-0 border-radius-0 col-2 text-white"
-          style={{ backgroundColor: "#6C9BCF", width:"18%" }}
+          style={{ backgroundColor: "#6C9BCF", width: "18%" }}
         >
-          <p className="fs-3 fw-bold mt-4 pb-2 border-bottom border-3 border-light">Assessment Test</p>
-          <div className="ms-2 d-flex pointer mt-3" onClick={() => navigate("/")}>
-            <i class="fas fa-info-circle fa-fw mt-2"></i>
-            <p className="ms-2 text-sidebar">Dashboard</p>
+          <p className="fs-3 fw-bold mt-4 pb-2 ps-2 border-bottom border-3 border-light">
+            Assessment <br /> Test
+          </p>
+          <div
+            className="d-flex pointer sidebar-menu"
+            onClick={() => navigate("/")}
+          >
+            <i class="fas fa-info-circle fa-fw mt-1"></i>
+            <span className="ms-2 text-sidebar">Dashboard</span>
           </div>
           {role === "1" ? (
             <div
-              className="ms-2 d-flex pointer"
+              className="d-flex pointer sidebar-menu"
               onClick={() => navigate("/client-management")}
             >
-              <i class="fas fa-user-alt fa-fw mt-2"></i>
-              <p className="ms-2 text-sidebar">Company Management</p>
+              <i class="fas fa-user-alt fa-fw mt-1"></i>
+              <span className="ms-2 text-sidebar">Company Management</span>
             </div>
           ) : (
             <>
               <div
-                className="ms-3 d-flex pointer"
+                className="d-flex pointer sidebar-menu"
                 onClick={() => navigate(`/user-management/${idCompany}`)}
               >
-                <i class="fas fa-user-alt fa-fw mt-2"></i>
-                <p className="ms-2 text-sidebar">User Management</p>
+                <i class="fas fa-user-alt fa-fw mt-1"></i>
+                <span className="ms-2 text-sidebar">User Management</span>
               </div>
               <div
-                className="ms-3 d-flex pointer"
+                className="d-flex pointer sidebar-menu"
                 onClick={() => navigate(`/settings/${idCompany}`)}
               >
-                <i class="fas fa-cog mt-2"></i>
-                <p className="ms-2 text-sidebar">Settings</p>
+                <i class="fas fa-cog fa-fw mt-1"></i>
+                <span className="ms-2 text-sidebar">Settings</span>
               </div>
             </>
           )}
@@ -54,7 +56,7 @@ const LayoutAdmin = ({ children }) => {
         <div className="col ps-0">
           <div className="shadow-sm p-3">
             <div className="d-flex justify-content-between">
-              <img className="" src={logoCompany} width="auto" height={35} />
+              <div></div>
               <Dropdown>
                 <Dropdown.Toggle className="d-flex" variant="none">
                   <i class="far fa-user-circle fs-4"></i>

@@ -18,7 +18,7 @@ const Opening = () => {
         }
       )
       .then((res) => {
-        setDataOpening(res.data.data.opening);
+        setDataOpening(res.data.data);
       });
   }, []);
 
@@ -32,7 +32,7 @@ const Opening = () => {
         }
       )
       .then((res) => {
-        navigate(`/holland-test/${id}`);
+        navigate(`/${dataOpening.slug}/${id}`);
       })
       .catch((err) => {
         alert("failed");
@@ -42,10 +42,9 @@ const Opening = () => {
   return (
     <div className="container p-4 mt-5 d-flex justify-content-center">
       <div className="card p-5 shadow-lg border-0 text-center w-100">
-        <p className="fs-1 fw-bold">Holland Test Online</p>
-        <p className="">{dataOpening}</p>
+        <p className="fs-1 fw-bold">{dataOpening.name}</p>
         <button
-          className="btn btn-success p-2 mt-3 w-50 mx-auto"
+          className="btn bg-blue p-2 mt-3 w-50 mx-auto"
           onClick={handleSubmit}
         >
           Start

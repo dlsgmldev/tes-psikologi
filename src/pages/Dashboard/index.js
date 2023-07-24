@@ -4,10 +4,9 @@ import "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import { PaginationControl } from "react-bootstrap-pagination-control";
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import Select from "react-select";
-import ReportHolland from "../../components/Report/reportHolland";
-import ReportPDR from "../../components/Report/reportPDR";
+import { ExportToExcel } from "../../components/ExportExcel";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -19,17 +18,23 @@ const Dashboard = () => {
   const [current, setCurrent] = useState(1);
   const [pieChart, setPieChart] = useState([""]);
   const [responden, setResponden] = useState([""]);
+  const [respondenExport, setRespondenExport] = useState([""]);
   const [selesai, setSelesai] = useState([""]);
+  const [selesaiExport, setSelesaiExport] = useState([""]);
   const [dalamProses, setDalamProses] = useState([""]);
+  const [dalamProsesExport, setDalamProsesExport] = useState([""]);
   const [belumMulai, setBelumMulai] = useState([""]);
+  const [belumMulaiExport, setBelumMulaiExport] = useState([""]);
   const [companyList, setCompanyList] = useState([""]);
   const [testList, setTestList] = useState([""]);
   const [selectedCompany, setSelectedCompany] = useState([""]);
-  const [selectedOption, setSelectedOption] = useState([""]);
+  const [selectedTest, setSelectedTest] = useState([""]);
+  const [selectedOptionCompany, setSelectedOptionCompany] = useState([""]);
+  const [selectedOptionTest, setSelectedOptionTest] = useState([""]);
   const [type, setType] = useState("");
-  const [report, setReport] = useState("");
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
   const idCompany = localStorage.getItem("id_company");
   const role = localStorage.getItem("role");
@@ -43,68 +48,156 @@ const Dashboard = () => {
       ? dalamProses
       : responden;
 
-  const handleChange = (selectedOption) => {
+  const handleFilterCompany = (selectedOption) => {
     const value = selectedOption.map((item) => item.value);
     setSelectedCompany(value.toString());
-    setSelectedOption(selectedOption);
+    setSelectedOptionCompany(selectedOption);
   };
 
-  const getData = (pageSize, pageIndex, searchIndex, filterIndex) => {
+  const handleFilterTest = (selectedOption) => {
+    const value = selectedOption.map((item) => item.value);
+    setSelectedTest(value.toString());
+    setSelectedOptionTest(selectedOption);
+  };
+
+  const getData = (
+    pageSize,
+    pageIndex,
+    searchIndex,
+    filterCompany,
+    filterTest
+  ) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}ac/data_total_responden/${
-          idCompany === "null" ? 0 : idCompany
-        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
+        `${process.env.REACT_APP_URL}ac/admin/data_total_responden/${
+          pageSize ?? 10
+        }/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex, filter_company: filterIndex },
+          params: {
+            search: searchIndex,
+            filter_company: filterCompany,
+            filter_test: filterTest,
+          },
         }
       )
       .then((res) => {
+        const fileExport = res.data.data.map((item) => ({
+          no: 1,
+          name: item.fullname,
+          email: item.email,
+          test: item.name_test,
+          status:
+            item.status === "2"
+              ? "Selesai"
+              : item.status === "0"
+              ? "Belum mulai"
+              : "Dalam proses",
+          company: item.name_company,
+        }));
+        setRespondenExport(fileExport);
         setResponden(res.data.data);
         setTotalDataResponden(res.data.totaldata);
+        setLoading(false);
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}ac/data_total_selesai/${
-          idCompany === "null" ? 0 : idCompany
-        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
+        `${process.env.REACT_APP_URL}ac/admin/data_total_selesai/${
+          pageSize ?? 10
+        }/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex, filter_company: filterIndex },
+          params: {
+            search: searchIndex,
+            filter_company: filterCompany,
+            filter_test: filterTest,
+          },
         }
       )
       .then((res) => {
+        const fileExport = res.data.data.map((item) => ({
+          no: 1,
+          name: item.fullname,
+          email: item.email,
+          test: item.name_test,
+          status:
+            item.status === "2"
+              ? "Selesai"
+              : item.status === "0"
+              ? "Belum mulai"
+              : "Dalam proses",
+          company: item.name_company,
+        }));
+        setSelesaiExport(fileExport);
         setSelesai(res.data.data);
         setTotalDataSelesai(res.data.totaldata);
+        setLoading(false);
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}ac/data_total_dalam_proses/${
-          idCompany === "null" ? 0 : idCompany
-        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
+        `${process.env.REACT_APP_URL}ac/admin/data_total_dalam_proses/${
+          pageSize ?? 10
+        }/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex, filter_company: filterIndex },
+          params: {
+            search: searchIndex,
+            filter_company: filterCompany,
+            filter_test: filterTest,
+          },
         }
       )
       .then((res) => {
+        const fileExport = res.data.data.map((item) => ({
+          no: 1,
+          name: item.fullname,
+          email: item.email,
+          test: item.name_test,
+          status:
+            item.status === "2"
+              ? "Selesai"
+              : item.status === "0"
+              ? "Belum mulai"
+              : "Dalam proses",
+          company: item.name_company,
+        }));
+        setDalamProsesExport(fileExport);
         setDalamProses(res.data.data);
         setTotalDataDalamProses(res.data.totaldata);
+        setLoading(false);
       });
     axios
       .get(
-        `${process.env.REACT_APP_URL}ac/data_total_belum_mulai/${
-          idCompany === "null" ? 0 : idCompany
-        }/${pageSize ?? 10}/${pageIndex ?? 1}`,
+        `${process.env.REACT_APP_URL}ac/admin/data_total_belum_mulai/${
+          pageSize ?? 10
+        }/${pageIndex ?? 1}`,
         {
           headers: { Authorization: "Bearer " + token },
-          params: { search: searchIndex, filter_company: filterIndex },
+          params: {
+            search: searchIndex,
+            filter_company: filterCompany,
+            filter_test: filterTest,
+          },
         }
       )
       .then((res) => {
+        const fileExport = res.data.data.map((item) => ({
+          no: 1,
+          name: item.fullname,
+          email: item.email,
+          test: item.name_test,
+          status:
+            item.status === "2"
+              ? "Selesai"
+              : item.status === "0"
+              ? "Belum mulai"
+              : "Dalam proses",
+          company: item.name_company,
+        }));
+        setBelumMulaiExport(fileExport);
         setBelumMulai(res.data.data);
         setTotalDataBelumMulai(res.data.totaldata);
+        setLoading(false);
       });
   };
 
@@ -142,16 +235,6 @@ const Dashboard = () => {
       });
   };
 
-  const getDataReport = (id) => [
-    axios
-      .get(`${process.env.REACT_APP_URL}ac/holland_summary/${id}`, {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        setReport(res.data);
-      }),
-  ];
-
   useEffect(() => {
     getCompany();
     getTest();
@@ -186,299 +269,326 @@ const Dashboard = () => {
     labels: pieChart.label,
     datasets: [
       {
-        // label: 'Rainfall',
-        backgroundColor: [
-          "#B21F00",
-          "#C9DE00",
-          "#2FDE00",
-          "#00A6B4",
-          "#6800B4",
-        ],
-        hoverBackgroundColor: [
-          "#501800",
-          "#4B5000",
-          "#175000",
-          "#003350",
-          "#35014F",
-        ],
+        backgroundColor: ["#B2E672", "#FFFD88", "#FF8C8C"],
+        hoverBackgroundColor: ["#B6E2A1", "#FFFBC1", "#F7A4A4"],
         data: pieChart.data,
       },
     ],
   };
-  console.log(dataType);
 
   return (
     <>
-      <div className="col-xl-12 col-md-6 mb-1 p-3">
-        <div className="card border-left-success shadow h-100 py-2">
-          <div className="card-body">
-            <div className="row no-gutters align-items-center">
-              <div className="col mr-2">
-                <div className="text-xs fw-bold text-success text-uppercase mb-1">
-                  Persentase Penyelesaian
-                </div>
-                <div className="d-flex justify-content-start">
-                  <div className="h5 mb-0 fw-bold text-secondary">
-                    {info.persentase_penyelesaian}%
+      {loading === true ? (
+        <div className="text-center p-5">
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <div>
+          <div className="col-xl-12 col-md-6 p-3">
+            <div className="card border-left-presentase shadow h-100 py-2">
+              <div className="card-body">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <div className="text-xs fw-bold text-uppercase mb-1">
+                      Persentase Penyelesaian
+                    </div>
+                    <div className="d-flex justify-content-start">
+                      <div className="h5 mb-0 fw-bold text-secondary">
+                        {info.persentase_penyelesaian}%
+                      </div>
+                      <div class="progress w-100 mt-1 ms-2">
+                        <div
+                          class="progress-bar"
+                          role="progressbar"
+                          style={{
+                            width: `${info.persentase_penyelesaian}%`,
+                            backgroundColor: "#0E8388",
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div class="progress w-100 mt-1 ms-2">
-                    <div
-                      class="progress-bar bg-success"
-                      role="progressbar"
-                      style={{ width: `${info.persentase_penyelesaian}%` }}
-                    />
+                  <div className="col-auto">
+                    <i class="fas fa-tasks fa-2x text-gray-300"></i>
                   </div>
                 </div>
-              </div>
-              <div className="col-auto">
-                <i class="fas fa-tasks fa-2x text-gray-300"></i>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="row p-3">
-        <div className="col-xl-3 col-md-6 mb-4">
-          <div
-            className="card border-left-primary shadow h-100 py-2 pointer"
-            onClick={() => setType("responden")}
-          >
+          <div className="row px-3">
+            <div className="col-xl-3 col-md-6 mb-4">
+              <div
+                className="card border-left-responden shadow h-100 py-2 pointer"
+                onClick={() => setType("responden")}
+              >
+                <div className="card-body">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col">
+                      <div className="text-xs fw-bold text-uppercase mb-1">
+                        Total Responden
+                      </div>
+                      <div className="h5 mb-0 fw-bold text-secondary">
+                        {info.total_responden}
+                      </div>
+                    </div>
+                    <div className="col-auto">
+                      <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-3 col-md-6 mb-4">
+              <div
+                className="card border-left-selesai shadow h-100 py-2 pointer"
+                onClick={() => setType("selesai")}
+              >
+                <div className="card-body">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col">
+                      <div className="text-xs fw-bold text-uppercase mb-1">
+                        Total Selesai
+                      </div>
+                      <div className="h5 mb-0 fw-bold text-secondary">
+                        {info.total_selesai}
+                      </div>
+                    </div>
+                    <div className="col-auto">
+                      <i class="fas fa-check fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-3 col-md-6 mb-4">
+              <div
+                className="card border-left-proses shadow h-100 py-2 pointer"
+                onClick={() => setType("proses")}
+              >
+                <div className="card-body">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col">
+                      <div className="text-xs fw-bold text-uppercase mb-1">
+                        Total Dalam Proses
+                      </div>
+                      <div className="h5 mb-0 fw-bold text-secondary">
+                        {info.total_dalam_proses}
+                      </div>
+                    </div>
+                    <div className="col-auto">
+                      <i class="fas fa-edit fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-3 col-md-6 mb-4">
+              <div
+                className="card border-left-mulai shadow h-100 py-2 pointer"
+                onClick={() => setType("mulai")}
+              >
+                <div className="card-body">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col">
+                      <div className="text-xs fw-bold text-uppercase mb-1">
+                        Total Belum Mulai
+                      </div>
+                      <div className="h5 mb-0 fw-bold text-secondary">
+                        {info.total_belum_mulai}
+                      </div>
+                    </div>
+                    <div className="col-auto">
+                      <i class="fas fa-times fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="card border-0 py-2 mx-3 shadow-lg p-2">
+            <div className="card-body d-flex justify-content-center">
+              <Pie data={dataPie} className="w-25 h-25" />
+            </div>
+          </div>
+          <div className="card border-0 py-2 mx-3 shadow-lg my-3">
             <div className="card-body">
-              <div className="row no-gutters align-items-center">
-                <div className="col mr-2">
-                  <div className="text-xs fw-bold text-blue text-uppercase mb-1">
-                    Total Responden
-                  </div>
-                  <div className="h5 mb-0 fw-bold text-secondary">
-                    {info.total_responden}
-                  </div>
+              <p className="text-blue fw-bold">
+                Data{" "}
+                {type === "mulai"
+                  ? "Belum Mulai"
+                  : type === "selesai"
+                  ? "Selesai"
+                  : type === "proses"
+                  ? "Dalam Proses"
+                  : "Responden"}
+              </p>
+              <div className="d-flex justify-content-between">
+                <div className="input-group w-70">
+                  <input
+                    className="form-control border"
+                    placeholder="Search"
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      getData(
+                        10,
+                        1,
+                        e.target.value,
+                        selectedCompany,
+                        selectedTest
+                      );
+                    }}
+                  />
+                  <span className="input-group-text">
+                    <i class="fas fa-search text-secondary"></i>
+                  </span>
                 </div>
-                <div className="col-auto">
-                  <i class="fas fa-users fa-2x text-gray-300"></i>
+                <div className="d-flex">
+                  <ExportToExcel
+                    apiData={
+                      type === "selesai"
+                        ? selesaiExport
+                        : type === "mulai"
+                        ? belumMulaiExport
+                        : type === "proses"
+                        ? dalamProsesExport
+                        : respondenExport
+                    }
+                    fileName={
+                      type === "selesai"
+                        ? "data-selesai"
+                        : type === "mulai"
+                        ? "data-belum-mulai"
+                        : type === "proses"
+                        ? "data-dalam-proses"
+                        : "data-responden"
+                    }
+                  />
+                  <div
+                    className="btn bg-blue text-white px-3 ms-2"
+                    onClick={() => setShow(true)}
+                  >
+                    Filter
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-xl-3 col-md-6 mb-4">
-          <div
-            className="card border-left-warning shadow h-100 py-2 pointer"
-            onClick={() => setType("selesai")}
-          >
-            <div className="card-body">
-              <div className="row no-gutters align-items-center">
-                <div className="col mr-2">
-                  <div className="text-xs fw-bold text-warning text-uppercase mb-1">
-                    Total Selesai
-                  </div>
-                  <div className="h5 mb-0 fw-bold text-secondary">
-                    {info.total_selesai}
-                  </div>
-                </div>
-                <div className="col-auto">
-                  <i class="fas fa-check fa-2x text-gray-300"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-xl-3 col-md-6 mb-4">
-          <div
-            className="card border-left-info shadow h-100 py-2 pointer"
-            onClick={() => setType("proses")}
-          >
-            <div className="card-body">
-              <div className="row no-gutters align-items-center">
-                <div className="col mr-2">
-                  <div className="text-xs fw-bold text-info text-uppercase mb-1">
-                    Total Dalam Proses
-                  </div>
-                  <div className="h5 mb-0 fw-bold text-secondary">
-                    {info.total_dalam_proses}
-                  </div>
-                </div>
-                <div className="col-auto">
-                  <i class="fas fa-edit fa-2x text-gray-300"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-xl-3 col-md-6 mb-4">
-          <div
-            className="card border-left-danger shadow h-100 py-2 pointer"
-            onClick={() => setType("mulai")}
-          >
-            <div className="card-body">
-              <div className="row no-gutters align-items-center">
-                <div className="col mr-2">
-                  <div className="text-xs fw-bold text-danger text-uppercase mb-1">
-                    Total Belum Mulai
-                  </div>
-                  <div className="h5 mb-0 fw-bold text-secondary">
-                    {info.total_belum_mulai}
-                  </div>
-                </div>
-                <div className="col-auto">
-                  <i class="fas fa-times fa-2x text-gray-300"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="card border-0 py-2 mx-3 shadow-lg p-2">
-        <div className="card-body d-flex justify-content-center">
-          <Pie data={dataPie} className="w-25 h-25" />
-        </div>
-      </div>
-      <div className="card border-0 py-2 mx-3 shadow-lg my-5">
-        <div className="card-body">
-          <p className="text-blue fw-bold">
-            Data{" "}
-            {type === "mulai"
-              ? "Belum Mulai"
-              : type === "selesai"
-              ? "Selesai"
-              : type === "proses"
-              ? "Dalam Proses"
-              : "Responden"}
-          </p>
-          <div className="d-flex justify-content-between">
-            <div className="input-group w-70">
-              <input
-                className="form-control"
-                placeholder="Search"
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  getData(10, 1, e.target.value, selectedCompany);
+              <table class="table table-bordered mt-2 rounded rounded-3 overflow-hidden">
+                <thead>
+                  <tr className="bg-blue text-white text-center">
+                    <th scope="col">No.</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Test</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Company</th>
+                    <th scope="col" width="8%">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                {dataType.map((item) => (
+                  <tbody>
+                    <tr>
+                      <th className="fw-normal text-center">1</th>
+                      <th className="fw-normal">{item.fullname}</th>
+                      <th className="fw-normal">{item.email}</th>
+                      <th className="fw-normal">{item.name_test}</th>
+                      <th className="fw-normal">
+                        {item.status === "2"
+                          ? "Selesai"
+                          : item.status === "0"
+                          ? "Belum mulai"
+                          : "Dalam proses"}
+                      </th>
+                      <th className="fw-normal">{item.name_company}</th>
+                      <th className="fw-bold text-center">
+                        {item.status === "2" ? (
+                          <i
+                            class="fas fa-arrow-right bg-secondary text-white rounded-circle p-1 pointer"
+                            onClick={() => {
+                              window.open(
+                                `${item.slug_report}/${item.id}`,
+                                "_blank"
+                              );
+                            }}
+                          ></i>
+                        ) : (
+                          "-"
+                        )}
+                      </th>
+                    </tr>
+                  </tbody>
+                ))}
+              </table>
+              <PaginationControl
+                page={current}
+                total={
+                  type === "selesai"
+                    ? totalDataSelesai
+                    : type === "mulai"
+                    ? totalDataBelumMulai
+                    : type === "proses"
+                    ? totalDataDalamProses
+                    : totalDataResponden
+                }
+                limit={10}
+                changePage={(page, size) => {
+                  getData(size, page);
+                  setCurrent(page);
                 }}
               />
-              <span className="input-group-text">
-                <i class="fas fa-search text-secondary"></i>
-              </span>
             </div>
-            {role === "1" ? (
-              <button
-                className="btn bg-blue text-white p-1 w-10"
-                onClick={() => setShow(true)}
-              >
-                Filter
-              </button>
-            ) : (
-              ""
-            )}
           </div>
-          <table class="table table-bordered mt-2 rounded rounded-3 overflow-hidden">
-            <thead>
-              <tr className="bg-blue text-white">
-                <th scope="col">Unit</th>
-                <th scope="col">Jabatan</th>
-                <th scope="col">Nip</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Test</th>
-                <th scope="col">Status</th>
-                <th scope="col">Company</th>
-                <th scope="col">Aksi</th>
-              </tr>
-            </thead>
-            {dataType.map((item) => (
-              <tbody>
-                <tr>
-                  <th className="fw-normal">{item.unit}</th>
-                  <th className="fw-normal">{item.jabatan}</th>
-                  <th className="fw-normal">{item.nip}</th>
-                  <th className="fw-normal">{item.fullname}</th>
-                  <th className="fw-normal">{item.email}</th>
-                  <th className="fw-normal">{item.name_test}</th>
-                  <th className="fw-normal">
-                    {item.status === "2"
-                      ? "Selesai"
-                      : item.status === "0"
-                      ? "Belum mulai"
-                      : "Dalam proses"}
-                  </th>
-                  <th className="fw-normal">{item.name_company}</th>
-                  <th className="fw-bold text-center">
-                    {item.status === "2" ? (
-                      <i
-                        class="fas fa-arrow-right bg-secondary text-white rounded-circle p-1 pointer"
-                        onClick={() => {
-                          getDataReport(item.id);
-                        }}
-                      ></i>
-                    ) : (
-                      "-"
-                    )}
-                  </th>
-                </tr>
-              </tbody>
-            ))}
-          </table>
-          <PaginationControl
-            page={current}
-            total={
-              type === "selesai"
-                ? totalDataSelesai
-                : type === "mulai"
-                ? totalDataBelumMulai
-                : type === "proses"
-                ? totalDataDalamProses
-                : totalDataResponden
-            }
-            limit={10}
-            changePage={(page, size) => {
-              getData(size, page);
-              setCurrent(page);
-            }}
-          />
-        </div>
-      </div>
-      {report ? <ReportPDR data={report} /> : ""}
 
-      {/* for modal */}
-      <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Body>
-          <p className="fs-4 fw-bold">Filter by company</p>
-          <Select
-            defaultValue={selectedOption}
-            isMulti
-            name="company"
-            options={companyList}
-            className="basic-multi-select mb-3"
-            classNamePrefix="select"
-            onChange={handleChange}
-          />
-          <p className="fs-4 fw-bold">Filter by Test</p>
-          <Select
-            // defaultValue={selectedOption}
-            isMulti
-            name="company"
-            options={testList}
-            className="basic-multi-select mb-3"
-            classNamePrefix="select"
-            // onChange={handleChange}
-          />
-          <div className="d-flex justify-content-center">
-            <div
-              className="btn bg-blue mx-2 text-white px-4"
-              onClick={() => {
-                getData(10, 1, search, selectedCompany);
-                setShow(false);
-              }}
-            >
-              OK
-            </div>
-            <div
-              className="btn bg-blue mx-2 text-white px-4"
-              onClick={() => setShow(false)}
-            >
-              Cancel
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+          {/* for modal */}
+          <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Body>
+              {role === "1" ? (
+                <>
+                  <p className="fs-4 fw-bold">Filter by company</p>
+                  <Select
+                    defaultValue={selectedOptionCompany}
+                    isMulti
+                    name="company"
+                    options={companyList}
+                    className="basic-multi-select mb-3"
+                    classNamePrefix="select"
+                    onChange={handleFilterCompany}
+                  />
+                </>
+              ) : (
+                ""
+              )}
+              <p className="fs-4 fw-bold">Filter by Test</p>
+              <Select
+                defaultValue={selectedOptionTest}
+                isMulti
+                name="company"
+                options={testList}
+                className="basic-multi-select mb-3"
+                classNamePrefix="select"
+                onChange={handleFilterTest}
+              />
+              <div className="d-flex justify-content-center">
+                <div
+                  className="btn bg-blue mx-2 text-white px-4"
+                  onClick={() => {
+                    getData(10, 1, search, selectedCompany, selectedTest);
+                    setShow(false);
+                  }}
+                >
+                  OK
+                </div>
+                <div
+                  className="btn bg-blue mx-2 text-white px-4"
+                  onClick={() => setShow(false)}
+                >
+                  Cancel
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

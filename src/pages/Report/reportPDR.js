@@ -1,10 +1,26 @@
+import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Radar } from "react-chartjs-2";
+import { useParams } from "react-router-dom";
 
-const ReportPDR = ({ data }) => {
-  const componentRef = useRef(null);
+const ReportPDR = () => {
+  const [dataReport, setDataReport] = useState("");
+  const token = localStorage.getItem("token");
+  const componentRef = useRef();
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_URL}ac/admin/pdr_summary/${id}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        setDataReport(res.data);
+        console.log(res.data);
+      });
+  }, []);
 
   const generatePDF = () => {
     html2canvas(componentRef.current).then((canvas) => {
@@ -16,49 +32,55 @@ const ReportPDR = ({ data }) => {
   };
 
   const dataRadar = {
-    labels: data?.radar_data?.label,
+    labels: dataReport?.dataRadar?.label,
     datasets: [
       {
         label: "Data",
-        data: data?.radar_data?.data,
+        data: dataReport?.dataRadar?.data,
         fill: true,
         borderColor: "blue",
       },
       {
         label: "Baseline",
-        data: data?.radar_data?.data,
-        fill: true,
-        border: "dashed red",
+        data: [3.25, 3.25, 3.25, 3.25, 3.25, 3.25],
+        borderColor: "red",
+        borderDash: [3, 5],
+        backgroundColor: "rgba(0, 0, 0, 0)",
       },
     ],
     options: {
-      legend: {
-        display: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
       },
-      tooltips: {
-        callbacks: {
-          label: function (tooltipItem) {
-            return tooltipItem.yLabel;
+      scales: {
+        r: {
+          pointLabels: {
+            font: {
+              size: 12,
+            },
           },
         },
       },
       scale: {
-        pointLabels: {
-          fontSize: 15,
-        },
         ticks: {
           beginAtZero: true,
-          max: 20,
+          max: 4,
           min: 0,
-          stepSize: 5,
+          stepSize: 1,
         },
+        min: 0,
       },
     },
   };
 
   return (
     <div className="p-3">
-      <button className="btn bg-blue mb-2 text-white" onClick={generatePDF}>
+      <button
+        className="btn btn-info text-white fw-bold mb-2"
+        onClick={generatePDF}
+      >
         Export PDF
       </button>
       <div
@@ -66,13 +88,13 @@ const ReportPDR = ({ data }) => {
         className="card border rounded shadow capture"
         ref={componentRef}
       >
-        <div className="rounded" style={{backgroundColor:"#0E2954"}}>
-          <p className="text-center text-uppercase fw-bold mt-2 text-white">
+        <div className="rounded" style={{ backgroundColor: "#0E2954" }}>
+          <p className="text-center text-uppercase fw-bold mt-2 text-white mb-2">
             data people digital readiness (pdr)
           </p>
         </div>
         <div className="p-2 px-3">
-          <p className="fw-bold">Name: {data?.fullname}</p>
+          <p className="fw-bold">Name: {dataReport?.user?.fullname}</p>
           <p className="fw-bold">Digital Competency:</p>
           <div className="d-flex justify-content-center mt-6">
             <div className="mapping-wrapper">
@@ -101,7 +123,7 @@ const ReportPDR = ({ data }) => {
               <div class="mapping-grid text-center">
                 <div class="col bg-blue text-white border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p>Paradox</p>
-                  <p>0%</p>
+                  <p>{dataReport?.dataScatter?.Paradox}</p>
                   <div
                     className="box-left"
                     style={{ backgroundColor: "#2e75b6" }}
@@ -111,21 +133,21 @@ const ReportPDR = ({ data }) => {
                 </div>
                 <div class="col bg-blue text-white border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p>Enabler</p>
-                  <p>0.67%</p>
+                  <p>{dataReport?.dataScatter?.Enabler}</p>
                 </div>
                 <div class="col bg-blue text-white border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p>Enhancer</p>
-                  <p>0%</p>
+                  <p>{dataReport?.dataScatter?.Enhancer}</p>
                 </div>
                 <div class="col bg-blue text-white border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p>Leader</p>
-                  <p>55.03%</p>
+                  <p>{dataReport?.dataScatter?.Leader}</p>
                 </div>
                 <div class="text-secondary col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p>Comfort Zone</p>
-                  <p>1.34%</p>
+                  <p>{dataReport?.dataScatter?.ComfortZone}</p>
                   <div
-                    className="box-left"
+                    className="box-left text-secondary"
                     style={{ backgroundColor: "#bdd7ee" }}
                   >
                     <p>Low</p>
@@ -139,7 +161,7 @@ const ReportPDR = ({ data }) => {
                 </div>
                 <div class="text-secondary col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p>Observer</p>
-                  <p>6.71%</p>
+                  <p>{dataReport?.dataScatter?.Observer}</p>
                   <div
                     className="box-bottom text-secondary"
                     style={{ backgroundColor: "#9dc3e6" }}
@@ -149,7 +171,9 @@ const ReportPDR = ({ data }) => {
                 </div>
                 <div class="col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p className="text-secondary">Fast Adopter</p>
-                  <p className="text-secondary">0%</p>
+                  <p className="text-secondary">
+                    {dataReport?.dataScatter?.FastAdopter}
+                  </p>
                   <div
                     className="box-bottom text-white"
                     style={{ backgroundColor: "#2e75b6" }}
@@ -159,7 +183,9 @@ const ReportPDR = ({ data }) => {
                 </div>
                 <div class="col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                   <p className="text-secondary">Learner</p>
-                  <p className="text-secondary">36.24%</p>
+                  <p className="text-secondary">
+                    {dataReport?.dataScatter?.Learner}
+                  </p>
                   <div
                     className="box-bottom text-white"
                     style={{ backgroundColor: "#1f4e79" }}
@@ -170,8 +196,12 @@ const ReportPDR = ({ data }) => {
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-center p-2 mt-7">
-            <Radar data={dataRadar} className="w-50 h-50" />
+          <div className="d-flex justify-content-center mt-4">
+            <Radar
+              data={dataRadar}
+              options={dataRadar.options}
+              className="w-75 h-75"
+            />
           </div>
         </div>
       </div>

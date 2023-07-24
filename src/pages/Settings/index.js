@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 
@@ -11,6 +12,7 @@ const Settings = () => {
   const [dataOptions, setDataOptions] = useState([""]);
   const [form, setForm] = useState({ opening: "", closing: "" });
   const [idTest, setIdtest] = useState(0);
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
   const handleChange = (e) => {
@@ -48,6 +50,7 @@ const Settings = () => {
           label: item.name,
         }));
         setDataSelectedAssessment(assessment);
+        setLoading(false);
       });
     axios
       .get(`${process.env.REACT_APP_URL}ac/company/setting/get_message/${id}`, {
@@ -55,6 +58,7 @@ const Settings = () => {
       })
       .then((res) => {
         setDataMessage(res.data.data);
+        setLoading(false);
       });
     axios
       .get(`${process.env.REACT_APP_URL}ac/get_test_option`, {
@@ -66,6 +70,7 @@ const Settings = () => {
           label: item.name,
         }));
         setDataOptions(option);
+        setLoading(false);
       });
   }, []);
 
@@ -100,68 +105,78 @@ const Settings = () => {
   };
 
   return (
-    <div className="">
-      <div className="card border-0 p-3 mx-3 shadow-lg my-4">
-        <p className="text-blue fw-bold fs-4">Set Assessment</p>
-        <div className="mb-3">
-          <label>Set Assessment:</label>
-          <Select
-            value={dataSelectedAssessment}
-            isMulti
-            name="test"
-            options={dataOptions}
-            className="basic-multi-select mt-1"
-            classNamePrefix="select"
-            onChange={handleSelect}
-          />
+    <>
+      {loading === true ? (
+        <div className="text-center p-5">
+          <Spinner animation="border" />
         </div>
-        <div
-          className="btn bg-blue w-25 float-right text-white"
-          onClick={handleSubmitAssessment}
-        >
-          Submit
-        </div>
-      </div>
-      <div className="card border-0 p-3 mx-3 shadow-lg my-4">
-        {dataMessage.map((item) => (
-          <>
-            <p className="text-blue fw-bold fs-4">Set Message ({item.name})</p>
-            <div className="row">
-              <div className="mb-3">
-                <label>Opening Message:</label>
-                <input
-                  type="text"
-                  name="opening"
-                  placeholder="opening"
-                  id={item.id}
-                  className="w-100 mt-1 rounded-3 p-2 border form-control"
-                  defaultValue={item.opening}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label>Ending Message:</label>
-                <input
-                  type="text"
-                  name="closing"
-                  placeholder="ending"
-                  id={item.id}
-                  className="w-100 mt-1 rounded-3 p-2 border form-control"
-                  defaultValue={item.closing}
-                  onChange={handleChange}
-                />
-              </div>
+      ) : (
+        <div className="">
+          <div className="card border-0 p-3 mx-3 shadow-lg my-4">
+            <p className="text-blue fw-bold fs-4">Set Assessment</p>
+            <div className="mb-3">
+              <label>Set Assessment:</label>
+              <Select
+                value={dataSelectedAssessment}
+                isMulti
+                name="test"
+                options={dataOptions}
+                className="basic-multi-select mt-1"
+                classNamePrefix="select"
+                onChange={handleSelect}
+              />
             </div>
-          </>
-        ))}
-        <div
-          className="btn bg-blue w-25 float-right text-white"
-          onClick={handleSubmitMessage}
-        >
-          Submit
+            <div
+              className="btn bg-blue w-25 float-right text-white"
+              onClick={handleSubmitAssessment}
+            >
+              Submit
+            </div>
+          </div>
+          <div className="card border-0 p-3 mx-3 shadow-lg my-4">
+            {dataMessage.map((item) => (
+              <>
+                <p className="text-blue fw-bold fs-4">
+                  Set Message ({item.name})
+                </p>
+                <div className="row">
+                  <div className="mb-3">
+                    <label>Opening Message:</label>
+                    <input
+                      type="text"
+                      name="opening"
+                      placeholder="opening"
+                      id={item.id}
+                      className="w-100 mt-1 rounded-3 p-2 border form-control"
+                      defaultValue={item.opening}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label>Ending Message:</label>
+                    <input
+                      type="text"
+                      name="closing"
+                      placeholder="ending"
+                      id={item.id}
+                      className="w-100 mt-1 rounded-3 p-2 border form-control"
+                      defaultValue={item.closing}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </>
+            ))}
+            <div
+              className="btn bg-blue w-25 float-right text-white"
+              onClick={handleSubmitMessage}
+            >
+              Submit
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

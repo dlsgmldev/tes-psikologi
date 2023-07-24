@@ -60,7 +60,6 @@ const TestPauli = () => {
   for (let index = 0; index < column; index++) {
     array.push(index);
   }
-  console.log(array);
 
   return (
     <div className="p-5">

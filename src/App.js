@@ -24,6 +24,9 @@ import TestPDR from "./pages/Test/testPDR";
 import TestPauli from "./pages/Test/testPauli";
 import Closing from "./pages/Closing";
 import TestKecerdasan from "./pages/Test/testKecerdasan";
+import ReportHolland from "./pages/Report/reportHolland";
+import ReportPDR from "./pages/Report/reportPDR";
+import ReportKecerdasan from "./pages/Report/reportKecerdasan";
 
 const App = () => (
   <BrowserRouter>
@@ -39,6 +42,9 @@ const App = () => (
         }
       >
         <Route path="/" element={<Dashboard />} />
+        <Route path="/report-holland-test/:id" element={<ReportHolland />} />
+        <Route path="/report-pdr-test/:id" element={<ReportPDR />} />
+        <Route path="/report-kecerdasan-test/:id" element={<ReportKecerdasan />} />
         <Route path="/user-management/:id" element={<UserManagement />} />
         <Route path="/add-user/:id" element={<AddUser />} />
         <Route path="/update-user/:id/:id2" element={<UpdateUser />} />
