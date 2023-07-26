@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Modal } from "react-bootstrap";
+import { Card, Modal } from "react-bootstrap";
 
 const TestPDR = () => {
   const navigate = useNavigate();
@@ -12,7 +12,9 @@ const TestPDR = () => {
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const [questionQuiz, setQuestionQuiz] = useState("");
   const [show, setShow] = useState(false);
+  const [time, setTime] = useState(1800);
   const answerArray = JSON.parse(localStorage.getItem("new_array"));
+  const lastTimer = JSON.parse(localStorage.getItem("last_timer_pdr"));
   const { id } = useParams();
 
   const getQuestions = (item) => {
@@ -42,8 +44,26 @@ const TestPDR = () => {
   };
 
   useEffect(() => {
+    if (answerArray === null) {
+      localStorage.setItem("new_array", JSON.stringify([]));
+    }
     getQuestions(lastPage ? lastPage : page);
     setPage(lastPage ? lastPage : 1);
+    if (lastTimer) {
+      setTime(lastTimer);
+    }
+    const timer = setInterval(() => {
+      setTime((time) => {
+        if (time === 0) {
+          clearInterval(timer);
+          handleSubmit();
+          return 0;
+        } else {
+          localStorage.setItem("last_timer_pdr", time - 1);
+          return time - 1;
+        }
+      });
+    }, 1000);
   }, [token]);
 
   const onClickNext = () => {
@@ -55,7 +75,7 @@ const TestPDR = () => {
       setShow(true);
     }
   };
-  
+
   const handleSubmit = () => {
     const answerArray = JSON.parse(localStorage.getItem("new_array"));
     axios
@@ -88,20 +108,29 @@ const TestPDR = () => {
     }
     localStorage.setItem("new_array", JSON.stringify(answerArray));
   };
-  console.log(answerArray);
+
   return (
     <>
       <p className="fs-2 fw-bold text-center mt-4">People Digital Readiness</p>
       <div className="card shadow-lg border-0 mx-5 p-1">
         <div className="quiz-container">
           <div>
-            <div>
-              <span className="active-question-no">
-                {addLeadingZero(lastPage ? lastPage : page)}
-              </span>
-              <span className="total-question">
-                /{addLeadingZero(totalData)}
-              </span>
+            <div className="d-flex">
+              <div>
+                <span className="active-question-no">
+                  {addLeadingZero(lastPage ? lastPage : page)}
+                </span>
+                <span className="total-question">
+                  /{addLeadingZero(totalData)}
+                </span>
+              </div>
+              <Card className="border p-1 px-5 text-center mx-auto mb-3 bg-blue">
+                <span className="fw-bold text-white fs-5">
+                  {/* {`${Math.floor(time / 3600)}`.padStart(2, 0)}: */}
+                  {`${Math.floor((time % 3600) / 60)}`.padStart(2, 0)}:
+                  {`${time % 60}`.padStart(2, 0)}
+                </span>
+              </Card>
             </div>
             <h2>{questionQuiz?.question}</h2>
             <ul>

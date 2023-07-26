@@ -1,6 +1,7 @@
 import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Outlet, useNavigate } from "react-router-dom";
+import logo from "../../assets/Logo Assesment Center-06.png";
 
 const LayoutAdmin = ({ children }) => {
   const navigate = useNavigate();
@@ -15,8 +16,9 @@ const LayoutAdmin = ({ children }) => {
           className="card border-0 border-radius-0 col-2 text-white"
           style={{ backgroundColor: "#6C9BCF", width: "18%" }}
         >
-          <p className="fs-3 fw-bold mt-4 pb-2 ps-2 border-bottom border-3 border-light">
-            Assessment <br /> Test
+          <p className="fs-5 fw-bold mt-3 pb-2 border-bottom border-3 border-light text-center">
+            Tes Psikologi <br />
+            ONE GML
           </p>
           <div
             className="d-flex pointer sidebar-menu"
@@ -56,7 +58,7 @@ const LayoutAdmin = ({ children }) => {
         <div className="col ps-0">
           <div className="shadow-sm p-3">
             <div className="d-flex justify-content-between">
-              <div></div>
+              <img className="d-flex" src={logo} width="auto" height={40} />
               <Dropdown>
                 <Dropdown.Toggle className="d-flex" variant="none">
                   <i class="far fa-user-circle fs-4"></i>

@@ -17,6 +17,7 @@ import c from "../../assets/Asset 63.png";
 import img from "../../assets/Asset 61.png";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import logo from "../../assets/Logo Assesment Center-06.png";
 
 const ReportHolland = () => {
   const [dataReport, setDataReport] = useState("");
@@ -99,9 +100,26 @@ const ReportHolland = () => {
         Export PDF
       </button>
       <div className="card border rounded shadow capture" ref={componentRef}>
-        <div id="pdfHidden" style={{ display: "none" }} className="a4">
+        <div id="pdfHidden" className="a4">
           <Row>
             <div className="col container p-5 my-auto">
+              <div className="d-flex">
+                <img
+                  className="my-auto p-1"
+                  alt=""
+                  src={logo}
+                  width="auto"
+                  height={80}
+                ></img>
+                <div className="mx-3 fw-bold vr"></div>
+                <img
+                  className="my-auto p-1"
+                  alt=""
+                  src={dataReport?.logo_company}
+                  width="auto"
+                  height={48}
+                ></img>
+              </div>
               <p
                 className="fw-bold text-uppercase mb-0"
                 style={{ fontSize: "100px", color: "#213555" }}

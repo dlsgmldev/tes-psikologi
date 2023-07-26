@@ -2,8 +2,12 @@ import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import React, { useEffect, useRef, useState } from "react";
+import { Row } from "react-bootstrap";
 import { Radar } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
+import logo from "../../assets/Logo Assesment Center-06.png";
+import lineTitle from "../../assets/Asset 69.png";
+import bgRight from "../../assets/Asset 28.png";
 
 const ReportPDR = () => {
   const [dataReport, setDataReport] = useState("");
@@ -18,17 +22,18 @@ const ReportPDR = () => {
       })
       .then((res) => {
         setDataReport(res.data);
-        console.log(res.data);
       });
   }, []);
 
   const generatePDF = () => {
+    document.getElementById("pdfHidden").style.display = "block";
     html2canvas(componentRef.current).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "pt", "a4", false);
       pdf.addImage(imgData, "PNG", 0, 0, 600, 0, undefined, false);
       pdf.save("report-digital-readiness.pdf");
     });
+    document.getElementById("pdfHidden").style.display = "none";
   };
 
   const dataRadar = {
@@ -88,13 +93,61 @@ const ReportPDR = () => {
         className="card border rounded shadow capture"
         ref={componentRef}
       >
+        <div id="pdfHidden" style={{ display: "none" }} className="a4">
+          <Row>
+            <div className="col container p-5 my-auto">
+              <div className="d-flex">
+                <img
+                  className="my-auto p-1"
+                  alt=""
+                  src={logo}
+                  width="auto"
+                  height={80}
+                ></img>
+                <div className="mx-3 fw-bold vr"></div>
+                <img
+                  className="my-auto p-1"
+                  alt=""
+                  src={dataReport?.user?.logo_company}
+                  width="auto"
+                  height={48}
+                ></img>
+              </div>
+              <p
+                className="fw-bold text-uppercase mb-0"
+                style={{ fontSize: "70px", color: "#213555" }}
+              >
+                people digital readiness
+              </p>
+              <p
+                className="fw-bold text-uppercase mb-0"
+                style={{ fontSize: "55px", color: "#6DA9E4" }}
+              >
+                Test Report
+              </p>
+              <img src={lineTitle} height="auto" width="70%" />
+              <p className="fw-bold mt-3 fs-4">{dataReport?.user?.fullname}</p>
+              <p className="fw-bold mb-0 fs-4">
+                Email: {dataReport?.user?.email}
+              </p>
+              <p className="fw-bold mb-0 fs-4">
+                Perusahaan: {dataReport?.user?.name_company}
+              </p>
+              <p className="fw-bold mb-0 fs-4">
+                Jabatan: {dataReport?.user?.jabatan}
+              </p>
+            </div>
+            <div className="col-4">
+              <img src={bgRight} height="auto" width="100%" />
+            </div>
+          </Row>
+        </div>
         <div className="rounded" style={{ backgroundColor: "#0E2954" }}>
           <p className="text-center text-uppercase fw-bold mt-2 text-white mb-2">
             data people digital readiness (pdr)
           </p>
         </div>
         <div className="p-2 px-3">
-          <p className="fw-bold">Name: {dataReport?.user?.fullname}</p>
           <p className="fw-bold">Digital Competency:</p>
           <div className="d-flex justify-content-center mt-6">
             <div className="mapping-wrapper">

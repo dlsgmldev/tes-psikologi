@@ -65,7 +65,7 @@ const Login = () => {
           <div className="col card border-0">
             <div className="col-lg-10 my-auto mx-auto">
               <img className="d-flex mx-auto" src={logo} width={250} />
-              <p className="text-center fs-3 fw-bold mt-1">Assessment Test</p>
+              <p className="text-center fs-3 fw-bold mt-1">Assessment Tools</p>
               <div class="form-group w-100 mt-4">
                 <input
                   type="text"

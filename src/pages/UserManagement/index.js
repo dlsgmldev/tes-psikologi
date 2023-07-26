@@ -5,12 +5,13 @@ import { PaginationControl } from "react-bootstrap-pagination-control";
 import { useNavigate, useParams } from "react-router-dom";
 import FileUploader from "../../components/FileUploader";
 import { Spinner } from "react-bootstrap";
+import Navigation from "../../components/Navigation";
 
 const UserManagement = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [dataUser, setDataUser] = useState([""]);
   const [dataPIC, setDataPIC] = useState([""]);
-  const [loading, setLoading] = useState(true);
   const [totalData, setTotalData] = useState(0);
   const [totalDataPIC, setTotalDataPIC] = useState(0);
   const [current, setCurrent] = useState(1);
@@ -111,8 +112,9 @@ const UserManagement = () => {
         </div>
       ) : (
         <div>
+          <Navigation link="client-management" name="Company Management" name2="User Management"/>
           {role === "1" ? (
-            <div className="card border-0 py-2 mx-3 shadow-lg my-4">
+            <div className="card border-0 py-2 mx-3 shadow-lg mb-4">
               <div className="card-body">
                 <p className="text-blue fw-bold fs-4">PIC Management</p>
                 <div className="d-flex justify-content-between">
@@ -221,7 +223,7 @@ const UserManagement = () => {
             ""
           )}
 
-          <div className="card border-0 py-2 mx-3 shadow-lg my-4">
+          <div className="card border-0 py-2 mx-3 shadow-lg mb-4">
             <div className="card-body">
               <p className="text-blue fw-bold fs-4">User Management</p>
               <div className="d-flex justify-content-between">

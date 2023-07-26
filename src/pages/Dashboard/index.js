@@ -10,6 +10,7 @@ import { ExportToExcel } from "../../components/ExportExcel";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState("");
   const [totalDataResponden, setTotalDataResponden] = useState(0);
   const [totalDataSelesai, setTotalDataSelesai] = useState(0);
@@ -34,7 +35,6 @@ const Dashboard = () => {
   const [type, setType] = useState("");
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
   const idCompany = localStorage.getItem("id_company");
   const role = localStorage.getItem("role");
@@ -474,7 +474,7 @@ const Dashboard = () => {
               <table class="table table-bordered mt-2 rounded rounded-3 overflow-hidden">
                 <thead>
                   <tr className="bg-blue text-white text-center">
-                    <th scope="col">No.</th>
+                    {/* <th scope="col">No.</th> */}
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Test</th>
@@ -488,7 +488,7 @@ const Dashboard = () => {
                 {dataType.map((item) => (
                   <tbody>
                     <tr>
-                      <th className="fw-normal text-center">1</th>
+                      {/* <th className="fw-normal text-center">1</th> */}
                       <th className="fw-normal">{item.fullname}</th>
                       <th className="fw-normal">{item.email}</th>
                       <th className="fw-normal">{item.name_test}</th>

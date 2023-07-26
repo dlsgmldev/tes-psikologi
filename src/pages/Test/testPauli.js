@@ -55,7 +55,7 @@ const TestPauli = () => {
 
   const totalData = number.length;
   const column = totalData / 51;
-  console.log(column);
+
   const array = [];
   for (let index = 0; index < column; index++) {
     array.push(index);

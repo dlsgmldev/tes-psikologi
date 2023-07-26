@@ -7,25 +7,33 @@ import Select from "react-select";
 const Settings = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(true);
   const [dataMessage, setDataMessage] = useState([""]);
   const [dataSelectedAssessment, setDataSelectedAssessment] = useState([""]);
   const [dataOptions, setDataOptions] = useState([""]);
-  const [form, setForm] = useState({ opening: "", closing: "" });
   const [idTest, setIdtest] = useState(0);
-  const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
-  const handleChange = (e) => {
+  const handleChangeOpening = (e) => {
     const index = dataMessage.findIndex((p) => p.id == e.target.id);
     const data = dataMessage.find((p) => p.id == e.target.id);
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+
     dataMessage[index] = {
       id: e.target.id,
-      opening: form.opening ? form.opening : data.opening,
-      closing: form.closing ? form.closing : data.closing,
+      opening: e.target.value ? e.target.value : data.opening,
+      closing: data.closing,
+      name: data.name,
+    };
+  };
+
+  const handleChangeClosing = (e) => {
+    const index = dataMessage.findIndex((p) => p.id == e.target.id);
+    const data = dataMessage.find((p) => p.id == e.target.id);
+
+    dataMessage[index] = {
+      id: e.target.id,
+      opening: data.opening,
+      closing: e.target.value ? e.target.value : data.closing,
       name: data.name,
     };
   };
@@ -149,19 +157,19 @@ const Settings = () => {
                       id={item.id}
                       className="w-100 mt-1 rounded-3 p-2 border form-control"
                       defaultValue={item.opening}
-                      onChange={handleChange}
+                      onChange={handleChangeOpening}
                     />
                   </div>
                   <div className="mb-3">
-                    <label>Ending Message:</label>
+                    <label>Closing Message:</label>
                     <input
                       type="text"
                       name="closing"
-                      placeholder="ending"
+                      placeholder="closing"
                       id={item.id}
                       className="w-100 mt-1 rounded-3 p-2 border form-control"
                       defaultValue={item.closing}
-                      onChange={handleChange}
+                      onChange={handleChangeClosing}
                     />
                   </div>
                 </div>

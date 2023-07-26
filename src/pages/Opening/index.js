@@ -43,11 +43,12 @@ const Opening = () => {
     <div className="container p-4 mt-5 d-flex justify-content-center">
       <div className="card p-5 shadow-lg border-0 text-center w-100">
         <p className="fs-1 fw-bold">{dataOpening.name}</p>
+        <p className="fs-5">{dataOpening.opening}</p>
         <button
-          className="btn bg-blue p-2 mt-3 w-50 mx-auto"
+          className="btn bg-blue p-2 mt-3 w-50 mx-auto text-white"
           onClick={handleSubmit}
         >
-          Start
+          Mulai
         </button>
       </div>
     </div>
