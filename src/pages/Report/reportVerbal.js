@@ -8,6 +8,7 @@ import logo from "../../assets/Logo Assesment Center-06.png";
 import lineTitle from "../../assets/Asset 69.png";
 import bgRight from "../../assets/Asset 28.png";
 import { Row } from "react-bootstrap";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
 const ReportVerbal = () => {
   const [dataReport, setDataReport] = useState("");
@@ -27,13 +28,10 @@ const ReportVerbal = () => {
 
   const generatePDF = () => {
     document.getElementById("pdfHidden").style.display = "block";
-    html2canvas(componentRef.current).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "pt", "a4", false);
-      pdf.addImage(imgData, "PNG", 0, 0, 600, 0, undefined, false);
-      pdf.save("report-verbal-test.pdf");
-    });
-    document.getElementById("pdfHidden").style.display = "none";
+    if (componentRef.current) {
+      componentRef.current.save();
+    }
+    // document.getElementById("pdfHidden").style.display = "none";
   };
 
   const dataRadar = {
@@ -85,12 +83,19 @@ const ReportVerbal = () => {
       >
         Export PDF
       </button>
-      <div
-        id="report"
-        className="card border rounded shadow capture"
+      <PDFExport
+        scale={0.6}
+        paperSize="A4"
+        margin="0.5cm"
+        forcePageBreak=".page-break"
+        fileName="report-verbal"
         ref={componentRef}
       >
-        <div id="pdfHidden" style={{ display: "none" }} className="a4">
+      <div
+        id="report"
+        className="card border-0 rounded shadow"
+      >
+        <div id="pdfHidden" className="a4">
           <Row>
             <div className="col container p-5 my-auto">
               <div className="d-flex">
@@ -112,25 +117,23 @@ const ReportVerbal = () => {
               </div>
               <p
                 className="fw-bold text-uppercase mb-0"
-                style={{ fontSize: "90px", color: "#213555" }}
+                style={{ fontSize: "40px", color: "#213555" }}
               >
                 Verbal Test
               </p>
               <p
                 className="fw-bold text-uppercase mb-0"
-                style={{ fontSize: "65px", color: "#6DA9E4" }}
+                style={{ fontSize: "30px", color: "#6DA9E4" }}
               >
                 Test Report
               </p>
               <img src={lineTitle} height="auto" width="70%" />
-              <p className="fw-bold mt-3 fs-4">{dataReport?.fullname}</p>
-              <p className="fw-bold mb-0 fs-4">
-                Email: {dataReport?.email}
-              </p>
-              <p className="fw-bold mb-0 fs-4">
+              <p className="fw-bold mt-3 fs-5">{dataReport?.fullname}</p>
+              <p className="fw-bold mb-0 fs-5">Email: {dataReport?.email}</p>
+              <p className="fw-bold mb-0 fs-5">
                 Perusahaan: {dataReport?.name_company}
               </p>
-              <p className="fw-bold mb-0 fs-4">
+              <p className="fw-bold mb-0 fs-5">
                 Jabatan: {dataReport?.jabatan}
               </p>
             </div>
@@ -139,42 +142,62 @@ const ReportVerbal = () => {
             </div>
           </Row>
         </div>
-        <div className="rounded" style={{ backgroundColor: "#0E2954" }}>
+
+        <div className="rounded page-break" style={{ backgroundColor: "#0E2954" }}>
           <p className="text-center text-uppercase fw-bold mt-2 text-white mb-2">
             data verbal test
           </p>
         </div>
-        <div className="p-2 px-3">
-          <p className="fw-bold">Name: {dataReport?.fullname}</p>
+        <div className="p-2 px-3 text-center">
           <p className="fw-bold">Tanggal: {dataReport?.date_finish}</p>
-          <ol>
+          <div className="d-flex">
             {dataReport?.data_category?.map((item) => (
-              <li>
-                <p>
-                  {item.name}: {item.category_total}
-                </p>
-              </li>
+              <div
+                className="card mx-1 text-white p-2 py-3 w-25 border-0 rounded-3"
+                style={{ backgroundColor: "#C4B0FF" }}
+              >
+                <p className="mb-1">{item.name}</p>
+                <p className="mb-0 fs-5 fw-bold">{item.category_total}</p>
+              </div>
             ))}
-          </ol>
-          <p className="fw-bold">
-            Total Skor Jawaban Benar: {dataReport?.total_keseluruhan}
-          </p>
-          <p>Norma Skor Keseluruhan:</p>
-          <ul>
-            {dataReport?.legend?.map((item) => (
-              <li>
-                {item.name}: {item.value}
-              </li>
-            ))}
-          </ul>
-          <p>
-            <b>Kesimpulan: </b>
-            Saudara {""}
-            <b>{dataReport?.fullname}</b> {""}
-            memiliki kecerdasan dalam kategori <b>{dataReport?.kesimpulan}</b>
-          </p>
+          </div>
+          <div className="d-flex justify-content-center gap-3 mt-3">
+            <div className="card border-0 shadow p-3 w-25" style={{backgroundColor:"#7A86B6"}}>
+              <p className="fw-bold text-white">Total Skor Jawaban Benar:</p>
+              <div
+                className="p-3 rounded-pill fw-bold mx-auto"
+                style={{ width: "65px", backgroundColor:"#DBDFFD" }}
+              >
+                <span className="fs-5">{dataReport?.total_keseluruhan}</span>
+              </div>
+            </div>
+            <div className="card border-0 shadow p-2 w-50 text-white" style={{backgroundColor:"#7A86B6"}}>
+              <p className="my-auto">
+                <p className="fw-bold mb-3">Kesimpulan: </p>
+                Saudara {""}
+                <b>{dataReport?.fullname}</b> {""}
+                memiliki kecerdasan verbal dalam kategori{" "}
+                <b>{dataReport?.kesimpulan}</b>
+              </p>
+            </div>
+          </div>
+
+          <div
+            className="card p-3 border-0 bg-light text-center mx-auto shadow-lg mt-3"
+            style={{ width: "25%" }}
+          >
+            <p className="fw-bold">Norma Skor Keseluruhan:</p>
+            <ul className="text-center-ul mb-0">
+              {dataReport?.legend?.map((item) => (
+                <li>
+                  {item.name}: {item.value}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
+      </PDFExport>
     </div>
   );
 };

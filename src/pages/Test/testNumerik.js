@@ -3,10 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Card, Modal } from "react-bootstrap";
 
-const TestPDR = () => {
+const TestNumerik = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const lastPage = JSON.parse(localStorage.getItem("last_page"));
+  const token = localStorage.getItem("token");
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
@@ -14,7 +14,7 @@ const TestPDR = () => {
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(1800);
   const answerArray = JSON.parse(localStorage.getItem("new_array"));
-  const lastTimer = JSON.parse(localStorage.getItem("last_timer_pdr"));
+  const lastTimer = JSON.parse(localStorage.getItem("last_timer_verbal"));
   const { id } = useParams();
 
   const getQuestions = (item) => {
@@ -29,14 +29,16 @@ const TestPDR = () => {
         const index = answerArray.find(
           (p) => p.id_question === res.data.data[0].id
         );
-        if (index?.answer === "1") {
+        if (index?.answer === "a") {
           setSelectedAnswerIndex(0);
-        } else if (index?.answer === "2") {
+        } else if (index?.answer === "b") {
           setSelectedAnswerIndex(1);
-        } else if (index?.answer === "3") {
+        } else if (index?.answer === "c") {
           setSelectedAnswerIndex(2);
-        } else if (index?.answer === "4") {
+        } else if (index?.answer === "d") {
           setSelectedAnswerIndex(3);
+        } else if (index?.answer === "e") {
+          setSelectedAnswerIndex(4);
         } else {
           setSelectedAnswerIndex(null);
         }
@@ -59,7 +61,7 @@ const TestPDR = () => {
           handleSubmit();
           return 0;
         } else {
-          localStorage.setItem("last_timer_pdr", time - 1);
+          localStorage.setItem("last_timer_verbal", time - 1);
           return time - 1;
         }
       });
@@ -111,7 +113,7 @@ const TestPDR = () => {
 
   return (
     <>
-      <p className="fs-2 fw-bold text-center mt-4">People Digital Readiness</p>
+      <p className="fs-2 fw-bold text-center mt-4">Tes Numerik</p>
       <div className="card shadow-lg border-0 mx-5 p-1">
         <div className="quiz-container">
           <div>
@@ -132,32 +134,45 @@ const TestPDR = () => {
                 </span>
               </Card>
             </div>
-            <h2>{questionQuiz?.question}</h2>
+            {questionQuiz?.question ? (
+              <p className="fw-bold">{questionQuiz?.question}</p>
+            ) : (
+              <img
+                src={questionQuiz?.question_image}
+                width="20%"
+                height="auto"
+              />
+            )}
             <ul>
               {questionQuiz.option?.map((answer, index) => (
                 <li
                   onClick={() => onAnswerSelected(answer.value, index)}
-                  key={answer.option}
+                  // key={answer.option}
                   className={
                     selectedAnswerIndex === index ? "selected-answer" : null
                   }
                 >
-                  {answer.option}
+                  {answer.value}. {""}
+                  {answer?.option ? (
+                    <span>{answer?.option}</span>
+                  ) : (
+                    <img src={answer?.option_image} width="3%" height="auto" />
+                  )}
                 </li>
               ))}
             </ul>
             <div className="flex-right">
-              <button
+              {/* <button
                 onClick={() => {
                   setPage((prev) => prev - 1);
                   getQuestions(page - 1);
                   localStorage.setItem("last_page", JSON.stringify(page - 1));
                 }}
-                className="me-3"
                 disabled={page === 1}
+                className="me-3"
               >
                 Kembali
-              </button>
+              </button> */}
               <button
                 onClick={onClickNext}
                 disabled={selectedAnswerIndex === null}
@@ -194,4 +209,4 @@ const TestPDR = () => {
   );
 };
 
-export default TestPDR;
+export default TestNumerik;

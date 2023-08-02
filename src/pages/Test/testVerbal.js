@@ -153,7 +153,7 @@ const TestVerbal = () => {
               ))}
             </ul>
             <div className="flex-right">
-              <button
+              {/* <button
                 onClick={() => {
                   setPage((prev) => prev - 1);
                   getQuestions(page - 1);
@@ -162,13 +162,13 @@ const TestVerbal = () => {
                 disabled={page === 1}
                 className="me-3"
               >
-                Prev
-              </button>
+                Kembali
+              </button> */}
               <button
                 onClick={onClickNext}
                 disabled={selectedAnswerIndex === null}
               >
-                {page === totalData ? "Finish" : "Next"}
+                {page === totalData ? "Selesai" : "Selanjutnya"}
               </button>
             </div>
           </div>
@@ -178,20 +178,20 @@ const TestVerbal = () => {
       {/* modal */}
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Body>
-          <p className="fs-4 fw-bold">Confirmation</p>
-          <p>Are you sure you want submit?</p>
+          <p className="fs-4 fw-bold">Konfirmasi</p>
+          <p>Apakah Anda yakin ingin menyelesaikan tes ini?</p>
           <div className="d-flex justify-content-center">
             <div
               className="btn bg-blue mx-2 text-white px-4"
               onClick={handleSubmit}
             >
-              OK
+              Ya
             </div>
             <div
               className="btn bg-blue mx-2 text-white px-4"
               onClick={() => setShow(false)}
             >
-              Cancel
+              Tidak
             </div>
           </div>
         </Modal.Body>

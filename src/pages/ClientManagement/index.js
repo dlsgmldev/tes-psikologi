@@ -151,20 +151,20 @@ const ClientManagement = () => {
             {/* for modal */}
             <Modal show={show} onHide={() => setShow(false)}>
               <Modal.Body>
-                <p className="fs-4 fw-bold">Confirmation</p>
-                <p>Are you sure you want to delete this?</p>
+                <p className="fs-4 fw-bold">Konfirmasi</p>
+                <p>Apakah Anda yakin mau menghapus ini?</p>
                 <div className="d-flex justify-content-center">
                   <div
                     className="btn bg-blue mx-2 text-white px-4"
                     onClick={handleDelete}
                   >
-                    OK
+                    Ya
                   </div>
                   <div
                     className="btn bg-blue mx-2 text-white px-4"
                     onClick={() => setShow(false)}
                   >
-                    Cancel
+                    Tidak
                   </div>
                 </div>
               </Modal.Body>

@@ -242,20 +242,20 @@ const TestHolland = () => {
 
       <Modal show={showConfirmation} onHide={() => setShowConfirmation(false)}>
         <Modal.Body>
-          <p className="fs-4 fw-bold">Confirmation</p>
-          <p>Are you sure you want submit?</p>
+          <p className="fs-4 fw-bold">Konfirmasi</p>
+          <p>Apakah Anda yakin ingin menyelesaikan tes ini?</p>
           <div className="d-flex justify-content-center">
             <div
               className="btn bg-blue mx-2 text-white px-4"
               onClick={handleOk}
             >
-              OK
+              Ya
             </div>
             <div
               className="btn bg-blue mx-2 text-white px-4"
               onClick={() => setShowConfirmation(false)}
             >
-              Cancel
+              Tidak
             </div>
           </div>
         </Modal.Body>

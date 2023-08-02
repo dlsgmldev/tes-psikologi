@@ -36,7 +36,7 @@ const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
-  const idCompany = localStorage.getItem("id_company");
+  const idCompany = JSON.parse(localStorage.getItem("id_company"));
   const role = localStorage.getItem("role");
 
   const dataType =
@@ -63,9 +63,9 @@ const Dashboard = () => {
   const getData = (
     pageSize,
     pageIndex,
-    searchIndex,
     filterCompany,
-    filterTest
+    filterTest,
+    searchIndex
   ) => {
     axios
       .get(
@@ -76,7 +76,7 @@ const Dashboard = () => {
           headers: { Authorization: "Bearer " + token },
           params: {
             search: searchIndex,
-            filter_company: filterCompany,
+            filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
           },
         }
@@ -109,7 +109,7 @@ const Dashboard = () => {
           headers: { Authorization: "Bearer " + token },
           params: {
             search: searchIndex,
-            filter_company: filterCompany,
+            filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
           },
         }
@@ -142,7 +142,7 @@ const Dashboard = () => {
           headers: { Authorization: "Bearer " + token },
           params: {
             search: searchIndex,
-            filter_company: filterCompany,
+            filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
           },
         }
@@ -175,7 +175,7 @@ const Dashboard = () => {
           headers: { Authorization: "Bearer " + token },
           params: {
             search: searchIndex,
-            filter_company: filterCompany,
+            filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
           },
         }
@@ -223,7 +223,7 @@ const Dashboard = () => {
 
   const getTest = () => {
     axios
-      .get(`${process.env.REACT_APP_URL}ac/get_test_option`, {
+      .get(`${process.env.REACT_APP_URL}ac/get_test_option/${idCompany ?? 0}`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -240,26 +240,16 @@ const Dashboard = () => {
     getTest();
     getData();
     axios
-      .get(
-        `${process.env.REACT_APP_URL}ac/box_info/${
-          idCompany === "null" ? 0 : idCompany
-        }`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
+      .get(`${process.env.REACT_APP_URL}ac/box_info/${idCompany ?? 0}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
       .then((res) => {
         setInfo(res.data);
       });
     axios
-      .get(
-        `${process.env.REACT_APP_URL}ac/pie_chart/${
-          idCompany === "null" ? 0 : idCompany
-        }`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
+      .get(`${process.env.REACT_APP_URL}ac/pie_chart/${idCompany ?? 0}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
       .then((res) => {
         setPieChart(res.data);
       });
@@ -275,6 +265,7 @@ const Dashboard = () => {
       },
     ],
   };
+  console.log(current);
 
   return (
     <>
@@ -319,7 +310,7 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-responden shadow h-100 py-2 pointer"
-                onClick={() => setType("responden")}
+                onClick={() => (setType("responden"), setCurrent(1), getData())}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -341,7 +332,7 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-selesai shadow h-100 py-2 pointer"
-                onClick={() => setType("selesai")}
+                onClick={() => (setType("selesai"), setCurrent(1), getData())}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -363,7 +354,7 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-proses shadow h-100 py-2 pointer"
-                onClick={() => setType("proses")}
+                onClick={() => (setType("proses"), setCurrent(1), getData())}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -385,7 +376,7 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-mulai shadow h-100 py-2 pointer"
-                onClick={() => setType("mulai")}
+                onClick={() => (setType("mulai"), setCurrent(1), getData())}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -432,9 +423,9 @@ const Dashboard = () => {
                       getData(
                         10,
                         1,
-                        e.target.value,
                         selectedCompany,
-                        selectedTest
+                        selectedTest,
+                        e.target.value
                       );
                     }}
                   />
@@ -443,26 +434,31 @@ const Dashboard = () => {
                   </span>
                 </div>
                 <div className="d-flex">
-                  <ExportToExcel
-                    apiData={
-                      type === "selesai"
-                        ? selesaiExport
-                        : type === "mulai"
-                        ? belumMulaiExport
-                        : type === "proses"
-                        ? dalamProsesExport
-                        : respondenExport
-                    }
-                    fileName={
-                      type === "selesai"
-                        ? "data-selesai"
-                        : type === "mulai"
-                        ? "data-belum-mulai"
-                        : type === "proses"
-                        ? "data-dalam-proses"
-                        : "data-responden"
-                    }
-                  />
+                  {role === "1" ? (
+                    <ExportToExcel
+                      apiData={
+                        type === "selesai"
+                          ? selesaiExport
+                          : type === "mulai"
+                          ? belumMulaiExport
+                          : type === "proses"
+                          ? dalamProsesExport
+                          : respondenExport
+                      }
+                      fileName={
+                        type === "selesai"
+                          ? "data-selesai"
+                          : type === "mulai"
+                          ? "data-belum-mulai"
+                          : type === "proses"
+                          ? "data-dalam-proses"
+                          : "data-responden"
+                      }
+                    />
+                  ) : (
+                    ""
+                  )}
+
                   <div
                     className="btn bg-blue text-white px-3 ms-2"
                     onClick={() => setShow(true)}
@@ -480,9 +476,13 @@ const Dashboard = () => {
                     <th scope="col">Test</th>
                     <th scope="col">Status</th>
                     <th scope="col">Company</th>
-                    <th scope="col" width="8%">
-                      Action
-                    </th>
+                    {role === "1" ? (
+                      <th scope="col" width="8%">
+                        Action
+                      </th>
+                    ) : (
+                      ""
+                    )}
                   </tr>
                 </thead>
                 {dataType.map((item) => (
@@ -500,21 +500,25 @@ const Dashboard = () => {
                           : "Dalam proses"}
                       </th>
                       <th className="fw-normal">{item.name_company}</th>
-                      <th className="fw-bold text-center">
-                        {item.status === "2" ? (
-                          <i
-                            class="fas fa-arrow-right bg-secondary text-white rounded-circle p-1 pointer"
-                            onClick={() => {
-                              window.open(
-                                `${item.slug_report}/${item.id}`,
-                                "_blank"
-                              );
-                            }}
-                          ></i>
-                        ) : (
-                          "-"
-                        )}
-                      </th>
+                      {role === "1" ? (
+                        <th className="fw-bold text-center">
+                          {item.status === "2" ? (
+                            <i
+                              class="fas fa-arrow-right bg-secondary text-white rounded-circle p-1 pointer"
+                              onClick={() => {
+                                window.open(
+                                  `${item.slug_report}/${item.id}`,
+                                  "_blank"
+                                );
+                              }}
+                            ></i>
+                          ) : (
+                            "-"
+                          )}
+                        </th>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </tbody>
                 ))}
@@ -532,7 +536,7 @@ const Dashboard = () => {
                 }
                 limit={10}
                 changePage={(page, size) => {
-                  getData(size, page);
+                  getData(size, page, selectedCompany, selectedTest, search);
                   setCurrent(page);
                 }}
               />
@@ -572,7 +576,7 @@ const Dashboard = () => {
                 <div
                   className="btn bg-blue mx-2 text-white px-4"
                   onClick={() => {
-                    getData(10, 1, search, selectedCompany, selectedTest);
+                    getData(10, 1, selectedCompany, selectedTest, search);
                     setShow(false);
                   }}
                 >

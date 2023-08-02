@@ -1,10 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import dayjs from "dayjs";
 
 const UpdateUser = () => {
   const navigate = useNavigate();
   const [dataUser, setDataUser] = useState("");
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
   const token = localStorage.getItem("token");
   const { id, id2 } = useParams();
 
@@ -51,6 +58,8 @@ const UpdateUser = () => {
           jabatan: form.jabatan ? form.jabatan : dataUser.jabatan,
           divisi: form.divisi ? form.divisi : dataUser.divisi,
           nip: form.nip ? form.nip : dataUser.nip,
+          // start_access: startTime? startTime: dataUser.start_access,
+          // end_access: endTime? endTime: dataUser.end_access,
           id_company: id2,
           role: 2,
         },
@@ -171,6 +180,36 @@ const UpdateUser = () => {
                 onChange={handleChange}
               />
             </div>
+            {/* <div className="my-3">
+              <label>Start Access:</label>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DateTimePicker"]}>
+                  <DateTimePicker
+                  defaultValue={dayjs(dataUser.start_access)}
+                    onChange={(dateString) =>
+                      setStartTime(
+                        Math.floor(new Date(dateString).getTime() / 1000)
+                      )
+                    }
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </div>
+            <div className="my-3">
+              <label>End Access:</label>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DateTimePicker"]}>
+                  <DateTimePicker
+                  defaultValue={dayjs(dataUser.end_access)}
+                    onChange={(dateString) =>
+                      setEndTime(
+                        Math.floor(new Date(dateString).getTime() / 1000)
+                      )
+                    }
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </div> */}
           </div>
         </div>
         <div

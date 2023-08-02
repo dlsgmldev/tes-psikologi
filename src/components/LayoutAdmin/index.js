@@ -7,7 +7,7 @@ const LayoutAdmin = ({ children }) => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const role = localStorage.getItem("role");
-  const idCompany = localStorage.getItem("id_company");
+  const logoCompany = localStorage.getItem("logo_company");
 
   return (
     <div className="wrapper">
@@ -36,29 +36,28 @@ const LayoutAdmin = ({ children }) => {
               <span className="ms-2 text-sidebar">Company Management</span>
             </div>
           ) : (
-            <>
-              <div
-                className="d-flex pointer sidebar-menu"
-                onClick={() => navigate(`/user-management/${idCompany}`)}
-              >
-                <i class="fas fa-user-alt fa-fw mt-1"></i>
-                <span className="ms-2 text-sidebar">User Management</span>
-              </div>
-              <div
-                className="d-flex pointer sidebar-menu"
-                onClick={() => navigate(`/settings/${idCompany}`)}
-              >
-                <i class="fas fa-cog fa-fw mt-1"></i>
-                <span className="ms-2 text-sidebar">Settings</span>
-              </div>
-            </>
+            ""
           )}
           <span className="mt-auto text-xs text-center">v 1.0.0</span>
         </div>
         <div className="col ps-0">
-          <div className="shadow-sm p-3">
-            <div className="d-flex justify-content-between">
-              <img className="d-flex" src={logo} width="auto" height={40} />
+          <div className="d-flex shadow-sm p-3">
+            <img className="d-flex" src={logo} width="auto" height={40} />
+            {logoCompany ? (
+              <>
+                <div className="mx-3 fw-bold vr"></div>
+                <img
+                  className="my-auto p-1"
+                  alt=""
+                  src={logoCompany}
+                  width="auto"
+                  height={33}
+                ></img>
+              </>
+            ) : (
+              ""
+            )}
+            <div className="d-flex justify-content-end ms-auto">
               <Dropdown>
                 <Dropdown.Toggle className="d-flex" variant="none">
                   <i class="far fa-user-circle fs-4"></i>
@@ -72,7 +71,7 @@ const LayoutAdmin = ({ children }) => {
                       localStorage.clear();
                     }}
                   >
-                    Logout
+                    Keluar
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

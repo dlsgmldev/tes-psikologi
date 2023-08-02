@@ -10,15 +10,21 @@ const LayoutUser = ({ children }) => {
 
   return (
     <div>
-      <div className="header d-flex p-2 px-3 border shadow rounded-3">
-        <img className="my-auto p-1" alt="" src={logo} width="auto" height={55}></img>
-        <div className="mx-3 fw-bold vr"></div>
+      <div className="header d-flex p-3 border shadow rounded-3">
+        {/* <img
+          className="my-auto p-1"
+          alt=""
+          src={logo}
+          width="auto"
+          height={55}
+        ></img>
+        <div className="mx-3 fw-bold vr"></div> */}
         <img
           className="my-auto p-1"
           alt=""
           src={logoCompany}
           width="auto"
-          height={33}
+          height={37}
         ></img>
         <div className="d-flex justify-content-end mt-2 ms-auto">
           <Dropdown>
@@ -34,7 +40,7 @@ const LayoutUser = ({ children }) => {
                   localStorage.clear();
                 }}
               >
-                Logout
+                Keluar
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

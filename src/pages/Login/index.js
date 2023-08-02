@@ -44,7 +44,7 @@ const Login = () => {
             },
           })
           .then((res) => {
-            navigate("/home")
+            navigate("/home");
           });
       })
       .catch((err) => {
@@ -52,11 +52,11 @@ const Login = () => {
       });
   };
 
-  const handleKeypress = e => {
-  if (e.keyCode === 13) {
-    handleSubmit();
-  }
-};
+  const handleKeypress = (e) => {
+    if (e.keyCode === 13) {
+      handleSubmit();
+    }
+  };
 
   return (
     <section className="vh-100">
@@ -64,8 +64,14 @@ const Login = () => {
         <div className="row">
           <div className="col card border-0">
             <div className="col-lg-10 my-auto mx-auto">
-              <img className="d-flex mx-auto" src={logo} width={250} />
-              <p className="text-center fs-3 fw-bold mt-1">Assessment Tools</p>
+              <img
+                className="d-flex mx-auto"
+                src="https://apidls.onegml.com/ac/holland_image/1690252267.jpg"
+                width={150}
+              />
+              <p className="text-center fs-3 fw-bold mt-3 text-blue">
+                Tes Psikologi
+              </p>
               <div class="form-group w-100 mt-4">
                 <input
                   type="text"
@@ -91,7 +97,7 @@ const Login = () => {
                 onClick={handleSubmit}
                 type="submit"
               >
-                Login
+                Masuk
               </button>
               <p className="text-center mt-4 text-xs">
                 Copyright © Assessment Center Solutions 2023.

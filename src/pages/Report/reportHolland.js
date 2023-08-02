@@ -18,6 +18,7 @@ import img from "../../assets/Asset 61.png";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import logo from "../../assets/Logo Assesment Center-06.png";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
 const ReportHolland = () => {
   const [dataReport, setDataReport] = useState("");
@@ -37,28 +38,10 @@ const ReportHolland = () => {
 
   const generatePDF = () => {
     document.getElementById("pdfHidden").style.display = "block";
-    document.getElementById("pdfHidden2").style.display = "block";
-    html2canvas(componentRef.current).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 210;
-      const pageHeight = 309;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      const doc = new jsPDF("pt", "mm", "a4");
-      let position = 0;
-      doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight + 25);
-      // doc.output('datauri');
-      heightLeft -= pageHeight;
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        doc.addPage();
-        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight + 25);
-        heightLeft -= pageHeight;
-      }
-      doc.save("report-holland.pdf");
-    });
-    document.getElementById("pdfHidden").style.display = "none";
-    document.getElementById("pdfHidden2").style.display = "none";
+    if (componentRef.current) {
+      componentRef.current.save();
+    }
+    // document.getElementById("pdfHidden").style.display = "none";
   };
 
   const dataRadar = {
@@ -91,6 +74,55 @@ const ReportHolland = () => {
     },
   };
 
+  const getBase64FromUrl = async (url) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        resolve(base64data);
+      };
+    });
+  };
+  // getBase64FromUrl('https://apidls.onegml.com/ac/holland_image/antropologi.png').then(console.log)
+
+  function convertImageToBase64(imgUrl, callback) {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.height = image.naturalHeight;
+      canvas.width = image.naturalWidth;
+      ctx.drawImage(image, 0, 0);
+      const dataUrl = canvas.toDataURL();
+      callback && callback(dataUrl);
+    };
+    image.src = imgUrl;
+  }
+
+  // convertImageToBase64('https://apidls.onegml.com/ac/holland_image/antropologi.png', console.log)
+
+  function toDataURL(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        callback(reader.result);
+      }
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  }
+  
+  btoa('https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0', function(dataUrl) {
+    console.log( dataUrl)
+  })
+
   return (
     <div className="p-3">
       <button
@@ -99,10 +131,18 @@ const ReportHolland = () => {
       >
         Export PDF
       </button>
-      <div className="card border rounded shadow capture" ref={componentRef}>
+      <PDFExport
+        scale={0.6}
+        paperSize="A4"
+        margin="0.5cm"
+        forcePageBreak=".page-break"
+        fileName="report-holland"
+        ref={componentRef}
+      >
+      <div className="card border-0 rounded shadow">
         <div id="pdfHidden" className="a4">
           <Row>
-            <div className="col container p-5 my-auto">
+            <div className="col-8 container p-5 my-auto">
               <div className="d-flex">
                 <img
                   className="my-auto p-1"
@@ -122,23 +162,23 @@ const ReportHolland = () => {
               </div>
               <p
                 className="fw-bold text-uppercase mb-0"
-                style={{ fontSize: "100px", color: "#213555" }}
+                style={{ fontSize: "40px", color: "#213555" }}
               >
                 Holland
               </p>
               <p
                 className="fw-bold text-uppercase mb-0"
-                style={{ fontSize: "75px", color: "#6DA9E4" }}
+                style={{ fontSize: "30px", color: "#6DA9E4" }}
               >
                 Test Report
               </p>
               <img src={lineTitle} height="auto" width="70%" />
-              <p className="fw-bold mt-3 fs-4">{dataReport?.fullname}</p>
-              <p className="fw-bold mb-0 fs-4">Email: {dataReport?.email}</p>
-              <p className="fw-bold mb-0 fs-4">
+              <p className="fw-bold mt-3 fs-5">{dataReport?.fullname}</p>
+              <p className="fw-bold mb-0 fs-5">Email: {dataReport?.email}</p>
+              <p className="fw-bold mb-0 fs-5">
                 Perusahaan: {dataReport?.name_company}
               </p>
-              <p className="fw-bold mb-0 fs-4">
+              <p className="fw-bold mb-0 fs-5">
                 Jabatan: {dataReport?.jabatan}
               </p>
             </div>
@@ -147,7 +187,7 @@ const ReportHolland = () => {
             </div>
           </Row>
         </div>
-        <div id="pdfHidden2" style={{ display: "none" }} className="a4">
+        <div id="pdfHidden2" className="page-break">
           <Row>
             <div className="col-1">
               <img src={bgLeft} height="100%" width="130%" />
@@ -273,19 +313,19 @@ const ReportHolland = () => {
                 </span>
               </div>
               <div className="d-flex justify-content-center mt-2">
-                <img src={img} height="auto" width="70%" />
+                <img src={img} height="auto" width="60%" />
               </div>
             </div>
           </Row>
         </div>
-        <div className="rounded" style={{ backgroundColor: "#0E2954" }}>
+
+        <div className="rounded page-break" style={{ backgroundColor: "#0E2954" }}>
           <p className="text-center text-uppercase fw-bold mt-2 text-white mb-2">
             data Holland test (RIASEC)
           </p>
         </div>
         <div className="p-2 px-3">
           <p className="fw-bold mt-1 text-center">Skor Jawaban:</p>
-
           <Row>
             <Col md={5} className="d-flex align-items-start">
               <div className="d-flex justify-content-center p-3 rounded shadow-lg p-4 pb-2 ms-2">
@@ -404,12 +444,13 @@ const ReportHolland = () => {
               }
             })}
           </Row>
-          <img src={line2} width="100%" />
+          {/* <img src={line2} width="100%" /> */}
           <span className="d-flex justify-content-center text-xs mt-2">
             Copyright © Assessment Center Solutions 2023. All rights reserved.
           </span>
         </div>
       </div>
+      </PDFExport>
     </div>
   );
 };

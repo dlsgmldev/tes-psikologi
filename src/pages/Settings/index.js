@@ -69,7 +69,7 @@ const Settings = () => {
         setLoading(false);
       });
     axios
-      .get(`${process.env.REACT_APP_URL}ac/get_test_option`, {
+      .get(`${process.env.REACT_APP_URL}ac/get_test_option/0`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -81,6 +81,7 @@ const Settings = () => {
         setLoading(false);
       });
   }, []);
+  console.log(dataOptions);
 
   const handleSubmitAssessment = () => {
     axios

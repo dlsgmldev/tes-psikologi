@@ -27,6 +27,7 @@ import ReportHolland from "./pages/Report/reportHolland";
 import ReportPDR from "./pages/Report/reportPDR";
 import TestVerbal from "./pages/Test/testVerbal";
 import ReportVerbal from "./pages/Report/reportVerbal";
+import TestNumerik from "./pages/Test/testNumerik";
 
 const App = () => (
   <BrowserRouter>
@@ -70,6 +71,7 @@ const App = () => (
         <Route path="/pdr-test/:id" element={<TestPDR />} />
         <Route path="/pauli-test/:id" element={<TestPauli />} />
         <Route path="/verbal-test/:id" element={<TestVerbal />} />
+        <Route path="/numeric-test/:id" element={<TestNumerik />} />
         <Route path="/closing/:id" element={<Closing />} />
       </Route>
     </Routes>
