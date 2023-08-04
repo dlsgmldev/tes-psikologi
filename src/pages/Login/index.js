@@ -67,7 +67,7 @@ const Login = () => {
               <img
                 className="d-flex mx-auto"
                 src="https://apidls.onegml.com/ac/holland_image/1690252267.jpg"
-                width={150}
+                width={120}
               />
               <p className="text-center fs-3 fw-bold mt-3 text-blue">
                 Tes Psikologi

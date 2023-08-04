@@ -81,7 +81,6 @@ const Settings = () => {
         setLoading(false);
       });
   }, []);
-  console.log(dataOptions);
 
   const handleSubmitAssessment = () => {
     axios

@@ -103,7 +103,7 @@ const ClientManagement = () => {
                 {dataClient.map((item) => (
                   <tbody>
                     <tr>
-                      {/* <th scope="row" className="fw-normal" width="5%">
+                      {/* <th scope="row" className="fw-normal text-center" width="5%">
                         1
                       </th> */}
                       <td className="fw-normal" width="15%">

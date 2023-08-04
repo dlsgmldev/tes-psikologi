@@ -1,5 +1,3 @@
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Radar } from "react-chartjs-2";
@@ -18,6 +16,7 @@ import img from "../../assets/Asset 61.png";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import logo from "../../assets/Logo Assesment Center-06.png";
+import infomedia from "../../assets/infomedia.jpg";
 import { PDFExport } from "@progress/kendo-react-pdf";
 
 const ReportHolland = () => {
@@ -144,24 +143,24 @@ const ReportHolland = () => {
           <Row>
             <div className="col-8 container p-5 my-auto">
               <div className="d-flex">
-                <img
+                {/* <img
                   className="my-auto p-1"
                   alt=""
                   src={logo}
                   width="auto"
                   height={80}
                 ></img>
-                <div className="mx-3 fw-bold vr"></div>
+                <div className="mx-3 fw-bold vr"></div> */}
                 <img
                   className="my-auto p-1"
                   alt=""
-                  src={dataReport?.logo_company}
+                  src={infomedia}
                   width="auto"
-                  height={48}
+                  height={35}
                 ></img>
               </div>
               <p
-                className="fw-bold text-uppercase mb-0"
+                className="fw-bold text-uppercase mb-0 mt-1"
                 style={{ fontSize: "40px", color: "#213555" }}
               >
                 Holland

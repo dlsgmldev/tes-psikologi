@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Navigation = ({ name, link, name2, link2 }) => {
+const Navigation = ({ name, link, name2, link2, name3 }) => {
   const navigate = useNavigate();
 
   return (
@@ -27,6 +27,12 @@ const Navigation = ({ name, link, name2, link2 }) => {
           onClick={() => navigate(`/${link2}`)}
         >
           <span>{name2}</span>
+        </li>
+        <li
+          className={name3 ? "breadcrumb-item pointer" : "pointer"}
+          // onClick={() => navigate(`/${link2}`)}
+        >
+          <span>{name3}</span>
         </li>
       </ol>
     </nav>

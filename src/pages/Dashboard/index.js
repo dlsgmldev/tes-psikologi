@@ -265,7 +265,6 @@ const Dashboard = () => {
       },
     ],
   };
-  console.log(current);
 
   return (
     <>

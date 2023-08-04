@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Card, Modal } from "react-bootstrap";
 
-const TestNumerik = () => {
+const TestNumeric = () => {
   const navigate = useNavigate();
   const lastPage = JSON.parse(localStorage.getItem("last_page"));
   const token = localStorage.getItem("token");
@@ -12,7 +12,7 @@ const TestNumerik = () => {
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const [questionQuiz, setQuestionQuiz] = useState("");
   const [show, setShow] = useState(false);
-  const [time, setTime] = useState(1800);
+  const [time, setTime] = useState(2700);
   const answerArray = JSON.parse(localStorage.getItem("new_array"));
   const lastTimer = JSON.parse(localStorage.getItem("last_timer_verbal"));
   const { id } = useParams();
@@ -209,4 +209,4 @@ const TestNumerik = () => {
   );
 };
 
-export default TestNumerik;
+export default TestNumeric;

@@ -1,10 +1,8 @@
 import axios from "axios";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import React, { useEffect, useRef, useState } from "react";
-import { Radar } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
 import logo from "../../assets/Logo Assesment Center-06.png";
+import infomedia from "../../assets/infomedia.jpg";
 import lineTitle from "../../assets/Asset 69.png";
 import bgRight from "../../assets/Asset 28.png";
 import { Row } from "react-bootstrap";
@@ -31,48 +29,6 @@ const ReportVerbal = () => {
     if (componentRef.current) {
       componentRef.current.save();
     }
-    // document.getElementById("pdfHidden").style.display = "none";
-  };
-
-  const dataRadar = {
-    labels: dataReport?.radar_data?.label,
-    datasets: [
-      {
-        label: "Data",
-        data: dataReport?.radar_data?.data,
-        fill: true,
-        borderColor: "blue",
-      },
-      {
-        label: "Baseline",
-        data: dataReport?.radar_data?.data,
-        fill: true,
-        border: "dashed red",
-      },
-    ],
-    options: {
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        callbacks: {
-          label: function (tooltipItem) {
-            return tooltipItem.yLabel;
-          },
-        },
-      },
-      scale: {
-        pointLabels: {
-          fontSize: 15,
-        },
-        ticks: {
-          beginAtZero: true,
-          max: 20,
-          min: 0,
-          stepSize: 5,
-        },
-      },
-    },
   };
 
   return (
@@ -99,24 +55,24 @@ const ReportVerbal = () => {
           <Row>
             <div className="col container p-5 my-auto">
               <div className="d-flex">
-                <img
+                {/* <img
                   className="my-auto p-1"
                   alt=""
                   src={logo}
                   width="auto"
                   height={80}
                 ></img>
-                <div className="mx-3 fw-bold vr"></div>
+                <div className="mx-3 fw-bold vr"></div> */}
                 <img
                   className="my-auto p-1"
                   alt=""
-                  src={dataReport?.logo_company}
+                  src={infomedia}
                   width="auto"
-                  height={48}
+                  height={35}
                 ></img>
               </div>
               <p
-                className="fw-bold text-uppercase mb-0"
+                className="fw-bold text-uppercase mb-0 mt-1"
                 style={{ fontSize: "40px", color: "#213555" }}
               >
                 Verbal Test
@@ -154,7 +110,7 @@ const ReportVerbal = () => {
             {dataReport?.data_category?.map((item) => (
               <div
                 className="card mx-1 text-white p-2 py-3 w-25 border-0 rounded-3"
-                style={{ backgroundColor: "#C4B0FF" }}
+                style={{ backgroundColor: "#176B87" }}
               >
                 <p className="mb-1">{item.name}</p>
                 <p className="mb-0 fs-5 fw-bold">{item.category_total}</p>
@@ -162,16 +118,16 @@ const ReportVerbal = () => {
             ))}
           </div>
           <div className="d-flex justify-content-center gap-3 mt-3">
-            <div className="card border-0 shadow p-3 w-25" style={{backgroundColor:"#7A86B6"}}>
+            <div className="card border-0 shadow p-3 w-25" style={{backgroundColor:"#3AA6B9"}}>
               <p className="fw-bold text-white">Total Skor Jawaban Benar:</p>
               <div
                 className="p-3 rounded-pill fw-bold mx-auto"
-                style={{ width: "65px", backgroundColor:"#DBDFFD" }}
+                style={{ width: "65px", backgroundColor:"#9BCDD2" }}
               >
                 <span className="fs-5">{dataReport?.total_keseluruhan}</span>
               </div>
             </div>
-            <div className="card border-0 shadow p-2 w-50 text-white" style={{backgroundColor:"#7A86B6"}}>
+            <div className="card border-0 shadow p-2 w-50 text-white" style={{backgroundColor:"#3AA6B9"}}>
               <p className="my-auto">
                 <p className="fw-bold mb-3">Kesimpulan: </p>
                 Saudara {""}

@@ -346,8 +346,9 @@ select:focus {
   margin-bottom: 16.5px;
 }
 
-.input-number:focus {
+.input-number:focus, textarea:focus {
   border: 1px solid #ced4da !important;
+  box-shadow: none!important;
 }
 
 input::-webkit-outer-spin-button,

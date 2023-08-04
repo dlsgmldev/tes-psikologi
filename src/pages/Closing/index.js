@@ -25,7 +25,11 @@ const Closing = () => {
   return (
     <div className="p-4 mt-5 d-flex justify-content-center">
       <div className="card p-5 shadow-lg border-0 text-center w-75">
-        <p className="fs-1 fw-bold">{dataClosing}</p>
+        {id === "8" ? (
+          <p className="fs-5 fw-bold">{dataClosing}</p>
+        ) : (
+          <p className="fs-1 fw-bold">{dataClosing}</p>
+        )}
         <button
           className="btn bg-blue p-2 mt-3 w-50 mx-auto text-white"
           onClick={() => navigate("/home")}

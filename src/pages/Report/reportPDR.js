@@ -1,11 +1,10 @@
 import axios from "axios";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import React, { useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
 import { Radar } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
 import logo from "../../assets/Logo Assesment Center-06.png";
+import infomedia from "../../assets/infomedia.jpg";
 import lineTitle from "../../assets/Asset 69.png";
 import bgRight from "../../assets/Asset 28.png";
 import cloud from "../../assets/thought-bubble.png";
@@ -91,13 +90,6 @@ const ReportPDR = () => {
       >
         Export PDF
       </button>
-      {/* <div
-        style={{
-          position: "absolute",
-          left: "-1000px",
-          top: 0,
-        }}
-      > */}
       <PDFExport
         scale={0.6}
         paperSize="A4"
@@ -111,25 +103,24 @@ const ReportPDR = () => {
             <div className="row">
               <div className="col container p-5 my-auto">
                 <div className="d-flex">
-                  <img
+                  {/* <img
                     className="my-auto p-1"
                     alt=""
                     src={logo}
                     width="auto"
                     height={80}
                   ></img>
-                  <div className="mx-3 fw-bold vr"></div>
+                  <div className="mx-3 fw-bold vr"></div> */}
                   <img
                     className="my-auto p-1"
                     alt=""
-                    src={dataReport?.user?.logo_company}
+                    src={infomedia}
                     width="auto"
-                    height={48}
-                    crossOrigin="anonymous"
+                    height={35}
                   ></img>
                 </div>
                 <p
-                  className="fw-bold text-uppercase mb-0"
+                  className="fw-bold text-uppercase mb-0 mt-1"
                   style={{ fontSize: "40px", color: "#213555" }}
                 >
                   people digital readiness
@@ -274,7 +265,7 @@ const ReportPDR = () => {
               </div>
             </div>
             <p className="fw-bold">
-              One GML mengidentifikasi 8 (delapan) area utama untuk mengukur
+              8 (delapan) area utama untuk mengukur
               tingkat pemahaman kompetensi digital dan tingkat adaptasi digital:
             </p>
             <ol>
@@ -450,7 +441,7 @@ const ReportPDR = () => {
               ></div>
             </div>
             <p className="fw-bold mt-5">
-              One GML mengidentifikasi 4 (empat) area utama untuk mengukur
+              4 (empat) area utama untuk mengukur
               tingkat adaptasi digital:
             </p>
             <ol>
@@ -490,7 +481,7 @@ const ReportPDR = () => {
               />
             </div>
             <p className="fw-bold mt-5">
-              One GML mengidentifikasi 6 (enam) area utama untuk mengukur
+              6 (enam) area utama untuk mengukur
               kelihaian kompetensi digital sebagai berikut:
             </p>
             <ol>
@@ -547,7 +538,6 @@ const ReportPDR = () => {
           </div>
         </div>
       </PDFExport>
-      {/* </div> */}
     </div>
   );
 };

@@ -1,15 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 const AddUser = () => {
   const navigate = useNavigate();
-  const [startTime, setStartTime] = useState();
-  const [endTime, setEndTime] = useState();
   const token = localStorage.getItem("token");
   const [form, setForm] = useState({
     email: "",
@@ -39,8 +33,6 @@ const AddUser = () => {
           ...form,
           id_company: id,
           role: 2,
-          // start_access: startTime,
-          // end_access: endTime,
         },
         {
           headers: { Authorization: "Bearer " + token },
@@ -159,34 +151,6 @@ const AddUser = () => {
                 onChange={handleChange}
               />
             </div>
-            {/* <div className="my-3">
-              <label>Start Access:</label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DateTimePicker"]}>
-                  <DateTimePicker
-                    onChange={(dateString) =>
-                      setStartTime(
-                        Math.floor(new Date(dateString).getTime() / 1000)
-                      )
-                    }
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </div>
-            <div className="my-3">
-              <label>End Access:</label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DateTimePicker"]}>
-                  <DateTimePicker
-                    onChange={(dateString) =>
-                      setEndTime(
-                        Math.floor(new Date(dateString).getTime() / 1000)
-                      )
-                    }
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </div> */}
           </div>
         </div>
         <div
