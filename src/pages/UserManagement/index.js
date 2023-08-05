@@ -17,6 +17,7 @@ const UserManagement = () => {
   const [current, setCurrent] = useState(1);
   const [show, setShow] = useState(false);
   const [idUser, setIdUser] = useState("");
+  const [search, setSearch] = useState("");
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
   const { id } = useParams();
@@ -108,7 +109,12 @@ const UserManagement = () => {
                   <input
                     className="form-control"
                     placeholder="Search"
-                    onChange={(e) => getData(10, 1, e.target.value)}
+                    onChange={
+                      (e) => {
+                        setSearch(e.target.value)
+                        getData(10, 1, e.target.value)
+                      }
+                    }
                   />
                   <span className="input-group-text">
                     <i class="fas fa-search text-secondary"></i>
@@ -182,7 +188,7 @@ const UserManagement = () => {
                 total={totalData}
                 limit={10}
                 changePage={(page, size) => {
-                  getData(size, page);
+                  getData(size, page, search);
                   setCurrent(page);
                 }}
               />
