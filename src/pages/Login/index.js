@@ -77,7 +77,7 @@ const Login = () => {
                   type="text"
                   name="username"
                   className="form-control mt-1 border-bottom border-0"
-                  placeholder="username"
+                  placeholder="email"
                   onKeyUp={handleKeypress}
                   onChange={handleChange}
                 />
