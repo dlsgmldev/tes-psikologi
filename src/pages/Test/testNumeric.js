@@ -156,7 +156,7 @@ const TestNumeric = () => {
                   {answer?.option ? (
                     <span>{answer?.option}</span>
                   ) : (
-                    <img src={answer?.option_image} width="3%" height="auto" />
+                    <img src={answer?.option_image} width="5%" height="auto" />
                   )}
                 </li>
               ))}

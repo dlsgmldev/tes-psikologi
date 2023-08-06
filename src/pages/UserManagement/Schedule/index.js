@@ -25,7 +25,7 @@ const ScheduleManagement = () => {
   const getDataSchedule = (pageSize, pageIndex, searchIndex) => {
     axios
       .get(
-        `${process.env.REACT_APP_URL}ac/admin/schedule/list/${pageSize ?? 10}/${
+        `${process.env.REACT_APP_URL}ac/admin/schedule/list/${id}/${pageSize ?? 10}/${
           pageIndex ?? 1
         }`,
         {
@@ -49,6 +49,7 @@ const ScheduleManagement = () => {
       .post(
         `${process.env.REACT_APP_URL}ac/admin/schedule/add`,
         {
+          id_company: parseInt(id),
           name: name,
           start_time: startTime,
           end_time: endTime,

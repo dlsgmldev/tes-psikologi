@@ -10,6 +10,7 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setForm({
@@ -48,7 +49,9 @@ const Login = () => {
           });
       })
       .catch((err) => {
-        alert("failed");
+        // console.log(err.response.data.message);
+        // alert("failed");
+        setErrorMessage(err.response.data.message)
       });
   };
 
@@ -72,6 +75,7 @@ const Login = () => {
               <p className="text-center fs-3 fw-bold mt-3 text-blue">
                 Tes Psikologi
               </p>
+              <p>{errorMessage}</p>
               <div class="form-group w-100 mt-4">
                 <input
                   type="text"

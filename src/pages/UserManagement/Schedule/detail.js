@@ -66,6 +66,7 @@ const ScheduleDetail = () => {
       .put(
         `${process.env.REACT_APP_URL}ac/admin/schedule/update/${id}`,
         {
+          id_company: 0,
           name: name ? name : dataScheduleDetail?.name,
           start_time: startTime ? startTime : Math.floor(new Date(dataScheduleDetail?.start_time).getTime() / 1000),
           end_time: endTime ? endTime : Math.floor(new Date(dataScheduleDetail?.end_time).getTime() / 1000),
