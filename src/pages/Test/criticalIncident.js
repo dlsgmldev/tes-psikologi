@@ -28,9 +28,15 @@ const CriticalIncident = () => {
   const answerArray = [];
 
   const handleChange = (e) => {
+    let getSt = localStorage.getItem("new_array")
+    let answerArray = getSt == null ? [] : JSON.parse(getSt)
     const index = answerArray.findIndex((p) => p.id_question === e.target.id);
     if (index > -1) {
-      answerArray[index] = { id_question: e.target.id, answer: e.target.value };
+      if(e.target.value == ""){
+        alert("Form tidak boleh kosong.")
+      }else{
+        answerArray[index] = { id_question: e.target.id, answer: e.target.value };
+      }
     } else {
       answerArray.push({ id_question: e.target.id, answer: e.target.value });
     }
@@ -38,18 +44,24 @@ const CriticalIncident = () => {
   };
 
   const handleSubmit = () => {
-    const answer = JSON.parse(localStorage.getItem("new_array"));
-    axios
-      .post(
-        `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
-        { data: answer },
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
-      .then((res) => {
-        navigate(`/closing/${id}`);
-      });
+    let getSt = localStorage.getItem("new_array")
+    let answer = getSt == null ? [] : JSON.parse(getSt)
+    if(answer.length != 18){
+      setShow(false)
+      alert("Terdapat soal yang belum terisi, silakan cek kembali agar semua form terisi.")
+    }else{
+      axios
+        .post(
+          `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
+          { data: answer },
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        )
+        .then((res) => {
+          navigate(`/closing/${id}`);
+        });
+    }
   };
 
   return (
