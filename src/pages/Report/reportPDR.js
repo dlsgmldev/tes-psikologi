@@ -30,11 +30,9 @@ const ReportPDR = () => {
   }, []);
 
   const generatePDF = () => {
-    document.getElementById("pdfHidden").style.display = "block";
     if (componentRef.current) {
       componentRef.current.save();
     }
-    // document.getElementById("pdfHidden").style.display = "none";
   };
 
   const dataRadar = {
@@ -95,7 +93,7 @@ const ReportPDR = () => {
         paperSize="A4"
         margin="0.5cm"
         forcePageBreak=".page-break"
-        fileName="report-pdr"
+        fileName={`${dataReport?.user?.fullname}-people-digital-readiness`}
         ref={componentRef}
       >
         <div id="report" className="card border-0 rounded shadow">
@@ -132,18 +130,24 @@ const ReportPDR = () => {
                   Report
                 </p>
                 <img src={lineTitle} height="auto" width="70%" />
-                <p className="fw-bold mt-3 fs-5">
+                <p className="fw-bold mt-3 fs-5 ">
                   {dataReport?.user?.fullname}
                 </p>
                 <p className="fw-bold mb-0 fs-5">
-                  Email: {dataReport?.user?.email}
+                  Email: <span className="">{dataReport?.user?.email}</span>
                 </p>
                 <p className="fw-bold mb-0 fs-5">
-                  Perusahaan: {dataReport?.user?.name_company}
+                  Perusahaan:{" "}
+                  <span className="">{dataReport?.user?.subcompany}</span>
                 </p>
                 <p className="fw-bold mb-0 fs-5">
-                  Jabatan: {dataReport?.user?.jabatan}
+                  Jabatan yang dilamar:{" "}
+                  <span className="">{dataReport?.user?.jabatan}</span>
                 </p>
+                {/* <p className="fw-bold fs-5">
+                  Tanggal penyelesaian:{" "}
+                  <span className="">{dataReport?.user?.date_finish}</span>
+                </p> */}
               </div>
               <div className="col-4">
                 <img src={bgRight} height="auto" width="100%" />
@@ -160,7 +164,6 @@ const ReportPDR = () => {
             </p>
           </div>
           <div className="p-2 px-4">
-            {/* <p className="fw-bold">Digital Competency:</p> */}
             <div
               className="d-flex justify-content-center"
               style={{ marginTop: "4rem", marginBottom: "7rem" }}
@@ -213,7 +216,7 @@ const ReportPDR = () => {
                   </div>
                   <div class="text-secondary col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                     <p>Comfort Zone</p>
-                    <p>{dataReport?.dataScatter?.ComfortZone}</p>
+                    <p className="">{dataReport?.dataScatter?.ComfortZone}</p>
                     <div
                       className="box-left text-secondary"
                       style={{ backgroundColor: "#bdd7ee" }}
@@ -229,7 +232,7 @@ const ReportPDR = () => {
                   </div>
                   <div class="text-secondary col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
                     <p>Observer</p>
-                    <p>{dataReport?.dataScatter?.Observer}</p>
+                    <p className="">{dataReport?.dataScatter?.Observer}</p>
                     <div
                       className="box-bottom text-secondary"
                       style={{ backgroundColor: "#9dc3e6" }}
@@ -237,9 +240,9 @@ const ReportPDR = () => {
                       <p>Emotional Response</p>
                     </div>
                   </div>
-                  <div class="col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
-                    <p className="text-secondary">Fast Adopter</p>
-                    <p className="text-secondary">
+                  <div class="text-secondary col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
+                    <p>Fast Adopter</p>
+                    <p className="">
                       {dataReport?.dataScatter?.FastAdopter}
                     </p>
                     <div
@@ -249,9 +252,9 @@ const ReportPDR = () => {
                       <p>Attitudinal Readiness</p>
                     </div>
                   </div>
-                  <div class="col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
-                    <p className="text-secondary">Learner</p>
-                    <p className="text-secondary">
+                  <div class="text-secondary col bg-light border border-white p-4 d-flex flex-column gap-2 justify-content-center position-relative">
+                    <p>Learner</p>
+                    <p className="">
                       {dataReport?.dataScatter?.Learner}
                     </p>
                     <div
@@ -326,7 +329,7 @@ const ReportPDR = () => {
             </p>
             <div className="d-flex justify-content-center">
               <div className="rotated-left fst-italic text-secondary">
-                Intra-processes
+                Intra-<br/>processes
               </div>
               <div className="card me-2 border-0" style={{ width: "20%" }}>
                 <img className="mx-auto mb-1" src={person} width={60} />
@@ -404,7 +407,7 @@ const ReportPDR = () => {
                 </div>
               </div>
               <div className="rotated-right fst-italic text-secondary">
-                Visible Action
+                Visible<br/>Action
               </div>
             </div>
             <div>

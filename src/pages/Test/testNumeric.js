@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Card, Modal } from "react-bootstrap";
+import { Card, Modal, Spinner } from "react-bootstrap";
 
 const TestNumeric = () => {
   const navigate = useNavigate();
@@ -13,13 +13,14 @@ const TestNumeric = () => {
   const [questionQuiz, setQuestionQuiz] = useState("");
   const [show, setShow] = useState(false);
   const [time, setTime] = useState(2700);
+  const [loading, setLoading] = useState(false);
   const answerArray = JSON.parse(localStorage.getItem("new_array"));
-  const lastTimer = JSON.parse(localStorage.getItem("last_timer_verbal"));
+  const lastTimer = JSON.parse(localStorage.getItem("last_timer"));
   const { id } = useParams();
 
   const getQuestions = (item) => {
     axios
-      .get(`${process.env.REACT_APP_URL}ac/questions/${id}/1/${item}`, {
+      .get(`${process.env.REACT_APP_URL}ac/questions/7/1/${item}`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -61,7 +62,7 @@ const TestNumeric = () => {
           handleSubmit();
           return 0;
         } else {
-          localStorage.setItem("last_timer_verbal", time - 1);
+          localStorage.setItem("last_timer", time - 1);
           return time - 1;
         }
       });
@@ -80,9 +81,10 @@ const TestNumeric = () => {
 
   const handleSubmit = () => {
     const answerArray = JSON.parse(localStorage.getItem("new_array"));
+    setLoading(true);
     axios
       .post(
-        `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
+        `${process.env.REACT_APP_URL}ac/save_answer/7`,
         { data: answerArray },
         {
           headers: { Authorization: "Bearer " + token },
@@ -92,6 +94,7 @@ const TestNumeric = () => {
         setPage(0);
         localStorage.removeItem("new_array");
         localStorage.removeItem("last_page");
+        localStorage.removeItem("last_timer");
         navigate(`/closing/${id}`);
       });
   };
@@ -194,7 +197,7 @@ const TestNumeric = () => {
               className="btn bg-blue mx-2 text-white px-4"
               onClick={handleSubmit}
             >
-              Ya
+              {loading === true ? <Spinner animation="border" size="sm" /> : "Ya"}
             </div>
             <div
               className="btn bg-blue mx-2 text-white px-4"

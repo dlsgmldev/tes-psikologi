@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Card, Modal } from "react-bootstrap";
+import { Card, Modal, Spinner } from "react-bootstrap";
 
 const CriticalIncident = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [questionQuiz, setQuestionQuiz] = useState([""]);
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
-  const [form, setForm] = useState("");
 
   const getQuestions = () => {
     axios
-      .get(`${process.env.REACT_APP_URL}ac/questions/${id}/18/1`, {
+      .get(`${process.env.REACT_APP_URL}ac/questions/8/18/1`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -28,14 +28,17 @@ const CriticalIncident = () => {
   const answerArray = [];
 
   const handleChange = (e) => {
-    let getSt = localStorage.getItem("new_array")
-    let answerArray = getSt == null ? [] : JSON.parse(getSt)
+    let getSt = localStorage.getItem("new_array");
+    let answerArray = getSt == null ? [] : JSON.parse(getSt);
     const index = answerArray.findIndex((p) => p.id_question === e.target.id);
     if (index > -1) {
-      if(e.target.value == ""){
-        alert("Form tidak boleh kosong.")
-      }else{
-        answerArray[index] = { id_question: e.target.id, answer: e.target.value };
+      if (e.target.value == "") {
+        alert("Form tidak boleh kosong.");
+      } else {
+        answerArray[index] = {
+          id_question: e.target.id,
+          answer: e.target.value,
+        };
       }
     } else {
       answerArray.push({ id_question: e.target.id, answer: e.target.value });
@@ -44,15 +47,18 @@ const CriticalIncident = () => {
   };
 
   const handleSubmit = () => {
-    let getSt = localStorage.getItem("new_array")
-    let answer = getSt == null ? [] : JSON.parse(getSt)
-    if(answer.length != 18){
-      setShow(false)
-      alert("Terdapat soal yang belum terisi, silakan cek kembali agar semua form terisi.")
-    }else{
+    setLoading(true);
+    let getSt = localStorage.getItem("new_array");
+    let answer = getSt == null ? [] : JSON.parse(getSt);
+    if (answer.length != 18) {
+      setShow(false);
+      alert(
+        "Terdapat soal yang belum terisi, silakan cek kembali agar semua form terisi."
+      );
+    } else {
       axios
         .post(
-          `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
+          `${process.env.REACT_APP_URL}ac/save_answer/8`,
           { data: answer },
           {
             headers: { Authorization: "Bearer " + token },
@@ -85,6 +91,7 @@ const CriticalIncident = () => {
                     name="answer"
                     className="form-control text-area"
                     onChange={handleChange}
+                    maxLength="100"
                   />
                 </div>
               )
@@ -115,6 +122,7 @@ const CriticalIncident = () => {
                     name="answer"
                     className="form-control text-area"
                     onChange={handleChange}
+                    maxLength="100"
                   />
                 </div>
               )
@@ -135,7 +143,7 @@ const CriticalIncident = () => {
               className="btn bg-blue mx-2 text-white px-4"
               onClick={handleSubmit}
             >
-              Ya
+              {loading === true ? <Spinner animation="border" size="sm" /> : "Ya"}
             </div>
             <div
               className="btn bg-blue mx-2 text-white px-4"

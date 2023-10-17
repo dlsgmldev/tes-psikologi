@@ -7,6 +7,17 @@ import { PaginationControl } from "react-bootstrap-pagination-control";
 import { Modal, Spinner } from "react-bootstrap";
 import Select from "react-select";
 import { ExportToExcel } from "../../components/ExportExcel";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import dayjs from "dayjs";
+import ReportVerbal from "../Report/reportVerbal";
+import ReportNumeric from "../Report/reportNumeric";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import ReportPDR from "../Report/reportPDR";
+import ReportCI from "../Report/reportCI";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -28,25 +39,32 @@ const Dashboard = () => {
   const [belumMulaiExport, setBelumMulaiExport] = useState([""]);
   const [companyList, setCompanyList] = useState([""]);
   const [testList, setTestList] = useState([""]);
+  const [subCompanyList, setSubCompanyList] = useState([""]);
   const [selectedCompany, setSelectedCompany] = useState([""]);
   const [selectedTest, setSelectedTest] = useState([""]);
+  const [selectedSubCompany, setSelectedSubCompany] = useState([""]);
   const [selectedOptionCompany, setSelectedOptionCompany] = useState([""]);
   const [selectedOptionTest, setSelectedOptionTest] = useState([""]);
+  const [selectedOptionSubCompany, setSelectedOptionSubCompany] = useState([
+    "",
+  ]);
   const [type, setType] = useState("");
   const [search, setSearch] = useState("");
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
   const [show, setShow] = useState(false);
   const token = localStorage.getItem("token");
   const idCompany = JSON.parse(localStorage.getItem("id_company"));
   const role = localStorage.getItem("role");
 
   const dataType =
-    type === "selesai"
-      ? selesai
+    type === "responden"
+      ? responden
       : type === "mulai"
       ? belumMulai
       : type === "proses"
       ? dalamProses
-      : responden;
+      : selesai;
 
   const handleFilterCompany = (selectedOption) => {
     const value = selectedOption.map((item) => item.value);
@@ -60,11 +78,67 @@ const Dashboard = () => {
     setSelectedOptionTest(selectedOption);
   };
 
-  const getData = (
+  const handleFilterSubCompany = (selectedOption) => {
+    const value = selectedOption.map((item) => item.value);
+    setSelectedSubCompany(value.toString());
+    setSelectedOptionSubCompany(selectedOption);
+  };
+
+  const getDataSelesai = (
     pageSize,
     pageIndex,
     filterCompany,
     filterTest,
+    filterSubCompany,
+    searchIndex,
+    filterTimestart,
+    filterTimeend
+  ) => {
+    axios
+      .get(
+        `${process.env.REACT_APP_URL}ac/admin/data_total_selesai/${
+          pageSize ?? 10
+        }/${pageIndex ?? 1}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+          params: {
+            search: searchIndex,
+            filter_company: idCompany ?? filterCompany,
+            filter_test: filterTest,
+            filter_subcompany: filterSubCompany,
+            filter_timestart: filterTimestart,
+            filter_timeend: filterTimeend,
+          },
+        }
+      )
+      .then((res) => {
+        const fileExport = res.data.data.map((item) => ({
+          name: item.fullname,
+          email: item.email,
+          test: item.name_test,
+          status:
+            item.status === "2"
+              ? "Selesai"
+              : item.status === "0"
+              ? "Belum mulai"
+              : "Dalam proses",
+          company: item.subcompany,
+          scorepercentage: item.score,
+          kesimpulan: item.kesimpulan,
+        }));
+        setSelesaiExport(fileExport);
+        setSelesai(res.data.data);
+        setTotalDataSelesai(res.data.totaldata);
+        setLoading(false);
+      });
+  };
+
+  const getDataResponden = (
+    pageSize,
+    pageIndex,
+    filterCompany,
+    filterTest,
+    filterSubCompany,
     searchIndex
   ) => {
     axios
@@ -78,12 +152,12 @@ const Dashboard = () => {
             search: searchIndex,
             filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
+            filter_subcompany: filterSubCompany,
           },
         }
       )
       .then((res) => {
         const fileExport = res.data.data.map((item) => ({
-          no: 1,
           name: item.fullname,
           email: item.email,
           test: item.name_test,
@@ -93,46 +167,25 @@ const Dashboard = () => {
               : item.status === "0"
               ? "Belum mulai"
               : "Dalam proses",
-          company: item.name_company,
+          company: item.subcompany,
+          scorepercentage: item.score,
+          kesimpulan: item.kesimpulan,
         }));
         setRespondenExport(fileExport);
         setResponden(res.data.data);
         setTotalDataResponden(res.data.totaldata);
         setLoading(false);
       });
-    axios
-      .get(
-        `${process.env.REACT_APP_URL}ac/admin/data_total_selesai/${
-          pageSize ?? 10
-        }/${pageIndex ?? 1}`,
-        {
-          headers: { Authorization: "Bearer " + token },
-          params: {
-            search: searchIndex,
-            filter_company: idCompany ?? filterCompany,
-            filter_test: filterTest,
-          },
-        }
-      )
-      .then((res) => {
-        const fileExport = res.data.data.map((item) => ({
-          no: 1,
-          name: item.fullname,
-          email: item.email,
-          test: item.name_test,
-          status:
-            item.status === "2"
-              ? "Selesai"
-              : item.status === "0"
-              ? "Belum mulai"
-              : "Dalam proses",
-          company: item.name_company,
-        }));
-        setSelesaiExport(fileExport);
-        setSelesai(res.data.data);
-        setTotalDataSelesai(res.data.totaldata);
-        setLoading(false);
-      });
+  };
+
+  const getDataDalamProses = (
+    pageSize,
+    pageIndex,
+    filterCompany,
+    filterTest,
+    filterSubCompany,
+    searchIndex
+  ) => {
     axios
       .get(
         `${process.env.REACT_APP_URL}ac/admin/data_total_dalam_proses/${
@@ -144,12 +197,12 @@ const Dashboard = () => {
             search: searchIndex,
             filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
+            filter_subcompany: filterSubCompany,
           },
         }
       )
       .then((res) => {
         const fileExport = res.data.data.map((item) => ({
-          no: 1,
           name: item.fullname,
           email: item.email,
           test: item.name_test,
@@ -159,13 +212,25 @@ const Dashboard = () => {
               : item.status === "0"
               ? "Belum mulai"
               : "Dalam proses",
-          company: item.name_company,
+          company: item.subcompany,
+          scorepercentage: item.score,
+          kesimpulan: item.kesimpulan,
         }));
         setDalamProsesExport(fileExport);
         setDalamProses(res.data.data);
         setTotalDataDalamProses(res.data.totaldata);
         setLoading(false);
       });
+  };
+
+  const getDataBelumMulai = (
+    pageSize,
+    pageIndex,
+    filterCompany,
+    filterTest,
+    filterSubCompany,
+    searchIndex
+  ) => {
     axios
       .get(
         `${process.env.REACT_APP_URL}ac/admin/data_total_belum_mulai/${
@@ -177,12 +242,12 @@ const Dashboard = () => {
             search: searchIndex,
             filter_company: idCompany ?? filterCompany,
             filter_test: filterTest,
+            filter_subcompany: filterSubCompany,
           },
         }
       )
       .then((res) => {
         const fileExport = res.data.data.map((item) => ({
-          no: 1,
           name: item.fullname,
           email: item.email,
           test: item.name_test,
@@ -192,7 +257,9 @@ const Dashboard = () => {
               : item.status === "0"
               ? "Belum mulai"
               : "Dalam proses",
-          company: item.name_company,
+          company: item.subcompany,
+          scorepercentage: item.score,
+          kesimpulan: item.kesimpulan,
         }));
         setBelumMulaiExport(fileExport);
         setBelumMulai(res.data.data);
@@ -201,7 +268,7 @@ const Dashboard = () => {
       });
   };
 
-  const getCompany = (pageSize, pageIndex, searchIndex) => {
+  const getFilterOption = (pageSize, pageIndex, searchIndex) => {
     axios
       .get(
         `${process.env.REACT_APP_URL}ac/company/list/${pageSize ?? 5}/${
@@ -219,9 +286,6 @@ const Dashboard = () => {
         }));
         setCompanyList(company);
       });
-  };
-
-  const getTest = () => {
     axios
       .get(`${process.env.REACT_APP_URL}ac/get_test_option/${idCompany ?? 0}`, {
         headers: { Authorization: "Bearer " + token },
@@ -233,27 +297,158 @@ const Dashboard = () => {
         }));
         setTestList(option);
       });
+    axios
+      .get(
+        `${process.env.REACT_APP_URL}ac/filter/get_subcompany_option/${
+          idCompany ?? 0
+        }`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
+      .then((res) => {
+        const option = res.data.data.map((item) => ({
+          value: item.subcompany,
+          label: item.subcompany,
+        }));
+        setSubCompanyList(option);
+      });
   };
 
-  useEffect(() => {
-    getCompany();
-    getTest();
-    getData();
+  const filterExport = (
+    filterCompany,
+    filterTest,
+    filterSubCompany,
+    searchIndex
+  ) => {
     axios
-      .get(`${process.env.REACT_APP_URL}ac/box_info/${idCompany ?? 0}`, {
+      .get(`${process.env.REACT_APP_URL}ac/admin/data_total_selesai/50/1`, {
         headers: { Authorization: "Bearer " + token },
+        params: {
+          search: searchIndex,
+          filter_company: idCompany ?? filterCompany,
+          filter_test: filterTest,
+          filter_subcompany: filterSubCompany,
+        },
       })
       .then((res) => {
+        const fileExport = res.data.data.map((item) => ({
+          name: item.fullname,
+          email: item.email,
+          test: item.name_test,
+          status:
+            item.status === "2"
+              ? "Selesai"
+              : item.status === "0"
+              ? "Belum mulai"
+              : "Dalam proses",
+          company: item.subcompany,
+          scorepercentage: item.score,
+          kesimpulan: item.kesimpulan,
+        }));
+        setRespondenExport(fileExport);
+        setLoading(false);
+      });
+  };
+
+  const filterChartAndBoxInfo = (
+    filterCompany,
+    filterTest,
+    filterSubCompany,
+    filterTimestart,
+    filterTimeend
+  ) => {
+    axios
+      .get(
+        `${process.env.REACT_APP_URL}ac/box_info/${
+          idCompany ? idCompany : filterCompany ? filterCompany : 0
+        }`,
+        {
+          headers: { Authorization: "Bearer " + token },
+          params: {
+            filter_subcompany: filterSubCompany,
+            filter_test: filterTest,
+            filter_timestart: filterTimestart,
+            filter_timeend: filterTimeend,
+          },
+        }
+      )
+      .then((res) => {
         setInfo(res.data);
+        setLoading(false);
       });
     axios
-      .get(`${process.env.REACT_APP_URL}ac/pie_chart/${idCompany ?? 0}`, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .get(
+        `${process.env.REACT_APP_URL}ac/pie_chart/${
+          idCompany ? idCompany : filterCompany ? filterCompany : 0
+        }`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then((res) => {
         setPieChart(res.data);
       });
-  }, [token]);
+  };
+
+  const handleFilter = () => {
+    setShow(false);
+    type === "mulai"
+      ? getDataBelumMulai(
+          10,
+          1,
+          selectedCompany,
+          selectedTest,
+          selectedSubCompany,
+          search
+        )
+      : type === "responden"
+      ? getDataResponden(
+          10,
+          1,
+          selectedCompany,
+          selectedTest,
+          selectedSubCompany,
+          search
+        )
+      : type === "proses"
+      ? getDataDalamProses(
+          10,
+          1,
+          selectedCompany,
+          selectedTest,
+          selectedSubCompany,
+          search
+        )
+      : getDataSelesai(
+          10,
+          1,
+          selectedCompany,
+          selectedTest,
+          selectedSubCompany,
+          search,
+          startTime,
+          endTime
+        );
+    // filterExport(
+    //   selectedCompany,
+    //   selectedTest,
+    //   selectedSubCompany,
+    //   search
+    // );
+    filterChartAndBoxInfo(
+      selectedCompany,
+      selectedTest,
+      selectedSubCompany,
+      startTime,
+      endTime
+    );
+  };
+
+  useEffect(() => {
+  getDataSelesai();
+  filterChartAndBoxInfo();
+  }, []);
 
   const dataPie = {
     labels: pieChart.label,
@@ -309,7 +504,18 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-responden shadow h-100 py-2 pointer"
-                onClick={() => (setType("responden"), setCurrent(1), getData())}
+                onClick={() => (
+                  setType("responden"),
+                  setCurrent(1),
+                  getDataResponden(
+                    10,
+                    1,
+                    selectedCompany,
+                    selectedTest,
+                    selectedSubCompany,
+                    search
+                  )
+                )}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -331,7 +537,18 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-selesai shadow h-100 py-2 pointer"
-                onClick={() => (setType("selesai"), setCurrent(1), getData())}
+                onClick={() => (
+                  setType("selesai"),
+                  setCurrent(1),
+                  getDataSelesai(
+                    10,
+                    1,
+                    selectedCompany,
+                    selectedTest,
+                    selectedSubCompany,
+                    search
+                  )
+                )}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -353,7 +570,18 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-proses shadow h-100 py-2 pointer"
-                onClick={() => (setType("proses"), setCurrent(1), getData())}
+                onClick={() => (
+                  setType("proses"),
+                  setCurrent(1),
+                  getDataDalamProses(
+                    10,
+                    1,
+                    selectedCompany,
+                    selectedTest,
+                    selectedSubCompany,
+                    search
+                  )
+                )}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -375,7 +603,18 @@ const Dashboard = () => {
             <div className="col-xl-3 col-md-6 mb-4">
               <div
                 className="card border-left-mulai shadow h-100 py-2 pointer"
-                onClick={() => (setType("mulai"), setCurrent(1), getData())}
+                onClick={() => (
+                  setType("mulai"),
+                  setCurrent(1),
+                  getDataBelumMulai(
+                    10,
+                    1,
+                    selectedCompany,
+                    selectedTest,
+                    selectedSubCompany,
+                    search
+                  )
+                )}
               >
                 <div className="card-body">
                   <div className="row no-gutters align-items-center">
@@ -406,26 +645,54 @@ const Dashboard = () => {
                 Data{" "}
                 {type === "mulai"
                   ? "Belum Mulai"
-                  : type === "selesai"
-                  ? "Selesai"
+                  : type === "responden"
+                  ? "Responden"
                   : type === "proses"
                   ? "Dalam Proses"
-                  : "Responden"}
+                  : "Selesai"}
               </p>
               <div className="d-flex justify-content-between">
-                <div className="input-group w-70">
+                <div className="input-group w-50">
                   <input
                     className="form-control border"
                     placeholder="Search"
                     onChange={(e) => {
                       setSearch(e.target.value);
-                      getData(
-                        10,
-                        1,
-                        selectedCompany,
-                        selectedTest,
-                        e.target.value
-                      );
+                      type === "mulai"
+                        ? getDataBelumMulai(
+                            10,
+                            1,
+                            selectedCompany,
+                            selectedTest,
+                            selectedSubCompany,
+                            e.target.value
+                          )
+                        : type === "responden"
+                        ? getDataResponden(
+                            10,
+                            1,
+                            selectedCompany,
+                            selectedTest,
+                            selectedSubCompany,
+                            e.target.value
+                          )
+                        : type === "proses"
+                        ? getDataDalamProses(
+                            10,
+                            1,
+                            selectedCompany,
+                            selectedTest,
+                            selectedSubCompany,
+                            e.target.value
+                          )
+                        : getDataSelesai(
+                            10,
+                            1,
+                            selectedCompany,
+                            selectedTest,
+                            selectedSubCompany,
+                            e.target.value
+                          );
                     }}
                   />
                   <span className="input-group-text">
@@ -436,22 +703,22 @@ const Dashboard = () => {
                   {role === "1" ? (
                     <ExportToExcel
                       apiData={
-                        type === "selesai"
-                          ? selesaiExport
+                        type === "responden"
+                          ? respondenExport
                           : type === "mulai"
                           ? belumMulaiExport
                           : type === "proses"
                           ? dalamProsesExport
-                          : respondenExport
+                          : selesaiExport
                       }
                       fileName={
-                        type === "selesai"
-                          ? "data-selesai"
+                        type === "reponden"
+                          ? "data-responden"
                           : type === "mulai"
                           ? "data-belum-mulai"
                           : type === "proses"
                           ? "data-dalam-proses"
-                          : "data-responden"
+                          : "data-selesai"
                       }
                     />
                   ) : (
@@ -460,7 +727,19 @@ const Dashboard = () => {
 
                   <div
                     className="btn bg-blue text-white px-3 ms-2"
-                    onClick={() => setShow(true)}
+                    // onClick={() => {
+                    //   setShow(true);
+                    //   getFilterOption();
+                    // }}
+                  >
+                    Export Report
+                  </div>
+                  <div
+                    className="btn bg-blue text-white px-3 ms-2"
+                    onClick={() => {
+                      setShow(true);
+                      getFilterOption();
+                    }}
                   >
                     Filter
                   </div>
@@ -469,7 +748,16 @@ const Dashboard = () => {
               <table class="table table-bordered mt-2 rounded rounded-3 overflow-hidden">
                 <thead>
                   <tr className="bg-blue text-white text-center">
-                    {/* <th scope="col">No.</th> */}
+                  <th width="10%" className="text-center">
+                      Select all
+                      <br />
+                      <input
+                        className="form-check-input input"
+                        type="checkbox"
+                        // onChange={handleSelectAll}
+                        // checked={isCheckAll}
+                      />
+                    </th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Test</th>
@@ -487,7 +775,15 @@ const Dashboard = () => {
                 {dataType.map((item) => (
                   <tbody>
                     <tr>
-                      {/* <th className="fw-normal text-center">1</th> */}
+                    <th className="fw-normal text-center">
+                        <input
+                          className="form-check-input input"
+                          type="checkbox"
+                          // value={item.id_recruitment}
+                          // checked={idExport.includes(item.id_recruitment)}
+                          // onChange={handleCheckbox}
+                        />
+                      </th>
                       <th className="fw-normal">{item.fullname}</th>
                       <th className="fw-normal">{item.email}</th>
                       <th className="fw-normal">{item.name_test}</th>
@@ -498,7 +794,7 @@ const Dashboard = () => {
                           ? "Belum mulai"
                           : "Dalam proses"}
                       </th>
-                      <th className="fw-normal">{item.name_company}</th>
+                      <th className="fw-normal">{item.subcompany}</th>
                       {role === "1" ? (
                         <th className="fw-bold text-center">
                           {item.status === "2" ? (
@@ -525,17 +821,51 @@ const Dashboard = () => {
               <PaginationControl
                 page={current}
                 total={
-                  type === "selesai"
-                    ? totalDataSelesai
+                  type === "responden"
+                    ? totalDataResponden
                     : type === "mulai"
                     ? totalDataBelumMulai
                     : type === "proses"
                     ? totalDataDalamProses
-                    : totalDataResponden
+                    : totalDataSelesai
                 }
                 limit={10}
                 changePage={(page, size) => {
-                  getData(size, page, selectedCompany, selectedTest, search);
+                  type === "mulai"
+                    ? getDataBelumMulai(
+                        size,
+                        page,
+                        selectedCompany,
+                        selectedTest,
+                        selectedSubCompany,
+                        search
+                      )
+                    : type === "responden"
+                    ? getDataResponden(
+                        size,
+                        page,
+                        selectedCompany,
+                        selectedTest,
+                        selectedSubCompany,
+                        search
+                      )
+                    : type === "proses"
+                    ? getDataDalamProses(
+                        size,
+                        page,
+                        selectedCompany,
+                        selectedTest,
+                        selectedSubCompany,
+                        search
+                      )
+                    : getDataSelesai(
+                        size,
+                        page,
+                        selectedCompany,
+                        selectedTest,
+                        selectedSubCompany,
+                        search
+                      );
                   setCurrent(page);
                 }}
               />
@@ -545,39 +875,83 @@ const Dashboard = () => {
           {/* for modal */}
           <Modal show={show} onHide={() => setShow(false)}>
             <Modal.Body>
+              <p className="fs-4 fw-bold">Filter</p>
+              <div className="my-3">
+                <label>Start Access:</label>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DateTimePicker"]}>
+                    <DateTimePicker
+                      // value={startTime}
+                      ampm={false}
+                      onChange={(dateString) =>
+                        setStartTime(
+                          Math.floor(new Date(dateString).getTime() / 1000)
+                        )
+                      }
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </div>
+              <div className="my-3">
+                <label>End Access:</label>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DateTimePicker"]}>
+                    <DateTimePicker
+                      // value="2023-08-10T12:00:00.000Z"
+                      ampm={false}
+                      onChange={(dateString) =>
+                        setEndTime(
+                          Math.floor(new Date(dateString).getTime() / 1000)
+                        )
+                      }
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </div>
               {role === "1" ? (
-                <>
-                  <p className="fs-4 fw-bold">Filter by company</p>
+                <div className="my-3">
+                  <label>Company:</label>
                   <Select
                     defaultValue={selectedOptionCompany}
                     isMulti
                     name="company"
                     options={companyList}
-                    className="basic-multi-select mb-3"
+                    className="basic-multi-select my-2"
                     classNamePrefix="select"
                     onChange={handleFilterCompany}
                   />
-                </>
+                </div>
               ) : (
                 ""
               )}
-              <p className="fs-4 fw-bold">Filter by Test</p>
-              <Select
-                defaultValue={selectedOptionTest}
-                isMulti
-                name="company"
-                options={testList}
-                className="basic-multi-select mb-3"
-                classNamePrefix="select"
-                onChange={handleFilterTest}
-              />
+              <div className="my-3">
+                <label>Test:</label>
+                <Select
+                  defaultValue={selectedOptionTest}
+                  isMulti
+                  name="Test"
+                  options={testList}
+                  className="basic-multi-select my-2"
+                  classNamePrefix="select"
+                  onChange={handleFilterTest}
+                />
+              </div>
+              <div className="my-3">
+                <label>Sub Company:</label>
+                <Select
+                  defaultValue={selectedOptionSubCompany}
+                  isMulti
+                  name="subcompany"
+                  options={subCompanyList}
+                  className="basic-multi-select my-2"
+                  classNamePrefix="select"
+                  onChange={handleFilterSubCompany}
+                />
+              </div>
               <div className="d-flex justify-content-center">
                 <div
                   className="btn bg-blue mx-2 text-white px-4"
-                  onClick={() => {
-                    getData(10, 1, selectedCompany, selectedTest, search);
-                    setShow(false);
-                  }}
+                  onClick={handleFilter}
                 >
                   OK
                 </div>

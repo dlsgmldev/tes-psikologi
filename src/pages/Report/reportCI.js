@@ -25,11 +25,9 @@ const ReportCI = () => {
   }, []);
 
   const generatePDF = () => {
-    document.getElementById("pdfHidden").style.display = "block";
     if (componentRef.current) {
       componentRef.current.save();
     }
-    // document.getElementById("pdfHidden").style.display = "none";
   };
 
   return (
@@ -45,12 +43,12 @@ const ReportCI = () => {
         paperSize="A4"
         margin="0.5cm"
         forcePageBreak=".page-break"
-        fileName="report-critical-incident"
+        fileName={`${dataReport?.fullname}-critical-incident`}
         ref={componentRef}
       >
         <div id="report" className="card border-0 rounded shadow">
           <div id="pdfHidden" className="a4">
-            <Row>
+            <div className="row">
               <div className="col container p-5 my-auto">
                 <div className="d-flex">
                   {/* <img
@@ -79,22 +77,29 @@ const ReportCI = () => {
                   className="fw-bold text-uppercase mb-0"
                   style={{ fontSize: "30px", color: "#6DA9E4" }}
                 >
-                  Test Report
+                  Report
                 </p>
                 <img src={lineTitle} height="auto" width="70%" />
-                <p className="fw-bold mt-3 fs-5">{dataReport?.fullname}</p>
-                <p className="fw-bold mb-0 fs-5">Email: {dataReport?.email}</p>
+                <p className="fw-bold mt-3 fs-5 ">{dataReport?.fullname}</p>
                 <p className="fw-bold mb-0 fs-5">
-                  Perusahaan: {dataReport?.name_company}
+                  Email: <span className="">{dataReport?.email}</span>
                 </p>
                 <p className="fw-bold mb-0 fs-5">
-                  Jabatan: {dataReport?.jabatan}
+                  Perusahaan: <span className="">{dataReport?.subcompany}</span>
+                </p>
+                <p className="fw-bold mb-0 fs-5">
+                  Jabatan yang dilamar:{" "}
+                  <span className="">{dataReport?.jabatan}</span>
+                </p>
+                <p className="fw-bold fs-5">
+                  Tanggal penyelesaian:{" "}
+                  <span className="">{dataReport?.date_finish}</span>
                 </p>
               </div>
               <div className="col-4">
                 <img src={bgRight} height="auto" width="100%" />
               </div>
-            </Row>
+            </div>
           </div>
 
           <div
@@ -106,13 +111,10 @@ const ReportCI = () => {
             </p>
           </div>
           <div className="p-2 px-3">
-            <p className="fw-bold text-center">
-              Tanggal: {dataReport?.date_finish}
-            </p>
             <div className="mt-3">
               {dataReport?.answer?.map((item) => (
                 <div
-                  className="rounded border-0 shadow p-3 text-white mb-3 d-flex"
+                  className="rounded border-0  p-3 text-white mb-3 d-flex"
                   style={{ backgroundColor: "#94ADD7" }}
                 >
                   <p className="fw-bold me-2">{item.number}.</p>

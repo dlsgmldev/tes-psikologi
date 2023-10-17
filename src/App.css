@@ -14,7 +14,11 @@ input:focus {
 
 select:focus {
   box-shadow: none !important;
-  border-bottom: 1px solid #ced4da !important;
+  border: 1px solid #ced4da !important;
+}
+
+.input:focus {
+  box-shadow: none !important;
   border: 1px solid #ced4da !important;
 }
 
@@ -201,19 +205,6 @@ select:focus {
   border-color: white !important;
 }
 
-.card-login {
-  border: 0 !important;
-  position: absolute;
-  top: 50%;
-  transform: translate(0, -55%);
-}
-
-.container-login {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-
 .w-20 {
   width: 20% !important;
 }
@@ -365,7 +356,7 @@ input::-webkit-inner-spin-button {
 
 .line-horizontal {
   height: 2px;
-  margin-left: 10%;
+  margin-left: 11%;
   margin-bottom: 15px;
   position: relative;
   background: #353ebe;
@@ -394,22 +385,23 @@ input::-webkit-inner-spin-button {
 }
 
 .rotated-left {
-  writing-mode: tb-rl;
-  transform: rotate(-180deg);
-  margin-right: 10px;
+  /* writing-mode: tb-rl; */
+  /* transform: rotate(-180deg); */
+  margin-right: 1.5%;
+  margin-top: 10%;
 }
 
 .rotated-left2 {
-  writing-mode: tb-rl;
-  transform: rotate(-180deg);
-  /* margin-right: 5px; */
-  margin-left: 5%;
-  margin-top: 6%;
+  /* writing-mode: tb-rl;
+  transform: rotate(-180deg); */
+  margin-left: 1.5%;
+  margin-top: 7%;
   position: absolute;
 }
 
 .rotated-right {
-  writing-mode: tb-rl;
-  transform: rotate(180deg);
-  margin-left: 2px;
+  /* writing-mode: tb-rl;
+  transform: rotate(180deg); */
+  margin-left: 1.5%;
+  margin-top: 10%;
 }

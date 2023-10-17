@@ -144,7 +144,7 @@ const TestHolland = () => {
 
   return (
     <div className="container p-4 mt-2">
-      <p className="fs-2 fw-bold text-center">Holland Test</p>
+      <p className="fs-2 fw-bold text-center">Tes Kesesuaian Bidang</p>
       <div
         className="card border p-3 shadow border-bottom mb-3"
         style={{ backgroundColor: "#DDE6ED" }}

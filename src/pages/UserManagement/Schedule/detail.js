@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal, Spinner } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navigation from "../../../components/Navigation";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,7 +12,6 @@ import FileUploader from "../../../components/FileUploader";
 import dayjs from "dayjs";
 
 const ScheduleDetail = () => {
-  const navigate = useNavigate();
   const [dataScheduleDetail, setDataScheduleDetail] = useState("");
   const [dataUser, setDataUser] = useState([""]);
   const [totalData, setTotalData] = useState(0);

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/login img2@72x.png";
 import logo from "../../assets/Logo Assesment Center-06.png";
+import { Spinner } from "react-bootstrap";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Login = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -20,6 +22,8 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
+    setLoadingButton(true);
+    localStorage.clear();
     axios
       .post(`${process.env.REACT_APP_URL}ac/login`, form, {
         headers: {
@@ -49,9 +53,8 @@ const Login = () => {
           });
       })
       .catch((err) => {
-        // console.log(err.response.data.message);
-        // alert("failed");
-        setErrorMessage(err.response.data.message)
+        setErrorMessage(err.response.data.message);
+        setLoadingButton(false);
       });
   };
 
@@ -67,20 +70,16 @@ const Login = () => {
         <div className="row">
           <div className="col card border-0">
             <div className="col-lg-10 my-auto mx-auto">
-              <img
-                className="d-flex mx-auto"
-                src="https://apidls.onegml.com/ac/holland_image/1690252267.jpg"
-                width={120}
-              />
+              <img className="d-flex mx-auto" src={logo} width={150} />
               <p className="text-center fs-3 fw-bold mt-3 text-blue">
                 Tes Psikologi
               </p>
-              <p>{errorMessage}</p>
+              
               <div class="form-group w-100 mt-4">
                 <input
                   type="text"
                   name="username"
-                  className="form-control mt-1 border-bottom border-0"
+                  className="form-control mt-1 border-bottom border-0 input-login"
                   placeholder="email"
                   onKeyUp={handleKeypress}
                   onChange={handleChange}
@@ -90,18 +89,19 @@ const Login = () => {
                 <input
                   type="password"
                   name="password"
-                  className="form-control mt-1 border-bottom border-0"
+                  className="form-control mt-1 border-bottom border-0 input-login"
                   placeholder="password"
                   onKeyUp={handleKeypress}
                   onChange={handleChange}
                 />
               </div>
+              <p className="text-danger mt-1 mb-0">{errorMessage}</p>
               <button
                 className="btn bg-blue p-2 w-100 mt-3 text-white"
                 onClick={handleSubmit}
                 type="submit"
               >
-                Masuk
+                {loadingButton === true ? <Spinner size="sm" /> : "Masuk"}
               </button>
               <p className="text-center mt-4 text-xs">
                 Copyright © Assessment Center Solutions 2023.

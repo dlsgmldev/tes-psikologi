@@ -30,7 +30,8 @@ const Home = () => {
       : navigate(`/home`);
   };
 
-  const critical = dataTest.find((item) => item.id === 8);
+  const CI = dataTest.find((item) => item.id === 8);
+  const isCI = dataTest.some((item) => item.id === 8);
 
   return (
     <div className="p-4">
@@ -50,7 +51,15 @@ const Home = () => {
             {item.id === 8 ? (
               <button
                 className="btn bg-blue text-white fw-bold w-100"
-                disabled={critical.status === 2}
+                disabled={CI.status === 2}
+                onClick={() => handleTest(item.id)}
+              >
+                Ikuti Tes
+              </button>
+            ) : isCI === true ? (
+              <button
+                className="btn bg-blue text-white fw-bold w-100"
+                disabled={CI.status !== 2 || item.status === 2}
                 onClick={() => handleTest(item.id)}
               >
                 Ikuti Tes
@@ -58,7 +67,7 @@ const Home = () => {
             ) : (
               <button
                 className="btn bg-blue text-white fw-bold w-100"
-                disabled={critical.status !== 2 || item.status === 2}
+                disabled={item.status === 2}
                 onClick={() => handleTest(item.id)}
               >
                 Ikuti Tes
