@@ -11,14 +11,14 @@ const LayoutUser = ({ children }) => {
   return (
     <div>
       <div className="header d-flex p-3 border shadow rounded-3">
-        {/* <img
+        <img
           className="my-auto p-1"
           alt=""
           src={logo}
           width="auto"
-          height={55}
+          height={50}
         ></img>
-        <div className="mx-3 fw-bold vr"></div> */}
+        <div className="mx-3 fw-bold vr"></div>
         <img
           className="my-auto p-1"
           alt=""

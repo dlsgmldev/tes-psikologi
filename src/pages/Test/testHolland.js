@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -8,6 +9,8 @@ const TestHolland = () => {
   const [questions, setQuestions] = useState([""]);
   const [show, setShow] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingButton, setLoadingButton] = useState(false);
   const token = localStorage.getItem("token");
   const answerArray = JSON.parse(localStorage.getItem("new_array"));
   const { id } = useParams();
@@ -19,6 +22,7 @@ const TestHolland = () => {
       })
       .then((res) => {
         setQuestions(res.data.data);
+        setLoading(false);
       });
     localStorage.setItem("new_array", JSON.stringify([]));
   }, [token]);
@@ -102,6 +106,7 @@ const TestHolland = () => {
   };
 
   const handleOk = () => {
+    setLoadingButton(true)
     axios
       .post(
         `${process.env.REACT_APP_URL}ac/save_answer/${id}`,
@@ -156,75 +161,83 @@ const TestHolland = () => {
           Tidak ada jawaban yang benar atau salah.
         </span>
       </div>
-      <div className="table-responsive card shadow-lg border-0">
-        <table className="table table-striped mb-0">
-          <thead>
-            <tr
-              className="text-center text-white"
-              style={{ backgroundColor: "#9CB4CC" }}
-            >
-              <th className="p-3">No.</th>
-              <th className="p-3">Pernyataan</th>
-              <th className="p-3" width="8%">
-                Ya
-              </th>
-              <th className="p-3" width="8%">
-                Tidak
-              </th>
-            </tr>
-          </thead>
-          <tbody onChange={handleChange} className="table-light">
-            {questions.map((item) => (
-              <tr>
-                <th scope="row" className="fw-normal text-center p-3">
-                  {item.id}
+      {loading === true ? (
+        <div className="text-center mt-5">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="table-responsive card shadow-lg border-0">
+          <table className="table table-striped mb-0">
+            <thead>
+              <tr
+                className="text-center text-white"
+                style={{ backgroundColor: "#9CB4CC" }}
+              >
+                <th className="p-3">No.</th>
+                <th className="p-3">Pernyataan</th>
+                <th className="p-3" width="8%">
+                  Ya
                 </th>
-                <th scope="row" className="fw-normal p-3">
-                  {item.question}
+                <th className="p-3" width="8%">
+                  Tidak
                 </th>
-                <td
-                  data-tag={item.id}
-                  className="text-center p-3 border-start border-end"
-                  // style={{backgroundColor:"#E8E8E8"}}
-                  id={"box_" + item.id}
-                  onClick={handleClick}
-                >
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id={item.id}
-                    name={"question_" + item.id}
-                    value="1"
-                    required
-                  />
-                </td>
-                <td
-                  data-tag={item.id}
-                  className="text-center p-3 border-start"
-                  id={"box2_" + item.id}
-                  onClick={handleClick2}
-                >
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id={item.id}
-                    name={"question_" + item.id}
-                    value="0"
-                    required
-                  />
-                </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody onChange={handleChange} className="table-light">
+              {questions.map((item) => (
+                <tr>
+                  <th scope="row" className="fw-normal text-center p-3">
+                    {item.id}
+                  </th>
+                  <th scope="row" className="fw-normal p-3">
+                    {item.question}
+                  </th>
+                  <td
+                    data-tag={item.id}
+                    className="text-center p-3 border-start border-end"
+                    // style={{backgroundColor:"#E8E8E8"}}
+                    id={"box_" + item.id}
+                    onClick={handleClick}
+                  >
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      id={item.id}
+                      name={"question_" + item.id}
+                      value="1"
+                      required
+                    />
+                  </td>
+                  <td
+                    data-tag={item.id}
+                    className="text-center p-3 border-start"
+                    id={"box2_" + item.id}
+                    onClick={handleClick2}
+                  >
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      id={item.id}
+                      name={"question_" + item.id}
+                      value="0"
+                      required
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <div className="card border-0 mt-5">
+        <button
+          className="btn bg-blue w-25 text-white mx-auto"
+          type="submit"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
       </div>
-      <button
-        className="btn bg-blue w-25 float-end my-3 text-white"
-        type="submit"
-        onClick={handleSubmit}
-      >
-        Submit
-      </button>
 
       {/* modal */}
       <Modal show={show} onHide={handleClose}>
@@ -240,16 +253,16 @@ const TestHolland = () => {
         </Modal.Body>
       </Modal>
 
-      <Modal show={showConfirmation} onHide={() => setShowConfirmation(false)}>
+      <Modal show={showConfirmation}>
         <Modal.Body>
-          <p className="fs-4 fw-bold">Konfirmasi</p>
-          <p>Apakah Anda yakin ingin menyelesaikan tes ini?</p>
+          <p className="fs-4 fw-bold text-center mb-1">Konfirmasi</p>
+          <p className="text-center">Apakah Anda yakin ingin menyelesaikan tes ini?</p>
           <div className="d-flex justify-content-center">
             <div
               className="btn bg-blue mx-2 text-white px-4"
               onClick={handleOk}
             >
-              Ya
+              {loadingButton === true ? <Spinner animation="border" size="sm" /> : "Ya"}
             </div>
             <div
               className="btn bg-blue mx-2 text-white px-4"
