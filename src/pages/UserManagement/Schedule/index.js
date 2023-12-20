@@ -116,7 +116,7 @@ const ScheduleManagement = () => {
                 <th className="fw-normal">Name</th>
                 <th className="fw-normal">Start Access</th>
                 <th className="fw-normal">End Access</th>
-                <th className="fw-normal" width="13%">Action</th>
+                <th className="fw-normal" width="17%">Action</th>
               </tr>
             </thead>
             {dataSchedule.map((item) => (
@@ -139,6 +139,12 @@ const ScheduleManagement = () => {
                       onClick={() =>
                         navigate(`/schedule-detail/${item.id}/${id}`)
                       }
+                    ></i>
+                    <i
+                      class="fa-solid fa-download ms-4 pointer text-secondary"
+                      onClick={() => {
+                        window.location.href = `https://apidls.onegml.com/ac/admin/schedule/download_report_schedule?id_schedule=${item.id}&authorization=${token}`;
+                      }}
                     ></i>
                   </td>
                 </tr>
